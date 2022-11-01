@@ -1,0 +1,15 @@
+
+[tool.black]
+line-length = 110
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  | data
+  | dist
+  | docs
+)/
+'''
+
+[tool.isort]
+profile = "black"

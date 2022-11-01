@@ -1,0 +1,14 @@
+--constraint ../requirements.txt
+bandit==1.7.0
+black
+flake8>=3.5
+isort
+pip-tools
+pre-commit==2.16.0
+pytest
+pytest-cov==2.11.1
+pytest-flake8==1.0.7
+pytest-mock==3.5.1
+pytest-pythonpath
+safety==1.10.3
+tox
