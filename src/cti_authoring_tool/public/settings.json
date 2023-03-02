@@ -1,0 +1,18 @@
+{
+    "hotkeys": {
+        "file": {
+            "new_file": "Control+N",
+            "open_file": "Control+O",
+            "save_file": "Control+S"
+        },
+        "edit": {
+            "undo": "Control+Z",
+            "redo": "Control+Y"
+        },
+        "layout": {
+        },
+        "view": {
+            "fullscreen": ""
+        }
+    }
+}

@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cti_authoring_tool:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    - name: Install Dependencies
+      working-directory: ./src/cti_authoring_tool/
+      run: npm ci
+    - name: Build CTI Authoring Tool
+      working-directory: ./src/cti_authoring_tool/
+      env:
+        # Workaround for node.js bug: https://github.com/webpack/webpack/issues/14532
+        NODE_OPTIONS: "--openssl-legacy-provider"
+      run: npm run build
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: cti_authoring_tool
+        path: src/cti_authoring_tool/dist/
