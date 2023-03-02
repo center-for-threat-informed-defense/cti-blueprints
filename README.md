@@ -1,17 +1,17 @@
 [![codecov](https://codecov.io/gh/center-for-threat-informed-defense/project-template/branch/main/graph/badge.svg?token=ygDiymg8y3)](https://codecov.io/gh/center-for-threat-informed-defense/project-template)
 TODO: Replace with project-specific CodeCov badge
 
-# project_name
-Short description of project_name
+# CTI Blueprints
 
-- [project_name](#project_name)
-  - [Questions and Feedback](#questions-and-feedback)
-  - [Guidance](#guidance)
-    - [Getting Started](#getting-started)
-    - [Proposing Changes](#proposing-changes)
-    - [Updating Dependencies](#updating-dependencies)
-  - [How Do I Contribute?](#how-do-i-contribute)
-  - [Notice](#notice)
+Short description of CTI Blueprints...
+
+- [Questions and Feedback](#questions-and-feedback)
+- [Guidance](#guidance)
+  - [Getting Started](#getting-started)
+  - [Proposing Changes](#proposing-changes)
+  - [Updating Dependencies](#updating-dependencies)
+- [How Do I Contribute?](#how-do-i-contribute)
+- [Notice](#notice)
 
 ## Questions and Feedback
 Please submit issues for any technical questions/concerns or contact ctid@mitre-engenuity.org directly for more general inquiries.
@@ -64,10 +64,10 @@ The following commands may be useful in getting the project setup locally. All c
 4. Push the changes.
 
 ## How Do I Contribute?
-We welcome your feedback and contributions to help advance project_name. Please see the guidance for
+We welcome your feedback and contributions to help advance CTI Blueprints. Please see the guidance for
 contributors if are you interested in [contributing or simply reporting issues.](/CONTRIBUTING.md)
 
-Please submit [issues](https://github.com/center-for-threat-informed-defense/project_name/issues) for any
+Please submit [issues](https://github.com/center-for-threat-informed-defense/cti_blueprints/issues) for any
 technical questions/concerns or contact ctid@mitre-engenuity.org directly for more general inquiries.
 
 ## Notice
