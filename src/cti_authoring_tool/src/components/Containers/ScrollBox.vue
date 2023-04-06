@@ -3,22 +3,23 @@
     <div 
       ref="content" 
       class="scroll-content" 
-      @wheel.passive="moveScrollPosition(scrollTop + $event.deltaY, $event)"
+      @wheel.passive="onScrollWheel"
+      @scroll="onScrollContent"
     >
       <slot></slot>
     </div>
     <div
       class="scroll-bar"
       :style="scroll.sty"
+      @wheel.passive="onScrollWheel"
       v-show="alwaysShowScrollBar || showScrollbar"
-      @wheel.passive="moveScrollPosition(scrollTop + $event.deltaY, $event)"
     >
       <div
         class="scroll-handle"
         :style="handle.sty"
-        v-show="showScrollbar"
         @pointerdown="startDrag"
         @pointerup="stopDrag"
+        v-show="showScrollbar"
       ></div>
     </div>
   </div>
@@ -64,6 +65,10 @@ export default defineComponent({
     width: {
       type: Number,
       default: 17
+    },
+    top: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -93,7 +98,17 @@ export default defineComponent({
       onMutateObserver: null as MutationObserver | null,
     };
   },
+  emits: ["scroll"],
   methods: {
+
+    /**
+     * Scroll wheel behavior.
+     * @param event
+     *  The wheel event.
+     */
+    onScrollWheel(event: WheelEvent) {
+      this.moveScrollPosition(this.scrollTop + event.deltaY, event);
+    },
 
     /**
      * Scroll handle drag start behavior.
@@ -118,6 +133,22 @@ export default defineComponent({
     },
 
     /**
+     * Scroll content behavior.
+     */
+    onScrollContent() {
+      if(!this.content) {
+        return;
+      }
+      // If browser changed scroll position on its own, update scroll state
+      if(this.content.scrollTop != this.scrollTop) {
+        this.scrollTop = this.content!.scrollTop;
+        this.handle.pos = this.topToHandleTop(this.scrollTop);
+        this.handle.sty.transform = `translateY(${this.handle.pos}px)`;
+      }
+      this.$emit("scroll", this.scrollTop);
+    },
+
+    /**
      * Calculates and configures the parameters required to mimic scrolling.
      * 
      * NOTE:
@@ -134,9 +165,9 @@ export default defineComponent({
      */
     recalculateScrollState(resetTop: boolean = true) {
       let showScrollbar = this.showScrollbar;
-      let content = this.content!;
+      let content = this.content;
       // Ignore scroll content with no height
-      if(content.clientHeight === 0) {
+      if(!content || content.clientHeight === 0) {
        this.showScrollbar = false;
        return;
       }
@@ -165,14 +196,17 @@ export default defineComponent({
      *  The scroll wheel event, if applicable.
      */
     moveScrollPosition(position: number, event: WheelEvent | null = null) {
+      if(!this.content) {
+        return;
+      }
       let scrollTop = this.scrollTop;
-      this.scrollTop = clamp(position, 0, this.windowMax);
+      this.scrollTop = clamp(Math.round(position), 0, this.windowMax);
       this.handle.pos = this.topToHandleTop(this.scrollTop);
       this.handle.sty.transform = `translateY(${this.handle.pos}px)`;
-      this.content!.scrollTop = this.scrollTop;
+      this.content.scrollTop = this.scrollTop;
       // Selectively propagate scroll event
-      let hasMoved = scrollTop - this.scrollTop !== 0;
       let canMove = 0 < this.scrollTop && this.scrollTop < this.windowMax;
+      let hasMoved = scrollTop - this.scrollTop !== 0;
       if(!this.propagateScroll || hasMoved || canMove) {
         event?.stopPropagation();
       }
@@ -201,6 +235,12 @@ export default defineComponent({
     }
 
   },
+  watch: {
+    // On top change
+    top() {
+      this.moveScrollPosition(this.top);
+    }
+  },
   mounted() {
     // Configure mutation observer
     let mutateOptions = { childList: true, characterData: true, subtree: true };
@@ -213,6 +253,10 @@ export default defineComponent({
     );
     this.onResizeObserver.observe(this.$el);
     this.onMutateObserver.observe(this.content!, mutateOptions);
+    // Calculate scroll state
+    this.recalculateScrollState(false);
+    // Set scroll position
+    this.moveScrollPosition(this.top);
   },
   unmounted() {
     this.onResizeObserver!.disconnect();

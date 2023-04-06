@@ -1,13 +1,25 @@
+import { clamp } from "@/assets/scripts/Utilities";
 import { PageSection } from "../../PageSection";
 import { AtomicProperty } from "..";
-import { NumberPropertyTemplate } from "../../../AppConfiguration";
+import { INumberProperty } from "./INumberProperty";
+import { NumberPropertyTemplate, PropertyType } from "../../../AppConfiguration";
 
-export class NumberProperty extends AtomicProperty {
-    
+export class NumberProperty extends AtomicProperty implements INumberProperty {
+
     /**
      * The property's value.
      */
-    public value: null | number;
+    public value: number | null;
+
+    /**
+     * The property's minimum allowed value.
+     */
+    public readonly min: number;
+
+    /**
+     * The property's maximum allowed value.
+     */
+    public readonly max: number;
 
 
     /**
@@ -31,23 +43,98 @@ export class NumberProperty extends AtomicProperty {
     constructor(section: PageSection, template: NumberPropertyTemplate, value: number);
     constructor(section: PageSection, template: NumberPropertyTemplate, value?: number) {
         super(section, template);
+        this.value = null;
+        this.min = template.min ?? -Infinity;
+        this.max = template.max ?? Infinity;
         if(value !== undefined) {
-            this.value = value;
+            this.setValue(value);
         } else if(template.default !== undefined) {
-            this.value = template.default;
+            this.setValue(template.default);
         } else {
-            this.value = null;
+            this.setValue(null);
+        }
+        this.initializePlugins(template);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. INumberProperty Methods  //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Sets the property's value directly.
+     * @param value
+     *  The property's new value.
+     */
+    public setValue(value: number | null): void {
+        // If null value
+        if(value === null) {
+            this.value = value;
+            return;
+        }
+        // If numeric value
+        let v = clamp(value, this.min, this.max);
+        if(this.type === PropertyType.Integer) {
+            this.value = Math.round(v);
+        } else {
+            this.value = v;
         }
     }
 
+    /**
+     * Creates a new command.
+     */
+    public newCommand(): void {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * Registers a property action.
+     * @param name
+     *  The action's name.
+     * @param action
+     *  The action.
+     */
+    public registerAction(name: string, action: () => void): void {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * Registers a property metric.
+     * @param name
+     *  The metric's name.
+     * @param metric
+     *  The metric.
+     */
+    public registerMetric(name: string, metric: () => any): void {
+        throw new Error("Method not implemented.");
+    }
     
     /**
      * Returns a string representation of the property.
      * @returns
      *  A string representation of the property.
      */
-    public toString(): string | undefined {
+    public override toString(): string | undefined {
         return this.value !== null ? `${ this.value }` : undefined;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. Event Methods  ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Property update behavior.
+     * @param newValue
+     *  The property's new value.
+     * @param oldValue
+     *  The property's old value.
+     */
+    public onUpdate(newValue: number, oldValue: number) {
+        this.emit("update", newValue, oldValue);
+        this._section.onUpdate(this, newValue, oldValue);
     }
 
 }

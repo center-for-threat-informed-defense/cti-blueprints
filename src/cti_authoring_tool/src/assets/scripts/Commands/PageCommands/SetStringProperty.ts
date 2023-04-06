@@ -1,5 +1,5 @@
 import { PageCommand } from "../PageCommand";
-import { StringProperty } from "../../Page/Property/StringProperty/StringProperty";
+import { StringProperty } from "../../Page/Property/";
 
 export class SetStringProperty extends PageCommand {
 
@@ -26,7 +26,7 @@ export class SetStringProperty extends PageCommand {
      * @param value
      *  The property's new value.
      */
-    constructor(property: StringProperty, value: string) {
+    constructor(property: StringProperty, value: string | null) {
         super(property.getPageInstance());
         this._property = property;
         this._lastValue = property.value;
@@ -40,7 +40,7 @@ export class SetStringProperty extends PageCommand {
      *  True if the command should be recorded, false otherwise.
      */
     public execute(): boolean {
-        this._property.value = this._nextValue;
+        this._property.setValue(this._nextValue);
         return true;
     }
 
@@ -48,7 +48,7 @@ export class SetStringProperty extends PageCommand {
      * Undoes the page command.
      */
     public undo() {
-        this._property.value = this._lastValue;
+        this._property.setValue(this._lastValue);
     }
 
 }

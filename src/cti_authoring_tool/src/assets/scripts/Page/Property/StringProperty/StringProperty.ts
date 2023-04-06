@@ -1,13 +1,14 @@
-import { AtomicProperty } from "..";
 import { PageSection } from "../../PageSection";
+import { AtomicProperty } from "..";
+import { IStringProperty } from "./IStringProperty";
 import { StringPropertyTemplate } from "../../../AppConfiguration";
 
-export class StringProperty extends AtomicProperty {
+export class StringProperty extends AtomicProperty implements IStringProperty {
 
     /**
      * The property's value.
      */
-    public value: null | string;
+    public value: string | null;
 
     /**
      * The property's string suggestions.
@@ -36,24 +37,87 @@ export class StringProperty extends AtomicProperty {
     constructor(section: PageSection, template: StringPropertyTemplate, value: string);
     constructor(section: PageSection, template: StringPropertyTemplate, value?: string) {
         super(section, template);
-        this.suggestions = [];
+        this.value = null;
+        this.suggestions = template.suggestions ?? [];
         if(value !== undefined) {
-            this.value = value;
+            this.setValue(value);
         } else if(template.default !== undefined) {
-            this.value = template.default;
+            this.setValue(template.default);
         } else {
-            this.value = null;
+            this.setValue(null);
         }
+        this.initializePlugins(template);
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. IStringProperty Methods  //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Sets the property's value directly.
+     * @param value
+     *  The property's new value.
+     */
+    public setValue(value: string | null): void {
+        this.value = value;
+    }
+
+    /**
+     * Creates a new command.
+     */
+    public newCommand(): void {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * Registers a property action.
+     * @param name
+     *  The action's name.
+     * @param action
+     *  The action.
+     */
+    public registerAction(name: string, action: () => void): void {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * Registers a property metric.
+     * @param name
+     *  The metric's name.
+     * @param metric
+     *  The metric.
+     */
+    public registerMetric(name: string, metric: () => any): void {
+        throw new Error("Method not implemented.");
+    }
 
     /**
      * Returns a string representation of the property.
      * @returns
      *  A string representation of the property.
      */
-    public toString(): string | undefined {
+    public override toString(): string | undefined {
         return this.value ?? undefined;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. Event Methods  ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Property update behavior.
+     * @param newValue
+     *  The property's new value.
+     * @param oldValue
+     *  The property's old value.
+     */
+    public onUpdate(newValue: string, oldValue: string) {
+        this.emit("update", newValue, oldValue);
+        this._section.onUpdate(this, newValue, oldValue);
     }
 
 }

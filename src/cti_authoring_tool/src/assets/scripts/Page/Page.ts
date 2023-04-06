@@ -57,7 +57,16 @@ export class Page {
         this.sections = new Map();
         // Init sections
         for(let s of template.sections) {
-            this.sections.set(s.id, new PageSection(this, s));
+            let section = new PageSection(this, s);
+            if(!this.sections.has(section.id)) {
+                this.sections.set(section.id, section);
+            } else {
+                throw new Error(`Section '${ 
+                    section.id 
+                }' is defined twice in page '${ 
+                    this.id
+                }'.`);
+            }
         }
     }
 

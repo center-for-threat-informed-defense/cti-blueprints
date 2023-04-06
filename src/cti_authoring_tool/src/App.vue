@@ -22,9 +22,8 @@
 <script lang="ts">
 import * as Store from "@/store/StoreTypes";
 import * as App from "@/assets/scripts/Commands/AppCommands";
-import Configuration from "@/assets/app.config"
+import Configuration from "@/assets/configuration/app.config"
 // Dependencies
-import { Page } from "./assets/scripts/Page/Page";
 import { Command } from "./assets/scripts/Commands/Command";
 import { PageEditor } from "./assets/scripts/Page/PageEditor";
 import { defineComponent } from 'vue';

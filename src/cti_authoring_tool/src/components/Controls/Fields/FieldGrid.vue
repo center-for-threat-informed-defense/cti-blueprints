@@ -1,0 +1,163 @@
+<template>
+  <div class="field-grid-control" :style="grid">
+    <template v-for="prop in properties" :key="prop.id">
+      <p class="field-name" :style="propTitleGridStyle(prop)">
+        {{ prop.name }}
+      </p>
+      <component
+        class="field-value"
+        :style="propFieldGridStyle(prop)"
+        :is="getField(prop.type)"
+        :property="prop"
+        @command="c => $emit('command', c)"
+      />
+    </template>
+  </div> 
+</template>
+
+<script lang="ts">
+// Dependencies
+import { Property } from '@/assets/scripts/Page/Property/Property';
+import { PropertyType } from '@/assets/scripts/AppConfiguration';
+import { defineComponent, PropType } from 'vue';
+// Components
+import TextField from "./TextField.vue";
+import EnumField from "./EnumField.vue";
+import NumberField from "./NumberField.vue";
+import DateTimeField from "./DateTimeField.vue";
+import BasicTableField from "./BasicTableField.vue";
+import ComplexTableField from "./ComplexTableField.vue";
+
+export default defineComponent({
+  name: 'FieldGrid',
+  props: {
+    rows: {
+      type: Number,
+      required: true
+    },
+    cols: {
+      type: Number,
+      required: true
+    },
+    properties: {
+      type: Array as PropType<Property[]>,
+      required: true
+    }
+  },
+  computed: {
+
+    /**
+     * Returns the section's grid styling.
+     * @returns
+     *  The section's grid styling.
+     */
+    grid() {
+      return {
+        gridTemplateRows: new Array(this.rows).fill("22px auto").join(" 15px "),
+        gridTemplateColumns: `repeat(${ this.cols }, minmax(0, 1fr))`,
+      }
+    }
+
+  },
+  emits: ["command"],
+  methods: {
+    
+    /**
+     * Returns a property title's grid styling.
+     * @returns
+     *  The property title's grid styling.
+     */
+    propTitleGridStyle(property: Property) {
+      let { row, col } = property;
+      let r = Array.isArray(row) ? {
+        gridRowStart    : (3 * row[0]) - 2
+      } : {
+        gridRowStart    : (3 * row) - 2
+      }
+      let c = Array.isArray(col) ? {
+        gridColumnStart : col[0],
+        gridColumnEnd   : col[1] + 1
+      } : {
+        gridColumnStart : col
+      }
+      return { ...r, ...c }
+    },
+
+    /**
+     * Returns a property field's grid styling.
+     * @returns
+     *  The property field's grid styling.
+     */
+    propFieldGridStyle(property: Property) {
+      let { row, col } = property;
+      let r = Array.isArray(row) ? {
+        gridRowStart    : (3 * row[0]) - 1,
+        gridRowEnd      : (3 * row[1])
+      } : {
+        gridRowStart    : (3 * row) - 1
+      }
+      let c = Array.isArray(col) ? {
+        gridColumnStart : col[0],
+        gridColumnEnd   : col[1] + 1
+      } : {
+        gridColumnStart : col
+      }
+      return { ...r, ...c }
+    },
+
+    /**
+     * Returns a property's field type.
+     * @param
+     *  The type of property.
+     * @returns
+     *  The property's field type.
+     */
+    getField(type: PropertyType): string | undefined {
+      switch(type) {
+        case PropertyType.String:
+          return "TextField";
+        case PropertyType.Float:
+        case PropertyType.Integer:
+          return "NumberField";
+        case PropertyType.Date:
+        case PropertyType.Time:
+        case PropertyType.DateTime:
+          return "DateTimeField";
+        case PropertyType.Enum:
+          return "EnumField";
+        case PropertyType.BasicTable:
+          return "BasicTableField";
+        case PropertyType.ComplexTable:
+          return "ComplexTableField";
+      }
+    }
+
+  },
+  components: { 
+    TextField, EnumField, NumberField, DateTimeField,
+    BasicTableField, ComplexTableField
+  }
+});
+</script>
+
+<style scoped>
+
+/** === Main Control === */
+
+.field-grid-control {
+  display: grid;
+  column-gap: 15px;
+}
+
+.field-name {
+  color: #616161;
+  font-size: 10.5pt;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.field-value {
+  background: #fff;
+}
+
+</style>
