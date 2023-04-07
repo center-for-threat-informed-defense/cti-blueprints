@@ -1,4 +1,4 @@
-import { Tactics } from "./Tactics";
+import { Tactic } from "./Tactic";
 import { Artifact } from "./Artifact";
 import { Attribution } from "./Attribution";
 import { PropertyType } from "@/assets/scripts/AppConfiguration";
@@ -22,7 +22,7 @@ export const SystemArtifactTable = {
             col: 1
         },
         {
-            ...Tactics,
+            ...Tactic,
             row: 1,
             col: 2
         },

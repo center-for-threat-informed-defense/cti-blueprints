@@ -1,6 +1,6 @@
 import { Defend } from "./Defend";
 import { Control } from "./Control";
-import { Tactics } from "./Tactics";
+import { Tactic } from "./Tactic";
 import { Procedure } from "./Procedure";
 import { Techniques } from "./Techniques";
 import { Attribution } from "./Attribution";
@@ -12,7 +12,7 @@ export const MITREAttackTable = {
     name: "MITRE ATT&CK Table",
     type: PropertyType.ComplexTable,
     layout: {
-        summary: "{{ attribution }}\n**[{{ tactics }}]: {{ technique }}**",
+        summary: "{{ attribution }}\n**[{{ tactic }}]: {{ technique }}**",
         rows: 5,
         cols: 2
     },
@@ -23,7 +23,7 @@ export const MITREAttackTable = {
             col: 1
         },
         {
-            ...Tactics,
+            ...Tactic,
             row: 1,
             col: 2
         },
