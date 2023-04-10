@@ -1,28 +1,26 @@
 <template>
-  <div class="page-editor-section-control" :style="grid">
-    <div class="field-container" :style="propGridStyle(p)" v-for="[k, p] in section.properties" :key="k">
-      <p class="field-name">
-        {{ p.name }}
-      </p>
-      <component
-        class="field-value"
-        :is="getField(p.type)"
-        :property="p"
-        @command="c => $emit('command', c)"
-      />
+  <div class="page-editor-section-control">
+    <div class="section-name" v-if="section.isNameDisplayed">
+      {{ section.name }}
     </div>
-  </div> 
+    <FieldGrid 
+      class="fields"
+      :rows="section.layout.rows"
+      :cols="section.layout.cols"
+      :properties="properties"
+      @command="c => $emit('command', c)"
+    />
+  </div>
 </template>
 
 <script lang="ts">
+import * as App from "@/assets/scripts/Commands/AppCommands";
 // Dependencies
-import { Property } from '@/assets/scripts/Page/Property/Property';
+import { Property } from '@/assets/scripts/Page/Property';
 import { PageSection } from '@/assets/scripts/Page/PageSection';
-import { PropertyType } from '@/assets/scripts/AppConfiguration';
 import { defineComponent, PropType } from 'vue';
 // Components
-import TextField from "@/components/Controls/Fields/TextField.vue";
-import TableField from "@/components/Controls/Fields/TableField.vue";
+import FieldGrid from "@/components/Controls/Fields/FieldGrid.vue";
 
 export default defineComponent({
   name: 'PageSection',
@@ -35,60 +33,25 @@ export default defineComponent({
   computed: {
 
     /**
-     * Returns the section's grid styling.
+     * Returns the section's properties.
      * @returns
-     *  The section's grid styling.
+     *  The section's properties.
      */
-    grid() {
-      return {
-        gridTemplateRows: `repeat(${ this.section.rows }, auto)`,
-        gridTemplateColumns: `repeat(${ this.section.cols }, minmax(0, 1fr))`,
-      }
+    properties(): Property[] {
+      return [...this.section.properties.values()]
     }
 
   },
   emits: ["command"],
-  methods: {
-    
-    /**
-     * Returns a property's grid styling.
-     * @returns
-     *  The property's grid styling.
-     */
-    propGridStyle(property: Property) {
-      let row = Array.isArray(property.row) ? {
-        gridRowStart    : property.row[0],
-        gridRowEnd      : property.row[1] 
-      } : {
-        gridRowStart    : property.row
-      }
-      let col = Array.isArray(property.col) ? {
-        gridColumnStart : property.col[0],
-        gridColumnEnd   : property.col[1]
-      } : {
-        gridColumnStart : property.col
-      }
-      return { ...row, ...col}
-    },
-
-    /**
-     * Returns a property's field type.
-     * @param
-     *  The type of property.
-     * @returns
-     *  The property's field type.
-     */
-    getField(type: PropertyType): string | undefined {
-      switch(type) {
-        case PropertyType.String:
-          return "TextField";
-        case PropertyType.Table:
-          return "TableField";
-      }
-    }
-
+  mounted() {
+    // Execute mount command
+    this.$emit("command", new App.MountPageSection(this.section, this.$el))
   },
-  components: { TextField, TableField }
+  unmounted() {
+    // Execute destroy command
+    this.$emit("command", new App.DestroyPageSection(this.section));
+  },
+  components: { FieldGrid }
 });
 </script>
 
@@ -96,23 +59,23 @@ export default defineComponent({
 
 /** === Main Control === */
 
-.page-editor-section-control {
-  display: grid;
-  column-gap: 15px;
-  row-gap: 15px;
-  padding: 30px;
+.section-name {
+  display: inline-block;
+  color: #1f85cf;
+  font-size: 13pt;
+  font-weight: 400;
+  padding: 8px 15px;
+  border: solid 1px #dddddd;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  background: rgb(255 255 255);
+}
+
+.fields {
   border: solid 1px #d9d9d9;
   border-radius: 3px;
   background: #fff;
-  
+  padding: 30px;
 }
-
-.field-name {
-  color: #616161;
-  font-size: 10.5pt;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
 
 </style>

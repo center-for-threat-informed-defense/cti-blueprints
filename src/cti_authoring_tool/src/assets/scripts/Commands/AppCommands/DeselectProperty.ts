@@ -1,5 +1,5 @@
 import { AppCommand } from "../AppCommand";
-import { AtomicProperty } from "../../Page/Property/AtomicProperty";
+import { AtomicProperty } from "../../Page/Property/AtomicProperty/AtomicProperty";
 
 export class DeselectProperty extends AppCommand {
 

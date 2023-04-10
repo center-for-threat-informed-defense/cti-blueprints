@@ -1,6 +1,5 @@
-import Configuration from "@/assets/app.config";
+import Configuration from "@/assets/configuration/app.config";
 import * as App from "@/assets/scripts/Commands/AppCommands";
-import * as Page from "@/assets/scripts/Commands/PageCommands"
 import { Module } from "vuex";
 import { ContextMenuStore, ModuleStore } from "../StoreTypes";
 import { ContextMenu, ContextMenuItem, ContextMenuSection, MenuType } from "@/assets/scripts/ContextMenuTypes";
@@ -53,7 +52,7 @@ export default {
             
             // Create file types
             let nfo: ContextMenuItem[] = Configuration.templates.map(t => ({
-                text: `New ${ t.name } File`,
+                text: t.name,
                 type: MenuType.Item,
                 data: () => App.LoadFile.fromNew(ctx, t)
             }));

@@ -35,10 +35,10 @@ export default defineComponent({
 /** === Main Control === */
 
 .page-section {
-  margin-top: 20px;
+  margin-top: 35px;
 }
 .page-section:last-child {
-  margin-bottom: 20px;
+  margin-bottom: 35px;
 }
 
 </style>

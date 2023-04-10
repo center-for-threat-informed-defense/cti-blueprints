@@ -1,4 +1,4 @@
-import Configuration from "@/assets/app.config";
+import Configuration from "@/assets/configuration/app.config";
 import { Browser } from "@/assets/scripts/Browser";
 import { PageEditor } from "../../Page/PageEditor";
 import { AppCommand } from "../AppCommand";
