@@ -121,7 +121,7 @@ export default defineComponent({
           break;
       }
       // Sort
-      let cmd = new Page.ReorderTabularProperty(this.property, prop.id, s);
+      let cmd = new Page.TabularPropertyReorder(this.property, prop.id, s);
       this.$emit("command", cmd);
     }
 

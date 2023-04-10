@@ -22,11 +22,6 @@ export abstract class Property extends EventEmitter implements IProperty {
     public readonly type: PropertyType;
 
     /**
-     * The property's primary status.
-     */
-    public readonly isPrimary: boolean;
-
-    /**
      * The property's row.
      */
     public readonly row: number | [number, number];
@@ -37,6 +32,16 @@ export abstract class Property extends EventEmitter implements IProperty {
     public readonly col: number | [number, number];
 
     /**
+     * The property's help link.
+     */
+    public readonly help: string | null;
+
+    /**
+     * The property's primary status.
+     */
+    public readonly isPrimary: boolean;
+
+    /**
      * The property's plugins.
      */
     protected _plugins: Object[];
@@ -45,11 +50,6 @@ export abstract class Property extends EventEmitter implements IProperty {
      * The property's actions
      */
     protected _actions: any[];
-
-    /**
-     * The property's metrics.
-     */
-    protected _metrics: any[];
 
     /**
      * The property's section.
@@ -72,10 +72,10 @@ export abstract class Property extends EventEmitter implements IProperty {
         this.type = template.type;
         this.row = template.row;
         this.col = template.col;
+        this.help = template.help ?? null;
         this.isPrimary = template.is_primary ?? false;
         this._plugins = [];
         this._actions = [];
-        this._metrics = [];
     }
 
     /**
@@ -92,6 +92,18 @@ export abstract class Property extends EventEmitter implements IProperty {
     ///  1. IProperty Methods  ////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    
+    /**
+     * Registers a property action.
+     * @param name
+     *  The action's name.
+     * @param action
+     *  The action.
+     */
+    public registerAction(name: string, action: () => void): void {
+        // TODO: Implement action registration
+        throw new Error("Method not implemented.");
+    }
 
     /**
      * Adds an event listener to the property.

@@ -1,4 +1,4 @@
-import { PropertyType, StringPropertyTemplate } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/AppConfiguration";
 import { ReportNumberPlugin } from "../plugins/ReportNumberPlugin";
 
 export const ReportNumber = {

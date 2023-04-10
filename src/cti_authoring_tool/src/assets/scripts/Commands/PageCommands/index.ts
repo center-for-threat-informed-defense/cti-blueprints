@@ -4,14 +4,16 @@
  * things like StringProperty.set(), StringProperty.clear(), 
  * ComplexTableProperty.collapse(), ComplexTableProperty.uncollapse() to 
  * generate PageCommands.
+ * 
+ * This idea should be unified with the newCommand() construct somehow.
  */
 
-export * from "./CreateRowTabularProperty";
-export * from "./DeleteRowTabularProperty";
-export * from "./MoveRowTabularProperty";
-export * from "./ReorderTabularProperty";
-export * from "./SetDateTimeProperty";
-export * from "./SetEnumProperty";
-export * from "./SetNumberProperty";
-export * from "./SetRowCollapseComplexTableProperty";
-export * from "./SetStringProperty";
+export * from "./ComplexTablePropertySetRowCollapse";
+export * from "./DateTimePropertySet";
+export * from "./EnumPropertySet";
+export * from "./NumberPropertySet";
+export * from "./StringPropertySet";
+export * from "./TabularPropertyCreateRow";
+export * from "./TabularPropertyDeleteRow";
+export * from "./TabularPropertyMoveRow";
+export * from "./TabularPropertyReorder";

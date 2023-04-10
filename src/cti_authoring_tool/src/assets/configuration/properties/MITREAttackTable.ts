@@ -2,17 +2,17 @@ import { Defend } from "./Defend";
 import { Control } from "./Control";
 import { Tactic } from "./Tactic";
 import { Procedure } from "./Procedure";
-import { Techniques } from "./Techniques";
+import { Techniques } from "./Technique";
 import { Attribution } from "./Attribution";
 import { PropertyType } from "@/assets/scripts/AppConfiguration";
-import { SubTechniques } from "./SubTechniques";
+import { SubTechniques } from "./SubTechnique";
 
-export const MITREAttackTable = {
+export const MitreAttackTable = {
     id: "mitre_attack_table",
     name: "MITRE ATT&CK Table",
     type: PropertyType.ComplexTable,
     layout: {
-        summary: "{{ attribution }}\n**[{{ tactic }}]: {{ technique }}**",
+        summary: "{{ attribution }}\n**{{ tactic }} :: {{ technique }}**",
         rows: 5,
         cols: 2
     },

@@ -1,18 +1,23 @@
-
-import { Body } from "../sections/Body";
-import { General } from "../sections/General";
-import { Metadata } from "../sections/Metadata";
-import { DataSources } from "../sections/DataSources";
-import { AutomationTable } from "../sections/AutomationTable";
+import { GeneralSection } from "../sections/GeneralSection";
+import { OutlookSection } from "../sections/OutlookSection";
+import { KeyPointsSection } from "../sections/KeyPointsSection";
+import { AssessmentSection } from "../sections/AssessmentSection";
+import { DataSourcesSection } from "../sections/DataSourcesSection";
+import { ExecutiveSummarySection } from "../sections/ExecutiveSummarySection";
+import { KeyIntelligenceGapsSection } from "../sections/KeyIntelligenceGapsSection";
+import { IntelligenceRequirementsSection } from "../sections/IntelligenceRequirementsSection";
 
 export const Executive: any = {
     id: "executive_report",
     name: "Executive Report",
     sections: [
-        General,
-        Body,
-        Metadata,
-        DataSources,
-        AutomationTable,
+        GeneralSection,
+        ExecutiveSummarySection,
+        KeyPointsSection,
+        AssessmentSection,
+        OutlookSection,
+        KeyIntelligenceGapsSection,
+        IntelligenceRequirementsSection,
+        DataSourcesSection
     ],
 }

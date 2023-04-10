@@ -17,6 +17,21 @@ export default {
         nativeHotkeys(): Hotkey<CommandEmitter>[] {
             return [
                 {
+                    shortcut: "Control+C",
+                    repeatable: true,
+                    allowBrowserBehavior: true
+                },
+                {
+                    shortcut: "Control+V",
+                    repeatable: true,
+                    allowBrowserBehavior: true
+                },
+                {
+                    shortcut: "Control+X",
+                    repeatable: true,
+                    allowBrowserBehavior: true
+                },
+                {
                     shortcut: "Control+R",
                     repeatable: true,
                     allowBrowserBehavior: true

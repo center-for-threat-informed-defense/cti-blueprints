@@ -1,32 +1,31 @@
-import { Body } from "../sections/Body";
-import { General } from "../sections/General";
-import { Metadata } from "../sections/Metadata";
-import { CveSection } from "../sections/CveSection";
-import { DataSources } from "../sections/DataSources";
-import { PageTemplate } from "@/assets/scripts/AppConfiguration";
-import { AutomationTable } from "../sections/AutomationTable";
-import { TimelineSection } from "../sections/TimelineTable";
-import { IocMalwareSection } from "../sections/IocMalwareSection";
+import { IocsSection } from "../sections/IocsSection";
+import { GeneralSection } from "../sections/GeneralSection";
+import { TimelineSection } from "../sections/TimelineSection";
+import { KeyPointsSection } from "../sections/KeyPointsSection";
+import { AssessmentSection } from "../sections/AssessmentSection";
 import { SignaturesSection } from "../sections/SignaturesSection";
-import { IocNetworkSection } from "../sections/IocNetworkSection";
-import { MITREAttackSection } from "../sections/MitreAttackSection";
-import { SystemArtifactSection } from "../sections/SystemArtifactsSection";
+import { DataSourcesSection } from "../sections/DataSourcesSection";
+import { MitreAttackTableSection } from "../sections/MitreAttackTableSection";
+import { ExecutiveSummarySection } from "../sections/ExecutiveSummarySection";
+import { CampaignMetadataSection } from "../sections/CampaignMetadataSection";
+import { KeyIntelligenceGapsSection } from "../sections/KeyIntelligenceGapsSection";
+import { IntelligenceRequirementsSection } from "../sections/IntelligenceRequirementsSection";
 
 export const Campaign: any = {
     id: "campaign_report",
     name: "Campaign Report",
     sections: [
-        General,
-        Body,
-        MITREAttackSection,
+        GeneralSection,
+        ExecutiveSummarySection,
+        KeyPointsSection,
+        AssessmentSection,
+        KeyIntelligenceGapsSection,
+        MitreAttackTableSection,
         TimelineSection,
-        CveSection,
-        IocMalwareSection,
-        IocNetworkSection,
-        SystemArtifactSection,
+        IocsSection,
         SignaturesSection,
-        Metadata,
-        DataSources,
-        AutomationTable,
+        IntelligenceRequirementsSection,
+        DataSourcesSection,
+        CampaignMetadataSection,
     ]
 }

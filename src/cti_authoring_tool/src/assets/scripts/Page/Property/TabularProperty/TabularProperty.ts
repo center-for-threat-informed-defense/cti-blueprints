@@ -8,30 +8,17 @@ import { AtomicProperty, DateTimeProperty, EnumProperty, NumberProperty, Propert
 export abstract class TabularProperty extends Property implements ITabularProperty {
 
     // TODO: Consume update events from child properties
+    // TODO: Link row events
 
     /**
      * The property's value.
      */
-    public get value(): Map<string, AtomicProperty[]> {
-        return new Map([...this._value]);
-    } 
-
-    /**
-     * The property's (internal) value.
-     */
-    protected _value: Map<string, AtomicProperty[]>;
+    public value: Map<string, AtomicProperty[]>;
 
     /**
      * The table's property state.
      */
-    public get properties(): TablePropertyState[] {
-        return [...this._properties];
-    }
-
-    /**
-     * The table's (internal) property state.
-     */
-    protected _properties: TablePropertyState[];
+    public properties: TablePropertyState[];
 
     /**
      * The table's property templates.
@@ -64,14 +51,14 @@ export abstract class TabularProperty extends Property implements ITabularProper
     constructor(section: PageSection, template: TabularPropertyTemplate, value: TabularPropertyRowValue[]);
     constructor(section: PageSection, template: TabularPropertyTemplate, value?: TabularPropertyRowValue[]) {
         super(section, template);
-        this._value = new Map();
+        this.value = new Map();
+        this.properties = [];
         this._templates = [];
-        this._properties = [];
         // Configure header
         let templates = template.properties;
         for(let t of templates) {
             this._templates.push(structuredClone(t));
-            this._properties.push({
+            this.properties.push({
                 id   : t.id ?? String.formatId(t.name),
                 name : t.name,
                 sort : Sort.None,
@@ -107,7 +94,7 @@ export abstract class TabularProperty extends Property implements ITabularProper
      *  The row's id, undefined if no row at `index`.
      */
     public getId(index: number): string | undefined {
-        return [...this._value.keys()][index];
+        return [...this.value.keys()][index];
     }
 
     /**
@@ -118,7 +105,7 @@ export abstract class TabularProperty extends Property implements ITabularProper
      *  The row's index, -1 if no row matches `id`.
      */
     public getIndex(id: string): number {
-        return [...this._value.keys()].findIndex(o => o === id);
+        return [...this.value.keys()].findIndex(o => o === id);
     }
 
     /**
@@ -130,8 +117,8 @@ export abstract class TabularProperty extends Property implements ITabularProper
      */
     public getRow(id: string): [string, AtomicProperty[]] | undefined {
         let result: [string, AtomicProperty[]] | undefined;
-        if(this._value.has(id)) {
-            result = [id, this._value.get(id)!]
+        if(this.value.has(id)) {
+            result = [id, this.value.get(id)!]
         }
         return result;
     }
@@ -192,11 +179,11 @@ export abstract class TabularProperty extends Property implements ITabularProper
         }
         // Insert row
         if(index === undefined) {
-            this._value.set(row[0], props);
+            this.value.set(row[0], props);
         } else {
-            let v = [...this._value.entries()];
+            let v = [...this.value.entries()];
             v.splice(index, 0, [row[0], props]);
-            this._value = new Map(v);
+            this.value = new Map(v);
         }
     }
 
@@ -209,11 +196,11 @@ export abstract class TabularProperty extends Property implements ITabularProper
      */
     public moveRow(src: number, dst: number) {
         // Get rows
-        let rows = [...this._value.entries()]
+        let rows = [...this.value.entries()]
         // Move row
         rows.splice(dst, 0, rows.splice(src, 1)[0]);
         // Update rows
-        this._value = new Map(rows);
+        this.value = new Map(rows);
     }
 
     /**
@@ -235,9 +222,9 @@ export abstract class TabularProperty extends Property implements ITabularProper
     public deleteRow(id: string): boolean;
     public deleteRow(_: string | number): boolean {
         if(typeof _ === "number") {
-            _ = [...this._value.keys()][_]   
+            _ = [...this.value.keys()][_]   
         }
-        return _ !== undefined ? this._value.delete(_) : false;
+        return _ !== undefined ? this.value.delete(_) : false;
     }
 
     /**
@@ -265,16 +252,16 @@ export abstract class TabularProperty extends Property implements ITabularProper
     public captureColumnSnapshot(id: string, sort: Sort): ColumnSnapshot;
     public captureColumnSnapshot(id: string, sort?: Sort): ColumnSnapshot {
         // Resolve column
-        let column = this._properties.findIndex(o => o.id === id);
+        let column = this.properties.findIndex(o => o.id === id);
         if(column === -1) {
             throw new Error(`Column '${ id }' does not exist.`);
         }
         // If no sort order, capture as is
         if(sort === undefined) {
             return {
-                id: this._properties[column].id,
-                sort: this._properties[column].sort,
-                ids: [...this._value.keys()]
+                id: this.properties[column].id,
+                sort: this.properties[column].sort,
+                ids: [...this.value.keys()]
             }
         }
         // If sort order, capture applied sort order
@@ -293,9 +280,9 @@ export abstract class TabularProperty extends Property implements ITabularProper
         }
         switch(this._templates[column].type) {
             case PropertyType.String:
-                ids = [...this._value.keys()].sort((a,b) => {
-                    let rowA = this._value.get(a)![column];
-                    let rowB = this._value.get(b)![column];
+                ids = [...this.value.keys()].sort((a,b) => {
+                    let rowA = this.value.get(a)![column];
+                    let rowB = this.value.get(b)![column];
                     if(
                         rowA instanceof StringProperty && 
                         rowB instanceof StringProperty
@@ -310,9 +297,9 @@ export abstract class TabularProperty extends Property implements ITabularProper
                 break;
             case PropertyType.Float:
             case PropertyType.Integer:
-                ids = [...this._value.keys()].sort((a,b) => {
-                    let rowA = this._value.get(a)![column];
-                    let rowB = this._value.get(b)![column];
+                ids = [...this.value.keys()].sort((a,b) => {
+                    let rowA = this.value.get(a)![column];
+                    let rowB = this.value.get(b)![column];
                     if(
                         rowA instanceof NumberProperty && 
                         rowB instanceof NumberProperty
@@ -326,9 +313,9 @@ export abstract class TabularProperty extends Property implements ITabularProper
                 });
                 break;
             case PropertyType.Date:
-                ids = [...this._value.keys()].sort((a,b) => {
-                    let rowA = this._value.get(a)![column];
-                    let rowB = this._value.get(b)![column];
+                ids = [...this.value.keys()].sort((a,b) => {
+                    let rowA = this.value.get(a)![column];
+                    let rowB = this.value.get(b)![column];
                     if(
                         rowA instanceof DateTimeProperty && 
                         rowB instanceof DateTimeProperty
@@ -342,9 +329,9 @@ export abstract class TabularProperty extends Property implements ITabularProper
                 });
                 break;
             case PropertyType.Enum:
-                ids = [...this._value.keys()].sort((a,b) => {
-                    let rowA = this._value.get(a)![column];
-                    let rowB = this._value.get(b)![column];
+                ids = [...this.value.keys()].sort((a,b) => {
+                    let rowA = this.value.get(a)![column];
+                    let rowB = this.value.get(b)![column];
                     if(
                         rowA instanceof EnumProperty && 
                         rowB instanceof EnumProperty
@@ -373,16 +360,16 @@ export abstract class TabularProperty extends Property implements ITabularProper
      */
     public applyColumnSnapshot(snapshot: ColumnSnapshot) {
         // Validate snapshot
-        let isValid = this._value.size === snapshot.ids.length;
+        let isValid = this.value.size === snapshot.ids.length;
         for(let id of snapshot.ids) {
-            isValid &&= this._value.has(id);
+            isValid &&= this.value.has(id);
         }
         if(!isValid) {
             throw new Error("Invalid snapshot.")
         }
         // Resolve column
         let id = snapshot.id;
-        let column = this._properties.find(o => o.id === id);
+        let column = this.properties.find(o => o.id === id);
         if(!column) {
             throw new Error(`Column '${ id }' does not exist.`);
         }
@@ -391,26 +378,16 @@ export abstract class TabularProperty extends Property implements ITabularProper
         // Apply row ordering
         let order: [string, AtomicProperty[]][] = [];
         for(let id of snapshot.ids) {
-            order.push([id, this._value.get(id)!]);
+            order.push([id, this.value.get(id)!]);
         }
-        this._value = new Map(order);
+        this.value = new Map(order);
     }
 
     /**
      * Creates a new command.
      */
     newCommand(): void {
-        throw new Error("Method not implemented.");
-    }
-
-    /**
-     * Registers a property action.
-     * @param name
-     *  The action's name.
-     * @param action
-     *  The action.
-     */
-    registerAction(name: string, action: () => void): void {
+        // TODO: Implement command construct
         throw new Error("Method not implemented.");
     }
 
@@ -421,10 +398,10 @@ export abstract class TabularProperty extends Property implements ITabularProper
      */
     public override toString(): string | undefined {
         let primaryColumn = this._templates.findIndex(o => o.is_primary);
-        if(primaryColumn === -1 || this._value.size === 0) {
+        if(primaryColumn === -1 || this.value.size === 0) {
             return undefined;
         }
-        let name = [...this._value.values()]  
+        let name = [...this.value.values()]  
             .map(o => o[primaryColumn].toString())
             .filter(Boolean)
             .join(", ")

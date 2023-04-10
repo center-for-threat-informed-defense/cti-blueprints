@@ -9,12 +9,12 @@ export interface ITabularProperty extends IProperty {
     /**
      * The property's value.
      */
-    get value(): Map<string, IAtomicProperty[]>;
+    readonly value: ReadonlyMap<string, IAtomicProperty[]>;
 
     /**
      * The table's property state.
      */
-    get properties(): TablePropertyState[];
+    readonly properties: ReadonlyArray<TablePropertyState>;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -139,22 +139,7 @@ export interface ITabularProperty extends IProperty {
 
     
     ///////////////////////////////////////////////////////////////////////////
-    //  2. Action / Metrics Registration  /////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * Registers a property action.
-     * @param name
-     *  The action's name.
-     * @param action
-     *  The action.
-     */
-    registerAction(name: string, action: () => void): void;
-
-    
-    ///////////////////////////////////////////////////////////////////////////
-    //  3. Events  ////////////////////////////////////////////////////////////
+    //  2. Events  ////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -187,7 +172,7 @@ export interface ITabularProperty extends IProperty {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    //  4. toString  //////////////////////////////////////////////////////////
+    //  3. toString  //////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -208,7 +193,9 @@ export interface ITabularProperty extends IProperty {
 
 // Event types
 export interface TabularPropertyEvents extends PropertyEvents {
-    "select"   : (property: IAtomicProperty) => void,
-    "deselect" : (property: IAtomicProperty) => void,
-    "update"   : (property: IAtomicProperty, value: any) => void
+    "row-select"   : (id: string, property: IAtomicProperty) => void,
+    "row-deselect" : (id: string, property: IAtomicProperty) => void,
+    "row-insert"   : (id: string, property: IAtomicProperty[]) => void,
+    "row-delete"   : (id: string, property: IAtomicProperty[]) => void,
+    "row-update"   : (id: string, property: IAtomicProperty, newValue: any, oldValue: any) => void
 }

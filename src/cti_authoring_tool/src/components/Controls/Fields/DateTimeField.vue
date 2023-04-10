@@ -386,7 +386,7 @@ export default defineComponent({
       }
       if(this.property.value?.getTime() !== value?.getTime()) {
         // Execute update command
-        this.$emit("command", new Page.SetDateTimeProperty(this.property, value));
+        this.$emit("command", new Page.DateTimePropertySet(this.property, value));
       }
       // Refresh value
       this.refreshValue();

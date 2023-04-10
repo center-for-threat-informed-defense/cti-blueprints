@@ -248,7 +248,7 @@ export default defineComponent({
       if(this.property.value !== value) {
         let v = value || null;
         // Execute update command
-        this.$emit("command", new Page.SetStringProperty(this.property, v));
+        this.$emit("command", new Page.StringPropertySet(this.property, v));
       }
       // Refresh value
       this.refreshValue();

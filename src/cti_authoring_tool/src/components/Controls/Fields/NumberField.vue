@@ -153,7 +153,7 @@ export default defineComponent({
       }
       if(this.property.value !== value) {
         // Execute update command
-        this.$emit("command", new Page.SetNumberProperty(this.property, value));
+        this.$emit("command", new Page.NumberPropertySet(this.property, value));
       }
       // Refresh value
       this.refreshValue();  

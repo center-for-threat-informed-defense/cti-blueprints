@@ -85,28 +85,7 @@ export class EnumProperty extends AtomicProperty implements IAtomicProperty {
      * Creates a new command.
      */
     public newCommand(): void {
-        throw new Error("Method not implemented.");
-    }
-
-    /**
-     * Registers a property action.
-     * @param name
-     *  The action's name.
-     * @param action
-     *  The action.
-     */
-    public registerAction(name: string, action: () => void): void {
-        throw new Error("Method not implemented.");
-    }
-
-    /**
-     * Registers a property metric.
-     * @param name
-     *  The metric's name.
-     * @param metric
-     *  The metric.
-     */
-    public registerMetric(name: string, metric: () => any): void {
+        // TODO: Implement command construct
         throw new Error("Method not implemented.");
     }
     
@@ -133,8 +112,9 @@ export class EnumProperty extends AtomicProperty implements IAtomicProperty {
      *  The property's old value.
      */
     public onUpdate(newValue: any, oldValue: any) {
+        // TODO: Link update event
         this.emit("update", newValue, oldValue);
-        this._section.onUpdate(this, newValue, oldValue);
+        this._section.onPropertyUpdate(this, newValue, oldValue);
     }
 
 }

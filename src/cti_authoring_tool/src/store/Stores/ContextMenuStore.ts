@@ -52,7 +52,7 @@ export default {
             
             // Create file types
             let nfo: ContextMenuItem[] = Configuration.templates.map(t => ({
-                text: `New ${ t.name } File`,
+                text: t.name,
                 type: MenuType.Item,
                 data: () => App.LoadFile.fromNew(ctx, t)
             }));

@@ -1,19 +1,19 @@
-import { Country } from "./Country";
-import { Industry } from "./Industry";
+import { Sector } from "./Sector";
 import { Activity } from "./Activity";
-import { Timestamp } from "./Timestamp";
-import { Techniques } from "./Techniques";
 import { Attribution } from "./Attribution";
 import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { LocationRegion } from "./LocationRegion";
+import { TimelineEndDate } from "./TimelineEndDate";
+import { TimelineStartDate } from "./TimelineStartDate";
 
 export const Timeline = {
     id: "timeline",
     name: "Timeline of Activity",
     type: PropertyType.ComplexTable,
     layout: {
-        summary: "{{ attribution }}: {{ technique }}\n**{{ country }}: {{ industry }}**",
-        rows: 5,
-        cols: 2
+        summary: "{{ attribution }}\n**{{ location }} :: {{ sector }}**",
+        rows: 4,
+        cols: 3
     },
     properties: [
         {
@@ -22,29 +22,29 @@ export const Timeline = {
             col: 1
         },
         {
-            ...Timestamp,
+            ...TimelineStartDate,
             row: 1,
             col: 2
         },
         {
-            ...Country,
+            ...TimelineEndDate,
+            row: 1,
+            col: 3
+        },
+        {
+            ...LocationRegion,
             row: 2,
-            col: [1, 2]
+            col: [1, 3]
         },
         {
-            ...Industry,
+            ...Sector,
             row: 3,
-            col: [1, 2]
-        },
-        {
-            ...Techniques,
-            row: 4,
-            col: [1, 2]
+            col: [1, 3]
         },
         {
             ...Activity,
-            row: 5,
-            col: [1, 2]
+            row: 4,
+            col: [1, 3]
         },
     ]
 }

@@ -82,7 +82,7 @@ export default defineComponent({
      * Row create behavior.
      */
     onCreate() {
-      let cmd = new Page.CreateRowTabularProperty(this.property);
+      let cmd = new Page.TabularPropertyCreateRow(this.property);
       this.$emit("command", cmd);
     },
 
@@ -92,7 +92,7 @@ export default defineComponent({
      *  The row's id.
      */
     onDelete(id: string) {
-      let cmd = new Page.DeleteRowTabularProperty(this.property, id);
+      let cmd = new Page.TabularPropertyDeleteRow(this.property, id);
       this.$emit("command", cmd);
     },
 
@@ -200,7 +200,7 @@ export default defineComponent({
         return;
       }
       // If movement
-      let cmd = new Page.MoveRowTabularProperty(this.property, id, dst);
+      let cmd = new Page.TabularPropertyMoveRow(this.property, id, dst);
       this.$emit("command", cmd);
     }
 

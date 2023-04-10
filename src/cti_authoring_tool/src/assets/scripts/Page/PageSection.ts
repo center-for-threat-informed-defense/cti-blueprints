@@ -39,6 +39,11 @@ export class PageSection extends EventEmitter implements IPageSection {
     public readonly properties: Map<string, Property>;
 
     /**
+     * True if the section's name should be displayed, false otherwise.
+     */
+    public readonly isNameDisplayed: boolean;
+
+    /**
      * The section's primary status.
      */
     public readonly isPrimary: boolean;
@@ -71,6 +76,7 @@ export class PageSection extends EventEmitter implements IPageSection {
             cols: template.layout.cols
         }
         this.properties = new Map();
+        this.isNameDisplayed = template.is_name_displayed ?? true;
         this.isPrimary = template.is_primary ?? false;
         this._page = page;
         this._plugins = [];
@@ -166,8 +172,8 @@ export class PageSection extends EventEmitter implements IPageSection {
      * @param property
      *  The property that was selected.
      */
-    public onSelect(property: Property) {
-        super.emit("select", property);
+    public onPropertySelect(property: Property) {
+        super.emit("property-select", property);
     }
 
     /**
@@ -175,8 +181,8 @@ export class PageSection extends EventEmitter implements IPageSection {
      * @param property
      *  The property that was deselected.
      */
-    public onDeselect(property: Property) {
-        super.emit("deselect", property);
+    public onPropertyDeselect(property: Property) {
+        super.emit("property-deselect", property);
     }
 
     /**
@@ -188,8 +194,8 @@ export class PageSection extends EventEmitter implements IPageSection {
      * @param oldValue
      *  The property's old value.
      */
-    public onUpdate(property: Property, newValue: any, oldValue: any) {
-        super.emit("update", property, newValue, oldValue);
+    public onPropertyUpdate(property: Property, newValue: any, oldValue: any) {
+        super.emit("property-update", property, newValue, oldValue);
     }
 
 

@@ -1,7 +1,7 @@
 import { Signatures } from "../properties/Signatures";
 
 export const SignaturesSection = {
-    name: "Tabes",
+    name: "Signatures",
     layout: {
         rows: 1,
         cols: 1

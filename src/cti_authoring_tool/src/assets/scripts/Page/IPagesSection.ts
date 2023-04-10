@@ -35,6 +35,11 @@ export interface IPageSection {
     readonly properties: Map<string, IProperty>;
 
     /**
+     * True if the section's name should be displayed, false otherwise.
+     */
+    readonly isNameDisplayed: boolean;
+
+    /**
      * The section's primary status.
      */
     readonly isPrimary: boolean;
@@ -85,9 +90,9 @@ export interface IPageSection {
 
 // Event types
 export interface PropertyEvents {
-    "mount"    : (el: HTMLElement) => void,
-    "destroy"  : () => void,
-    "select"   : (property: IProperty) => void,
-    "deselect" : (property: IProperty) => void,
-    "update"   : (property: IProperty) => void
+    "mount"             : (el: HTMLElement) => void,
+    "destroy"           : () => void,
+    "property-select"   : (property: IProperty) => void,
+    "property-deselect" : (property: IProperty) => void,
+    "property-update"   : (property: IProperty, newValue: any, oldValue: any) => void
 }

@@ -15,6 +15,11 @@ export abstract class AtomicProperty extends Property implements IAtomicProperty
      */
     public readonly alignment: Alignment;
 
+    /**
+     * The property's metrics.
+     */
+    protected _metrics: any[];
+
 
     /**
      * Creates a new {@link AtomicProperty}.
@@ -25,14 +30,32 @@ export abstract class AtomicProperty extends Property implements IAtomicProperty
      */
     constructor(section: PageSection, template: AtomicPropertyTemplate) {
         super(section, template);
-        this._plugins = []
         this.required = template.required ?? true;
         this.alignment = template.alignment ?? Alignment.TopLeft;
+        this._metrics = [];
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ///  1. Event Methods  ////////////////////////////////////////////////////
+    ///  1. IAtomicProperty Methods  //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Registers a property metric.
+     * @param name
+     *  The metric's name.
+     * @param metric
+     *  The metric.
+     */
+    public registerMetric(name: string, metric: () => any): void {
+        // TODO: Implement metric registration
+        throw new Error("Method not implemented.");
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. Event Methods  ////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -41,7 +64,7 @@ export abstract class AtomicProperty extends Property implements IAtomicProperty
      */
     public onSelect() {
         super.emit("select");
-        this._section.onSelect(this);
+        this._section.onPropertySelect(this);
     }
 
     /**
@@ -49,7 +72,7 @@ export abstract class AtomicProperty extends Property implements IAtomicProperty
      */
     public onDeselect() {
         super.emit("deselect");
-        this._section.onDeselect(this);
+        this._section.onPropertyDeselect(this);
     }
 
 }

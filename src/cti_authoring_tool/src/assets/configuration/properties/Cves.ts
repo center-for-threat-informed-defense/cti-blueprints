@@ -1,11 +1,11 @@
-import { CvePatch } from "./CvePatch";
 import { CveNumber } from "./CveNumber";
 import { Attribution } from "./Attribution";
 import { CveCvssScore } from "./CveCvssScore";
 import { DateOfReport } from "./DateOfReport";
 import { PropertyType } from "@/assets/scripts/AppConfiguration";
-import { CvePatchStatus } from "./CvePatchStatus";
 import { CveRemediation } from "./CveRemediation";
+import { CvePatchApplied } from "./CvePatchApplied";
+import { CvePatchAvailable } from "./CvePatchAvailable";
 
 export const Cves = {
     id: "cves",
@@ -28,7 +28,7 @@ export const Cves = {
             col: 2
         },
         {
-            ...CvePatch,
+            ...CvePatchAvailable,
             row: 2,
             col: 1
         },
@@ -38,7 +38,7 @@ export const Cves = {
             col: 2
         },
         {
-            ...CvePatchStatus,
+            ...CvePatchApplied,
             row: 3,
             col: 1
         },

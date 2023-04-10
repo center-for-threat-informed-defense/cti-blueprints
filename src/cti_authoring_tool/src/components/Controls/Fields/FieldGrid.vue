@@ -1,9 +1,10 @@
 <template>
   <div class="field-grid-control" :style="grid">
     <template v-for="prop in properties" :key="prop.id">
-      <p class="field-name" :style="propTitleGridStyle(prop)">
-        {{ prop.name }}
-      </p>
+      <div class="field-info" :style="propTitleGridStyle(prop)">
+        <p class="field-name">{{ prop.name }}</p>
+        <a class="field-help" :href="prop.help" v-if="prop.help" target=”_blank”></a>
+      </div>
       <component
         class="field-value"
         :style="propFieldGridStyle(prop)"
@@ -53,7 +54,7 @@ export default defineComponent({
      */
     grid() {
       return {
-        gridTemplateRows: new Array(this.rows).fill("22px auto").join(" 15px "),
+        gridTemplateRows: new Array(this.rows).fill("22px auto").join(" 18px "),
         gridTemplateColumns: `repeat(${ this.cols }, minmax(0, 1fr))`,
       }
     }
@@ -149,11 +150,21 @@ export default defineComponent({
   column-gap: 15px;
 }
 
-.field-name {
+.field-info {
+  display: flex;
+  align-items: center;
   color: #616161;
   font-size: 10.5pt;
   font-weight: 600;
   margin-bottom: 5px;
+}
+
+.field-name {
+  flex: 1;
+}
+
+.field-help {
+  font-size: 8pt;
 }
 
 .field-value {

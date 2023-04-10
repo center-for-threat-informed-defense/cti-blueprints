@@ -123,7 +123,7 @@ export class ComplexTableProperty extends TabularProperty implements IComplexTab
     public override deleteRow(_: string | number): boolean {
         // Update collapsed state
         if(typeof _ === "number") {
-            _ = [...this._value.keys()][_];
+            _ = [...this.value.keys()][_];
         }
         if(_ !== undefined) {
             this.collapsed.delete(_);

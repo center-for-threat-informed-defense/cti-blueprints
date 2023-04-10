@@ -1,11 +1,16 @@
 <template>
-  <FieldGrid 
-    class="page-editor-section-control"
-    :rows="section.layout.rows"
-    :cols="section.layout.cols"
-    :properties="properties"
-    @command="c => $emit('command', c)"
-  />
+  <div class="page-editor-section-control">
+    <div class="section-name" v-if="section.isNameDisplayed">
+      {{ section.name }}
+    </div>
+    <FieldGrid 
+      class="fields"
+      :rows="section.layout.rows"
+      :cols="section.layout.cols"
+      :properties="properties"
+      @command="c => $emit('command', c)"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -54,11 +59,23 @@ export default defineComponent({
 
 /** === Main Control === */
 
-.page-editor-section-control {
-  padding: 30px;
+.section-name {
+  display: inline-block;
+  color: #1f85cf;
+  font-size: 13pt;
+  font-weight: 400;
+  padding: 8px 15px;
+  border: solid 1px #dddddd;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  background: rgb(255 255 255);
+}
+
+.fields {
   border: solid 1px #d9d9d9;
   border-radius: 3px;
   background: #fff;
+  padding: 30px;
 }
 
 </style>

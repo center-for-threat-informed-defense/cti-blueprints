@@ -148,13 +148,14 @@ export interface Plugin<T> {
  * Property Template
  */
 export interface PropertyTemplate {
-    id?: string
+    id?: string;
+    help?: string;
     name: string;
     type: PropertyType;
     row: number | [number, number];
     col: number | [number, number];
     is_primary?: boolean;
-    plugins?: Plugin<any>[],
+    plugins?: Plugin<any>[];
 }
 
 /**
@@ -284,6 +285,7 @@ export interface PageSectionTemplate {
         cols: number;
     }
     properties: PagePropertyTemplate[];
+    is_name_displayed?: boolean;
     is_primary?: boolean;
     plugins?: Plugin<IPageSection>[]
 }

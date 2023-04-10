@@ -1,34 +1,35 @@
-
-import { Body } from "../sections/Body";
-import { General } from "../sections/General";
-import { Metadata } from "../sections/Metadata";
-import { CveSection } from "../sections/CveSection";
-import { DataSources } from "../sections/DataSources";
-import { ThreatActors } from "../sections/ThreatActorSummary";
-import { AutomationTable } from "../sections/AutomationTable";
-import { TimelineSection } from "../sections/TimelineTable";
-import { IocMalwareSection } from "../sections/IocMalwareSection";
+import { IocsSection } from "../sections/IocsSection";
+import { VictimsSection } from "../sections/VictimsSection";
+import { GeneralSection } from "../sections/GeneralSection";
+import { TimelineSection } from "../sections/TimelineSection";
+import { KeyPointsSection } from "../sections/KeyPointsSection";
 import { SignaturesSection } from "../sections/SignaturesSection";
-import { IocNetworkSection } from "../sections/IocNetworkSection";
-import { MITREAttackSection } from "../sections/MitreAttackSection";
-import { SystemArtifactSection } from "../sections/SystemArtifactsSection";
+import { AssessmentSection } from "../sections/AssessmentSection";
+import { DataSourcesSection } from "../sections/DataSourcesSection";
+import { MitreAttackTableSection } from "../sections/MitreAttackTableSection";
+import { ExecutiveSummarySection } from "../sections/ExecutiveSummarySection";
+import { ThreatActorSummarySection } from "../sections/ThreatActorSummarySection";
+import { ThreatActorMetadataSection } from "../sections/ThreatActorMetadataSection";
+import { KeyIntelligenceGapsSection } from "../sections/KeyIntelligenceGapsSection";
+import { IntelligenceRequirementsSection } from "../sections/IntelligenceRequirementsSection";
 
 export const ThreatActorProfile: any = {
     id: "threat_actor_profile",
     name: "Threat Actor Profile",
     sections: [
-        General,
-        Body,
-        ThreatActors,
-        AutomationTable,
-        MITREAttackSection,
+        GeneralSection,
+        ExecutiveSummarySection,
+        KeyPointsSection,
+        AssessmentSection,
+        ThreatActorSummarySection,
         TimelineSection,
-        CveSection,
-        IocMalwareSection,
-        IocNetworkSection,
-        SystemArtifactSection,
+        KeyIntelligenceGapsSection,
+        MitreAttackTableSection,
+        VictimsSection,
+        IocsSection,
         SignaturesSection,
-        Metadata,
-        DataSources,
+        IntelligenceRequirementsSection,
+        DataSourcesSection,
+        ThreatActorMetadataSection,
     ]
 }

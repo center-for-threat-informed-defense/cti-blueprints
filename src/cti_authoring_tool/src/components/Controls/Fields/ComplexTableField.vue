@@ -84,7 +84,7 @@ export default defineComponent({
           break;
       }
       // Sort
-      let cmd = new Page.ReorderTabularProperty(this.property, prop.id, s);
+      let cmd = new Page.TabularPropertyReorder(this.property, prop.id, s);
       this.$emit("command", cmd);
     },
 
@@ -97,7 +97,7 @@ export default defineComponent({
       // Determine collapse state
       let c = !this.property.collapsed.get(id);
       // Collapse
-      let cmd = new Page.SetRowCollapseComplexTableProperty(this.property, id, c);
+      let cmd = new Page.ComplexTablePropertySetRowCollapse(this.property, id, c);
       this.$emit("command", cmd);
     }
 
@@ -194,7 +194,7 @@ span.bold {
 }
 
 .collapsed span.normal {
-  color: #404040;
+  color: #1c7abe;
 }
 
 .collapsed span.bold {

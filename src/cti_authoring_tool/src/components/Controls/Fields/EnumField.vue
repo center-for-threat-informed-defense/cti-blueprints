@@ -118,7 +118,6 @@ export default defineComponent({
         options.push({ id: null, text: "Null" });
       }
       let st = this.searchTerm.toLocaleLowerCase();
-      console.log("update");
       for(let [id, { text }] of this.property.options) {
         if(st === "" || text.toLocaleLowerCase().includes(st)) {
           options.push({ id, text });
@@ -244,7 +243,7 @@ export default defineComponent({
     updateProperty(value: string | null) {
       if(this.property.value !== value) {
         // Execute update command
-        this.$emit("command", new Page.SetEnumProperty(this.property, value));
+        this.$emit("command", new Page.EnumPropertySet(this.property, value));
       }
     },
 
