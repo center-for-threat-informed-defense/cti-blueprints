@@ -296,15 +296,15 @@ export default defineComponent({
 
 /** === Scroll Box === */
 
-.options-list-field-control:not(.flip) >>> .scroll-content {
+.options-list-field-control:not(.flip):deep(.scroll-content) {
   border-top: solid 1px #d9d9d9;  
 }
 
-.options-list-field-control.flip >>> .scroll-content {
+.options-list-field-control.flip:deep(.scroll-content) {
   border-bottom: solid 1px #d9d9d9;  
 }
 
-.options-list-field-control >>> .scroll-bar {
+.options-list-field-control:deep(.scroll-bar) {
   border-left: solid 1px #d9d9d9;  
 }
 
