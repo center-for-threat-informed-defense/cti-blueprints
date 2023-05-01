@@ -3,69 +3,42 @@ TODO: Replace with project-specific CodeCov badge
 
 # CTI Blueprints
 
-Short description of CTI Blueprints...
+CTI Blueprints is a free suite of templates and tools that helps Cyber Threat Intelligence (CTI) analysts create high-quality, actionable reports more consistently and efficiently. CTI analysts face many challenges in creating consistent, actionable reports, including time and resource constraints, lack of analytic training and guidance, and lack of feedback from customers on what works. This project provides a set of solutions that increase the operational relevance of reports through a standardized set of templates that help analysts answer specific analytic questions for common cyber security use cases, sample reports that demonstrate best practices for each type of report, and a set of tools for publishing both human and machine-readable reports. This project is created and maintained by the MITRE Engenuity Center for Threat-Informed Defense in futherance of our mission to advance the start of the art and the state of the practice in threat-informed defense globally. The project is funded by our research participants. 
 
 - [Questions and Feedback](#questions-and-feedback)
 - [Guidance](#guidance)
   - [Getting Started](#getting-started)
-  - [Proposing Changes](#proposing-changes)
-  - [Updating Dependencies](#updating-dependencies)
 - [How Do I Contribute?](#how-do-i-contribute)
 - [Notice](#notice)
 
-## Questions and Feedback
-Please submit issues for any technical questions/concerns or contact ctid@mitre-engenuity.org directly for more general inquiries.
-
-Also see the guidance for contributors if are you interested in contributing or simply reporting issues.
 
 ## Guidance
 
 ### Getting Started
 
-The project currently uses Python 3.8, which must be installed prior to project setup.
-
-The following commands may be useful in getting the project setup locally. All commands should be run from the project root directory.
-
-* Build Python virtualenv
-  * `make venv`
-* Install all development dependencies
-  * `make install-dev`
-* Activate newly created virtualenv
-  * `source .venv/bin/activate`
-* Update dependency resolution (after updating appropriate `*.in` file, see _Updating Dependencies_ section below)
-  * Runtime dependency update
-    * `make requirements.txt`
-  * Development dependency update
-    * `make requirements/dev.txt`
-* Setup pre-commit (required one-time process per local `git clone` repository)
-  * `pre-commit install`
-* Manually run pre-commit hooks without performing a commit
-  * `make pre-commit-run`
-* Build container image
-  * `make build-container`
-* Run linting locally
-  * `make lint`
-* Run unit tests
-  * `make test`
+To get started, we suggest visiting our Github Wiki page and reviewing our Slip Sheet to familiarize yourself with the project. Then, you may want to review the templates and sample reports. From there,  try creating and publishing your own report using the CTI Blueprints Suite of tools, which consist of an easy to use web interface for authoring and a command line tool for publishing. 
 
 
+| Resource                                                                                   | Description                                                              |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| [Documentation](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki) | Complete documentation for the CTI blueprintsproject. |
+| [Slip Sheet]                                                                              | Concise explanation of CTI Blueprints
+| [Templates]                                                                                | CTI report templates with included guidance
+| [Sample Reports]                                                                           | Examples of how to fill out the templates 
+|[CTI Blueprints Authoring Tool]                                                             | Web interface for generating reports
+| [CTI Blueprints Publishing Tool]                                                           | CLI for publishing reports
 
-
-### Proposing Changes
-
-* Please open a [Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) (PR) against the `main` branch for any desired changes. The PR will be reviewed by the project team.
-* Note that all PR checks must pass to be eligible for merge approval.
-
-### Updating Dependencies
-
-1. Add new dependency in either `requirements/requirements.in`, _or_ `requirements/dev.in`, depending on if the new dependency is a runtime or development time dependency, respectively.
-2. Run `make requirements.txt` or `make requirements/dev.txt`, depending on the file updated in the previous step.
-3. Add all modified files to the changeset (e.g. `requirements.txt`, `requirements/dev.txt`, `requirements/requirements.in`, `requirements/dev.in`).
-4. Push the changes.
 
 ## How Do I Contribute?
-We welcome your feedback and contributions to help advance CTI Blueprints. Please see the guidance for
-contributors if are you interested in [contributing or simply reporting issues.](/CONTRIBUTING.md)
+We welcome your feedback and contributions to help advance CTI Blueprints. 
+
+• Provide feedback on the templates and tool on Github, find us on LinkedIn, or reach out to our team directly at ctid@mitre-engenuity.org.   
+
+• Help us develop additional plug-ins for the community or provide additional plugin suggestions. A running list of suggested plug-ins can be found on our Github Wiki Developer page. 
+
+• Spread the word! Our goal is to increase adoption of CTI Blueprints in the community, and we encourage analysts to integrate it into their production workflow. CTI Blueprints is open-source, so go ahead and share it in your professional network!
+
+Please see the guidance forcontributors if are you interested in [contributing or simply reporting issues.](/CONTRIBUTING.md)
 
 Please submit [issues](https://github.com/center-for-threat-informed-defense/cti_blueprints/issues) for any
 technical questions/concerns or contact ctid@mitre-engenuity.org directly for more general inquiries.
