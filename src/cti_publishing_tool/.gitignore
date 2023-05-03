@@ -1,0 +1,11 @@
+output
+
+# local env files
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode
+
+# Backups
+templates/Backups/
