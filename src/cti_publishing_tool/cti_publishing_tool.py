@@ -295,7 +295,7 @@ def modular_template(exclude_sections):
     """
     Create a template dynamically by adding sections as needed, without the criteria from `exclude_sections`.
     """
-    # TODO: Incorporate into `template()`
+    # TODO: Incorporate into `process_template()`
     dummy = ['data_sources', 'metadata']
     sec_dict = dict()
     for key in exclude_sections:
@@ -304,8 +304,7 @@ def modular_template(exclude_sections):
     
 
 
-def template(data_input_filepath, report_type, excludeParams=None):
-    # TODO: Rename function
+def process_template(data_input_filepath, report_type, excludeParams=None):
     """
     Load the template from memory
     As the `report_type`
@@ -315,7 +314,6 @@ def template(data_input_filepath, report_type, excludeParams=None):
     """
     data = load_data(data_input_filepath)
     report_type = report_type.lower()
-    # print("3: Template")
     _env = Environment(
         loader=FileSystemLoader('templates/')
     )
@@ -347,9 +345,8 @@ def template(data_input_filepath, report_type, excludeParams=None):
     # TODO: Incorporate `excludeParams` usage.
 
 
-def doc_convert(filepath_to_html, doc_type='docx'):
+def export_report(filepath_to_html, doc_type='docx'):
     # TODO: Rename function
-    # print("4: Convert " + doc_type)
     filename = os.path.splitext(filepath_to_html)[0]
     if doc_type == 'docx':
         new_parser = HtmlToDocx()
@@ -361,11 +358,9 @@ def doc_convert(filepath_to_html, doc_type='docx'):
         new_parser.table_style = 'Light List Accent 1'
         new_parser.parse_html_file(filepath_to_html, filename)
         # Remove all the above when we find a better transformer
-        print(filename)
-        print(Path(filename).absolute())
-        print(Path(filename+'.docx').absolute())
-        input_f = r"C:\Users\tiffanylee\Downloads\CTID\cti-blueprints\src\liquid\output\An Example Campaign Report.docx"
-        output_f = r"C:\Users\tiffanylee\Downloads\CTID\cti-blueprints\src\liquid\output\An Example Campaign Report.pdf"
+        
+        input_f = Path(filename+'.docx')
+        output_f = Path(filename+'.pdf')
         convert(input_f, output_f)
     print("Done")
 
@@ -379,7 +374,6 @@ def load_data(data_input_filepath):
         return data_json
 
 if __name__ == "__main__":
-    # print("1: Start")
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--report_type', nargs=1,
                         help='The report type to generate. \n1: Campaign\n2: Executive\n3. Intrusion Analysis\n4: Threat Actor',
@@ -392,7 +386,6 @@ if __name__ == "__main__":
         # Perhaps best to have it come from the HTML_dict?
     parser.add_argument('-f', '--data_input_filepath', help="An absolute path to the JSON data input", type=Path)
     args = parser.parse_args()  # Load arguments from console into a Namespace object
-    # TODO: Check and raise exceptions for given arguments through command line?
 
     if len(sys.argv)-1 < 3 :  # Not enough parameters given. Initiate CLI
         # TODO: Change this conditional to be a check for data_input_field and report_type check only.
@@ -401,9 +394,9 @@ if __name__ == "__main__":
     # print(args)
     args.data_input_filepath = Path(args.data_input_filepath)
 
-    template(args.data_input_filepath, args.report_type, args.exclude_section) 
+    process_template(args.data_input_filepath, args.report_type, args.exclude_section) 
     filename = os.path.splitext(os.path.split(args.data_input_filepath)[-1])[0]+'.html'
-    doc_convert("output/" + filename, args.document_type)
+    export_report("output/" + filename, args.document_type)
 
 
 def todo():
