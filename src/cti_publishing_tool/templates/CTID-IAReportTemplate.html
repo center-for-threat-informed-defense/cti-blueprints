@@ -1,1 +1,300 @@
-<p><strong><em>Intrusion Analysis </em></strong><em>template use cases:</em></p><ul><li><strong><em>Author: </em></strong><em>CTI Team </em></li><li><strong><em>Audience: </em></strong><em>SOC, IR, Hunt </em></li><li><strong><em>Key Decisions:</em></strong><em> Look for additional adversary behavior beyond the initial alert; Stop the adversary from reaching their goals and contain the threats.  </em></li><li><strong><em>Decision-Enabling Data Points</em></strong><em>: intelligence assessment of potential intrusion scenarios; Set of techniques used in past adversary behavior.</em></li></ul><p><em>_________________________________________________________________________________________</em></p><p><em> </em></p><p><em> </em></p><p><em>The </em><strong><em>mandatory</em></strong><em> fields in this template are denoted with an asterisk (*), e.g., Report Date, Report Title, Executive Summary, and Key Points. However, most fields are </em><strong><em>optional</em></strong><em> and can be removed/adjusted for external sharing. </em></p><p><strong><em>Criticality</em></strong><em>: This field communicates the urgency of the report and helps prioritize for recipients. Criticality’s selections are: FYSA, Low, Medium, High, Critical. </em></p><p><strong>&lt;Report Date*&gt;								    &lt; Criticality*&gt;</strong></p><p><strong>Report Title*</strong></p><h1><strong>Executive Summary*</strong></h1><h1>This is a brief narrative explaining the significance of the report. This should focus on the decision the CTI summary is supporting and the change in circumstances that makes this timely and actionable.  </h1><h1>This should focus on: </h1><h1>BLUF (Bottom Line Up Front) as the single largest takeaway from the CTI analysis </h1><h1>What is the new information? </h1><h1>Why it is important for the audience to understand this now? </h1><h1>This section should not summarize the underlying reports used to create the analysis.  </h1><h1>This should be able to convey the most important analysis to the reader, so that they can skip the rest of the report and still be able to take an informed action. </h1><h1>The Executive Summary should not be longer than 2 -3 paragraphs, according to best practices. For this report, we recommend trying to keep it to a paragraph</h1><h1><strong>Key Points*</strong></h1><p>These bullets should summarize:  </p><ul><li>What data anchors the analysis? </li><li>Where the data falls in the intrusion chain  </li><li>Threat actors associated with the data and  </li><li>Malicious activity generally observed before and after the known activity. </li></ul><h1><strong>Indicator Analysis</strong></h1><h1>This section should provide:  </h1><h1>An assessment of what other TTPs are likely to be in a network based on the initial information provided by the SOC or IR team.  </h1><h1>Include corresponding detections in the Signature section below, if applicable (i.e., YARA signatures, etc.) </h1><h1>Once possible, provide attribution to a threat actor with a level of confidence.  </h1><h1>An Attack Flow for that threat actor should then be included *IF CURRENTLY AVAILABLE* </h1><h1>If not available, a description of end goal TTPs is most important to aid in initial containment steps.  </h1><h1>Only take the time to create a full Attack Flow once the IR has moved into eradication and remediation.  </h1><h1>If multiple threat actors could be responsible based on observed data, provide the above for each threat actor ordered by confidence in attribution and secondarily by potential harm caused. This should provide key hunt recommendations for the different threat actors that may be responsible to help the IR team find additional malicious activity and increase the intelligence assessment of attribution. </h1><h1><strong>MITRE ATT&amp;CK Table (based on v12): TTPs Likely to Be in the Network</strong></h1><p>This table should show the MITRE tactics and techniques/Sub-techniques not yet observed but likely to be in the network. The procedure column details a particular instance of how a technique/sub-technique has been used. The D3FEND column includes the corresponding MITRE D3FEND countermeasure technique, if available.  If using the tool, the tactics and techniques can be automatically generated from an Attack Flow document using the plug-in. </p><table><tr><td><p><strong>Attribution</strong></p></td><td><p><strong>Tactics</strong></p></td><td><p><strong>Techniques</strong></p></td><td><p><strong>Sub Technique</strong></p></td><td><p><strong>Procedure</strong></p></td><td><p><strong>D3FEND</strong></p></td><td><p><strong>Deployed Control</strong></p></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><h1><strong>MITRE ATT&amp;CK Table (based on v12): TTPs Observed in the Intrusion</strong></h1><p>This table should show the MITRE tactics, techniques/sub-techniques, and procedures observed during the intrusion based on data provided by the SOC or IR team. Analysts can include the corresponding MITRE DEFEND countermeasure technique, if available.  If using the tool, the tactics and techniques can be automatically generated from an Attack Flow document using the plug-in. </p><table><tr><td><p><strong>Tactics</strong></p></td><td><p><strong>Techniques</strong></p></td><td><p><strong>Sub Technique</strong></p></td><td><p><strong>Procedure</strong></p></td><td><p><strong>D3FEND</strong></p></td></tr><tr><td><p>Sample text goes here</p></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr></table><h1><strong>Indicators of Compromise for Hunting</strong></h1><p>This section consists of three IOC tables [Malware, Network, and System Artifacts] associated with the Campaign.</p><h1>Malware</h1><p>This table should detail the malware and tools associated with the campaign. The “Associated Files Hash” column can include any files related to the tool or malware, e.g., downloader for a memory dropper. The “Brief Malware Description” column should provide a short description for context, as well as where the activity falls in the intrusion chain. The first and last reported fields are intended to memorialize the longevity of a particular piece of malware, providing additional insight into trends in malicious behavior.</p><table><tr><td><p>Attribution</p></td><td><p>Malicious Tool Name</p></td><td><p>Hash Type</p></td><td><p>File Hash</p></td><td><p>Associated Files Hash</p></td><td><p>Brief Description</p></td><td><p>Malware Analysis Report (Hyperlink, or N/A)</p></td><td><p>First Reported</p></td><td><p>Last Reported</p></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><h1>Network</h1><p>This table should detail the network indicators associated with the campaign, e.g., domains and IP addresses. The “Intrusion Phase” column includes Initial Access, Command and Control, and Exfiltration. The first and last reported fields are intended to memorialize the longevity of a particular network artifact, providing additional insight into trends in malicious behavior.</p><table><tr><td><p>Attribution</p></td><td><p>Network Artifact</p></td><td><p>Intrusion Phase</p></td><td><p>First Reported</p></td><td><p>Last Reported</p></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr></table><h1>System Artifacts</h1><p>This table should detail any unique artifacts associated with the campaign that could be observed on a host, e.g., processes, DLLs, registry keys. The first and last reported fields are intended to memorialize the longevity of a particular system artifact, providing additional insight into trends in malicious behavior.</p><table><tr><td><p>Attribution</p></td><td><p>Host Artifact</p></td><td><p>Type</p></td><td><p>Details</p></td><td><p>Tactic</p></td><td><p>First Reported</p></td><td><p>Last Reported</p></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><h1>Common Vulnerabilities and Exposures (CVEs)</h1><p>CVEs associated with the campaign. The date reported field is designed to capture the date when the CVE became public knowledge. To adequately fill out this table, it may require information from other internal teams. </p><table><tr><td><p>Attribution</p></td><td><p>CVE Number</p></td><td><p>CVSS Score</p></td><td><p>Patch Available (Y/N)</p></td><td><p>Other Remediation</p></td><td><p>Date Reported</p></td><td><p>Patch Applied  (Y/N/UNK/NA)</p></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><h1><strong>Signatures</strong></h1><p>This section should include detections (e.g., Yara signature) that correspond to the malware or malicious activity associated with the campaign.</p><ol><li>Malware or malicious activity name <ol><li>Detection </li></ol></li><li>Malware or malicious activity name <ol><li>Detection</li></ol></li></ol><h1><strong>Attached Attack Flow and/or Navigator Heat Maps, if applicable</strong></h1><h1><strong>Probability Matrix</strong></h1><p>We recommend that analysts properly express and explain uncertainties associated with major analytic judgments.</p><table><tr><td><p>Almost no chance</p></td><td><p>Very unlikely</p></td><td><p>Unlikely</p></td><td><p>Roughly Even Chance</p></td><td><p>Likely</p></td><td><p>Very likely</p></td><td><p>Almost certain(ly)</p></td></tr><tr><td><p>01–05%</p></td><td><p>05–20%</p></td><td><p>20–45%</p></td><td><p>45–55%</p></td><td><p>55–80%</p></td><td><p>80–95%</p></td><td><p>95–99%</p></td></tr></table><h1><strong>Intelligence Requirements</strong></h1><p>Brief citation of CTI requirements(s) addressed by this report.</p><h1><strong>Feedback</strong></h1><p>Provide a point of contact (e.g., an email address) for customer feedback on the published CTI report, such as whether the report addressed the customers’ Intelligence Requirements, how the report could be more actionable, additional Intelligence Requirement questions to answer, etc. </p><table><tr><td><h2>Data Sources:            </h2></td><td><ul><li>Cite external CTI Report with hyperlink if available.</li><li>Cite Internal Telemetry sources provided by the SOC as needed. This field is not designed to preserve Intrusion Analysis data and should only include data necessary to justify the analytic assessments.  </li></ul></td></tr></table><p>The metadata table below is for automation purposes and provides discrete fields for tool extraction. If you are not using the tool, we recommend removing the table.  </p><table><tr><td><h2>Threat Actor:</h2></td><td><ul><li>Primary Threat Actor Name(s) or Unknown </li><li>Associated Group Names/Aliases or N/A</li></ul></td></tr><tr><td><h2>Actor Motivation:</h2></td><td><ul><li>Cyber Espionage, Data Theft, Cyber Crime, Ransomware, Destructive Attack, Hacktivism, Other, Unknown</li></ul></td></tr></table>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CTID - Campaign Report</title>
+        <style>
+            body {
+                white-space: pre-wrap;
+            }
+            th {
+                background: black;
+                color: white;
+                padding: 5px;
+            }
+            table, th, td {
+                border: solid 1px black;
+                border-collapse: collapse;
+            }
+            .report-header {
+                text-align:left;
+            }
+            .report-header span {
+                float:right;
+            }
+            .page-break {
+                page-break-before: always;
+                text-align:left;
+            }
+            .hash {
+                word-wrap: break-word;
+                word-break: break-all;
+            }
+        </style>
+    </head>
+    <body>
+        <p class="report-header">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Report Date</th>
+                        <th>Sensitivity</th>
+                        <th>Traffic Light Protocol</th>
+                        <th>Criticality</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ report_date }}</td>
+                        <td>{{ sensitivity }}</td>
+                        <td>{{ traffic_light_protocol }}</td>
+                        <td>{{ criticality }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </p>
+        <hr/>
+        <h1>{{ report_title }}</h1>
+        <h2>Executive Summary</h2>
+        <p>{{ executive_summary }}</p>
+        <h2>Key Points</h2>
+        <p>{{ key_points }}</p>
+        <h2>Indicator Analysis</h2>
+        <p>{{ indicator_analysis }}</p>
+        <h2>MITRE ATT&amp;CK Table (based on v12): TTPs Likely to Be in the Network</h2>
+        <p>This table should show the MITRE tactics and techniques/Sub-techniques not yet observed but likely to be in the network. The procedure column details a particular instance of how a technique/sub-technique has been used. The D3FEND column includes the corresponding MITRE D3FEND countermeasure technique, if available. If using the tool, the tactics and techniques can be automatically generated from an Attack Flow document using the plug-in.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribution</th>
+                    <th>Tactics</th>
+                    <th>Techniques</th>
+                    <th>Sub Technique</th>
+                    <th>Procedure</th>
+                    <th>D3FEND</th>
+                    <th>Deployed Control</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%- for attack_entry in mitre_attack_table.likely_in_network -%}
+                <td>{{ attack_entry.attribution }}</td>
+                <td>{{ attack_entry.tactic }}</td>
+                <td>{{ attack_entry.technique }}</td>
+                <td>{{ attack_entry.sub_technique }}</td>
+                <td>{{ attack_entry.procedure }}</td>
+                <td>{{ attack_entry.defend }}</td>
+                <td>{{ attack_entry.control }}</td>
+                {%- endfor -%}
+            </tbody>
+        </table>
+        <h2>MITRE ATT&amp;CK Table (based on v12): TTPs Observed in the Intrusion</h2>
+        <p>This table should show the MITRE tactics, techniques/sub-techniques, and procedures observed during the intrusion based on data provided by the SOC or IR team. Analysts can include the corresponding MITRE DEFEND countermeasure technique, if available. If using the tool, the tactics and techniques can be automatically generated from an Attack Flow document using the plug-in.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tactics</th>
+                    <th>Techniques</th>
+                    <th>Sub Technique</th>
+                    <th>Prodecure</th>
+                    <th>D3FEND</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%- for ttp_entry in mitre_attack_table.observed -%}
+                <td>{{ ttp_entry.tactic }}</td>
+                <td>{{ ttp_entry.technique }}</td>
+                <td>{{ ttp _entry.sub_technique }}</td>
+                <td>{{ ttp_entry.procedure }}</td>
+                <td>{{ ttp_entry.defend }}</td>
+                {%- endfor -%}
+            </tbody>
+        </table>
+        <p class="page-break"></p>
+        <h2>Indicators of Compromise (IOC)</h2>
+        <p>This section consists of three IOC tables [Malware, Network, and System Artifacts] associated with the Campaign.</p>
+        <h2>Malware</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribution</th>
+                    <th>Malicious Tool Name</th>
+                    <th>Hash Type</th>
+                    <th>File Hash</th>
+                    <th>Associated Files Hash</th>
+                    <th>Brief Description</th>
+                    <th>Malware Analysis Report (Hyperlink, or N/A)</th>
+                    <th>First Reported</th>
+                    <th>Last Reported</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%- for malwareRow in iocs.malware -%}
+                <tr>
+                    <td>{{ malwareRow.attribution }}</td>
+                    <td>{{ malwareRow.ioc_malware_name }} </td>
+                    <td>{{ malwareRow.ioc_malware_hash_type }} </td>
+                    <td class="hash">{{ malwareRow.ioc_malware_hash }} </td>
+                    <td class="hash">{{ malwareRow.ioc_associated_file_hash }} </td>
+                    <td>{{ malwareRow.ioc_malware_description }}</td>
+                    <td>{{ malwareRow.ioc_malware_description }}</td>
+                    <td>{{ malwareRow.timestamp }}</td>
+                    <td>{{ malwareRow.timestamp }}</td>
+                </tr>
+                {%- endfor -%}
+            </tbody>
+        </table>
+        <h2>Network</h2>
+        <p>This table should detail the network indicators associated with the campaign, e.g., domains and IP addresses. The &OpenCurlyDoubleQuote;Intrusion Phase&CloseCurlyDoubleQuote; column includes Initial Access, Command and Control, and Exfiltration. The first and last reported fields are intended to memorialize the longevity of a particular network artifact, providing additional insight into trends in malicious behavior.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribution</th>
+                    <th>Network Artifact</th>
+                    <th>Details</th>
+                    <th>Intrusion Phase</th>
+                    <th>First Reported</th>
+                    <th>Last Reported</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%- for networkRow in iocs.network -%}
+                <tr>
+                    <td>{{ networkRow.attribution }}</td>
+                    <td>{{ networkRow.artifact }}</td>
+                    <td>{{ networkRow.details }}</td>
+                    <td>{{ networkRow.network_intrusion_phase }}</td>
+                    <td>{{ networkRow.first_observed }}</td>
+                    <td>{{ networkRow.last_observed }}</td>
+                </tr>
+                {%- endfor -%}
+            </tbody>
+        </table>
+        <h2>System Artifacts</h2>
+        <p>This table should detail any unique artifacts associated with the campaign that could be observed on a host, e.g., processes, DLLs, registry keys. The first and last reported fields are intended to memorialize the longevity of a particular system artifact, providing additional insight into trends in malicious behavior.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribution</th>
+                    <th>Host Artifact</th>
+                    <th>Type</th>
+                    <th>Details</th>
+                    <th>Tactic</th>
+                    <th>First Reported</th>
+                    <th>Last Reported</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%- for sysArtifactRow in iocs.system_artifacts -%}
+                <tr>
+                    <td>{{ sysArtifactRow.attribution }}</td>
+                    <td>{{ sysArtifactRow.artifact }}</td>
+                    <td>{{ sysArtifactRow.type }}</td>
+                    <td>{{ sysArtifactRow.system_details }}</td>
+                    <td>{{ sysArtifactRow.tactic }}</td>
+                    <td>{{ sysArtifactRow.first_observed }}</td>
+                    <td>{{ sysArtifactRow.last_observed }}</td>
+                </tr>
+                {%- endfor -%}
+            </tbody>
+        </table>
+        <h2>Common Vulnerabilities and Exposures (CVEs)</h2>
+        <p>CVEs associated with the campaign. The date reported field is designed to capture the date when the CVE became public knowledge. To adequately fill out this table, it may require information from other internal teams.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribution</th>
+                    <th>CVE Number</th>
+                    <th>CVSS Score</th>
+                    <th>Patch Available (Y/N)</th>
+                    <th>Other Remediation</th>
+                    <th>Date Reported</th>
+                    <th>Patch Applied  (Y/N/UNK/NA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%- for CVE in iocs.cves -%}
+                <tr>
+                    <td>{{ CVE.attribution }}</td>
+                    <td>{{ CVE.cve_number }}</td>
+                    <td>{{ CVE.cve_cvss_score }}</td>
+                    <td>{{ CVE.cve_patch_available }}</td>
+                    <td>{{ CVE.cve_remediation }}</td>
+                    <td>{{ CVE.date_of_report }}</td>
+                    <td>{{ CVE.cve_patch_applied }}</td>
+                </tr>
+                {%- endfor -%}
+            </tbody>
+        </table>
+        <h2>Signatures</h2>
+        <p>This section should include detections (e.g., Yara signature) that correspond to the malware or malicious activity associated with the campaign.</p>
+        <ol>
+            {%- for sig in iocs.signatures -%}
+            <li>{{ sig.attribution }}</li>
+            <li>{{ sig.ioc_malware_name }}</li>
+            <li>{{ sig.signature_description }}</li>
+            {%- endfor -%}
+        </ol>
+        <h2>Attached Attack Flow and/or Navigator Heat Maps, if applicable</h2>
+        <h2>Probability Matrix</h2>
+        <p>We recommend that analysts properly express and explain uncertainties associated with major analytic judgments.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Almost no chance</th>
+                    <th>Very unlikely</th>
+                    <th>Unlikely</th>
+                    <th>Roughly Even Chance</th>
+                    <th>Likely</th>
+                    <th>Very likely</th>
+                    <th>Almost certain(ly)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01&#8211;05%</td>
+                    <td>05&#8211;20%</td>
+                    <td>20&#8211;45%</td>
+                    <td>45&#8211;55%</td>
+                    <td>55&#8211;80%</td>
+                    <td>80&#8211;95%</td>
+                    <td>95&#8211;99%</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Intelligence Requirements</h2>
+        <p>Brief citation of CTI requirements(s) addressed by this report.</p>
+        <ul>
+            {%- for requirement in intelligence_requirements -%}
+            <li>{{ requirement.intelligence_requirement }}</li>
+            {%- endfor -%}
+        </ul>
+        <h2>Feedback</h2>
+        <p>Provide a point of contact (e.g., an email address) for customer feedback on the published CTI report, such as whether the report addressed the customers&quot; Intelligence Requirements, how the report could be more actionable, additional Intelligence Requirement questions to answer, etc. </p>
+        <hr>
+        <h3>Data Sources:</h3>
+            <ul>
+                {%- for citation in data_sources.report_citations -%}
+                <li>{{ citation.description }}
+                    {{ citation.hyperlink }}</li>
+                {%- endfor -%} 
+                {%- for telemetry in data_sources.internal_telemetry -%}
+                <li>{{ telemetry.internal_telemetry }}</li>
+                {%- endfor -%}
+            </ul>
+        <hr>
+        <h2>Metadata</h2>
+        <p>The metadata info below is for automation purposes and provides discrete fields for tool extraction. If you are not using the tool, we recommend removing the info.</p>
+        <h3>Threat Actor:</h3>
+        <ul>
+            {%- for threat_actor in metadata.threat_actors -%}
+            <li>{{ threat_actor.threat_actor_name }}</li>
+            <li>{{ threat_actor.threat_actor_aliases }}</li>
+            {%- endfor -%}
+        </ul>
+        <h3>Actor Motivation:</h3>
+        <ul>
+            {%- for motive in metadata.threat_actor_motivation -%}
+            <li>{{ motive.threat_actor_motivation }}</li>
+            {%- endfor -%}
+        </ul>
+    </body>
+</html>

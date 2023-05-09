@@ -7,16 +7,47 @@ import json
 from htmldocx import HtmlToDocx
 from docx2pdf import convert
 
+# A global to map sections to append
+SECTIONS = {
+    'header': 'report_header.html',
+    'intro': 'report_intro.html',
+    'executive_summary': 'executive_summary.html',
+    'key_points': 'key_points.html',
+    'assessment': 'assessment.html',
+    'indicator_analysis': 'indicator_analysis.html',
+    'outlook': 'outlook.html',
+    'threat_actor': 'threat_actor.html',
+    'intelligence_gaps': 'intelligence_gaps.html',
+    'mitre_attack_table': 'mitre_attack_table.html',
+    'mitre_attack_table_ttp': 'mitre_attack_table_ttp.html',
+    'victims': 'victims.html',
+    'timeline': 'timeline.html',
+    'iocs': 'iocs.html',
+    'signatures': 'signatures.html',
+    
+    'TORENAMELATER': 'TORENAMELATER.html',
+    # TODO: Rename this file. This file deals with attaching Attack Flows and heat maps (to be implemented in the future)
+    # TODO: Handle attaching of AF JSONs & other files and how they will be handled within above HTML module
+
+    'intelligence_requirements': 'intelligence_requirements.html',
+    'feedback': 'feedback.html',
+    'data_sources': 'data_sources.html',
+    'metadata': 'metadata_generic.html',
+    'metadata_ia': 'metadata_ia.html',
+    'footer': 'report_footer.html'
+}
+
 
 def CLI():
     # Take command line parameters argv
     # No parameters results in a guide:
-        # Hit 1 to export `reportType`
+        # Hit 1 to export `report_type`
         # Hit 2 to export `otherReportType`
         # etc.
-    # Type out absolute path, or allow dragging a file to console
+    # Type out absolute path, or drag a file to console...
 
     report_type_choice = 0
+    # TODO: Handle invalid chars (e.g. '`'`). This is an issue for all CLI methods
     while int(report_type_choice) not in range(1,5):
         report_type_choice = input(
             """\tChoose what type of report you would like to export:
@@ -68,7 +99,8 @@ def CLI():
             # Blank paths are not allowed
             print(data_input_path, type(data_input_path))
             print("\nThis is an invalid path.\n")
-        # elif os.path.splitext(data_input_path)[-1] != ".json":  # TODO: implement file checking.
+        # elif os.path.splitext(data_input_path)[-1] != ".json":  
+        # # TODO: implement file checking.
         #     print(os.path.splitext(data_input_path)[-1])
         #     print("\nFile is not a .json. Please try again.")
         elif not data_input_path.exists():
@@ -86,7 +118,7 @@ def CLI_exclude(report_type):
     """
     section_choice = 0
     exclude_sections = set()
-
+    # NOTE: If making no selections, prints 'set()' instead of nothing.i
     if report_type == 'Campaign':
         while section_choice != 'exit':
             section_choice = input(
@@ -259,34 +291,52 @@ def CLI_exclude(report_type):
     return exclude_sections
 
 
-def template(data_input_filepath, reportType, excludeParams=None):
+def modular_template(exclude_sections):
+    """
+    Create a template dynamically by adding sections as needed, without the criteria from `exclude_sections`.
+    """
+    # TODO: Incorporate into `template()`
+    dummy = ['data_sources', 'metadata']
+    sec_dict = dict()
+    for key in exclude_sections:
+        sec_dict[key] = False
+
+    
+
+
+def template(data_input_filepath, report_type, excludeParams=None):
+    # TODO: Rename function
     """
     Load the template from memory
-    As the `reportType`
+    As the `report_type`
     Excluding sections of `excludeParams` from `data`
     
     `data` must be of type loaded json from load_data
     """
     data = load_data(data_input_filepath)
-    reportType = reportType.lower()
+    report_type = report_type.lower()
     # print("3: Template")
     _env = Environment(
         loader=FileSystemLoader('templates/')
     )
-    if reportType == None or reportType == 'campaign':
+    if report_type == None or report_type == 'campaign':
         # Default to campaign report.   
         _template = 'CTID-CampaignReportTemplate.html'
-    elif reportType == 'executive':
+    elif report_type == 'executive':
         _template = 'CTID-ExecutiveReportTemplate.html'
-    elif reportType == 'ia':
+    elif report_type == 'ia':
         _template = 'CTID-IAReportTemplate.html'
-    elif reportType == 'ta':
+    elif report_type == 'ta':
         _template = 'CTID-TAReportTemplate.html'
     else:
         # Must be an invalid, or example/test case:
         _template = 'example_template.html'
 
     temp = _env.get_template(_template)
+    # TODO: Iterate over dictionary keys instead
+        # Skip ones in exclude
+        # Concatenate to a growing template String
+        # And render it below
     rendered_template = temp.render(data)
     filename = os.path.splitext(os.path.split(data_input_filepath)[-1])[0]+'.html'
     
@@ -298,6 +348,7 @@ def template(data_input_filepath, reportType, excludeParams=None):
 
 
 def doc_convert(filepath_to_html, doc_type='docx'):
+    # TODO: Rename function
     # print("4: Convert " + doc_type)
     filename = os.path.splitext(filepath_to_html)[0]
     if doc_type == 'docx':
@@ -305,6 +356,14 @@ def doc_convert(filepath_to_html, doc_type='docx'):
         new_parser.table_style = 'Light List Accent 1'
         new_parser.parse_html_file(filepath_to_html, filename)
     elif doc_type == 'pdf':
+        # Temporary workaround - with out current PDF creation, we require a DOCX.
+        new_parser = HtmlToDocx()
+        new_parser.table_style = 'Light List Accent 1'
+        new_parser.parse_html_file(filepath_to_html, filename)
+        # Remove all the above when we find a better transformer
+        print(filename)
+        print(Path(filename).absolute())
+        print(Path(filename+'.docx').absolute())
         input_f = r"C:\Users\tiffanylee\Downloads\CTID\cti-blueprints\src\liquid\output\An Example Campaign Report.docx"
         output_f = r"C:\Users\tiffanylee\Downloads\CTID\cti-blueprints\src\liquid\output\An Example Campaign Report.pdf"
         convert(input_f, output_f)
@@ -322,20 +381,27 @@ def load_data(data_input_filepath):
 if __name__ == "__main__":
     # print("1: Start")
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', '--reportType', nargs=1,
-                        help='The report type to generate')
-    # TODO: Restrict -r type very firmly?
-    parser.add_argument('-d', '--document_type', nargs='?', default='docx', help="Document type to export.")
+    parser.add_argument('-r', '--report_type', nargs=1,
+                        help='The report type to generate. \n1: Campaign\n2: Executive\n3. Intrusion Analysis\n4: Threat Actor',
+                        type=int, choices=[1,2,3,4])
+    parser.add_argument('-d', '--document_type', nargs='?', default='docx', help="Document type to export. Default value is a DOCX",
+                        type=str.lower, choices=['docx', 'pdf'])
     parser.add_argument('-e', '--exclude_section', action='extend', nargs='*', 
-                        help='Fields to exclude from export. Invalid sections will be ignored.')
-    parser.add_argument('-f', '--data_input_filepath', help="An absolute path to the JSON data input")
+                        help='Fields to exclude from export. Invalid sections for a report will be ignored.')
+    # TODO: Find a better way to document 'help' for the exclude_section, so to not have invalid arguments (e.g., 'Executive Summary' instead of 'executive_summary')
+        # Perhaps best to have it come from the HTML_dict?
+    parser.add_argument('-f', '--data_input_filepath', help="An absolute path to the JSON data input", type=Path)
     args = parser.parse_args()  # Load arguments from console into a Namespace object
-    # TODO: Check and raise exceptions for given arguments through command line.
+    # TODO: Check and raise exceptions for given arguments through command line?
 
-    if len(sys.argv)-1 < 4 :  # Not enough parameters given. Initiate CLI
-        args.reportType, args.document_type, args.exclude_section, args.data_input_filepath = CLI()
+    if len(sys.argv)-1 < 3 :  # Not enough parameters given. Initiate CLI
+        # TODO: Change this conditional to be a check for data_input_field and report_type check only.
+        print('Not enough arguments provided, please make selections within the CLI.\n')
+        args.report_type, args.document_type, args.exclude_section, args.data_input_filepath = CLI()
     # print(args)
-    template(args.data_input_filepath, args.reportType, args.exclude_section) 
+    args.data_input_filepath = Path(args.data_input_filepath)
+
+    template(args.data_input_filepath, args.report_type, args.exclude_section) 
     filename = os.path.splitext(os.path.split(args.data_input_filepath)[-1])[0]+'.html'
     doc_convert("output/" + filename, args.document_type)
 
@@ -345,6 +411,7 @@ def todo():
     A running list of remaining TODO's
         *. Change `doc_convert` to work with local paths.
         *. Implement `exclude_section` to do something.
+        *. TODO: Test other templates
         *. Create a way to import published Attack Flow techniques (.json files) to ensure data can be pulled
         *. Ending tasks:
             -. Clean up comments

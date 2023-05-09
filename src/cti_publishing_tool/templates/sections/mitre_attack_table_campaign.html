@@ -1,0 +1,28 @@
+<h2>MITRE ATT&amp;CK Table (based on v12)</h2>
+<p>Table of the MITRE ATT&amp;CK tactics and techniques/sub-techniques from the campaign. The procedure column details a particular instance of how a technique/sub-technique has been used. The D3FEND column includes the corresponding MITRE D3FEND countermeasure technique, if available. If using the tool, the Tactics and Techniques can be automatically generated from an Attack Flow document using the plug-in.</p>
+<table>
+    <thead>
+        <tr>
+            <th>Attribution</th>
+            <th>Tactics</th>
+            <th>Techniques</th>
+            <th>Sub Technique</th>
+            <th>Procedure</th>
+            <th>D3FEND</th>
+            <th>Deployed Control</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for attackTableRow in mitre_attack_table -%}
+        <tr>
+            <td>{{ attackTableRow.attribution }}</td>
+            <td>{{ attackTableRow.tactic }}</td>
+            <td>{{ attackTableRow.technique }}</td>
+            <td>{{ attackTableRow.sub_technique }}</td>
+            <td>{{ attackTableRow.procedure }}</td>
+            <td>{{ attackTableRow.defend }}</td>
+            <td>{{ attackTableRow.control }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>

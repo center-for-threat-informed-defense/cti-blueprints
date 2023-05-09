@@ -1,0 +1,11 @@
+<h3>Data Sources:</h3>
+<ul>
+    {%- for citation in data_sources.report_citations -%}
+    <li>{{ citation.description }}
+        {{ citation.hyperlink }}</li>
+    {%- endfor -%} 
+    {%- for telemetry in data_sources.internal_telemetry -%}
+    <li>{{ telemetry.internal_telemetry }}</li>
+    {%- endfor -%}
+</ul>
+<br>

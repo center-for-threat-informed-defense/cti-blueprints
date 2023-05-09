@@ -94,7 +94,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Atthibution</th>
+                    <th>Attribution</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Location</th>
@@ -277,7 +277,7 @@
         <h2>Feedback</h2>
         <p>Provide a point of contact (e.g., an email address) for customer feedback on the published CTI report, such as whether the report addressed the customers&quot; Intelligence Requirements, how the report could be more actionable, additional Intelligence Requirement questions to answer, etc. </p>
         <hr>
-            <h3>Data Sources:</h3>
+        <h3>Data Sources:</h3>
             <ul>
                 {%- for citation in data_sources.report_citations -%}
                 <li>{{ citation.description }}
@@ -287,39 +287,39 @@
                 <li>{{ telemetry.internal_telemetry }}</li>
                 {%- endfor -%}
             </ul>
-        <br>
+        <hr>
         <h2>Metadata</h2>
         <p>The metadata info below is for automation purposes and provides discrete fields for tool extraction. If you are not using the tool, we recommend removing the info.</p>
-            <h3>Threat Actor:</h3>
-            <ul>
-                {%- for threat_actor in metadata.threat_actors -%}
-                <li>{{ threat_actor.threat_actor_name }}</li>
-                <li>{{ threat_actor.threat_actor_aliases }}</li>
-                {%- endfor -%}
-            </ul>
-            <h3>Victim Location:</h3>
-            <ul>
-                {%- for loc in metadata.victim_location -%}
-                <li>{{ loc.location }}</li>
-                {%- endfor -%}
-            </ul>
-            <h3>Sectors:</h3>
-            <ul>
-                {%- for sec in metadata.sectors -%}
-                <li>{{ sec.sector }}</li>
-                {%- endfor -%}
-            </ul>
-            <h3>Infrastructure Used</h3>
-            <ul>
-                {%- for inf in metadata.infrastructure_used -%} 
-                <li>{{ inf.infrastructure }}</li>
-                {%- endfor -%}
-            </ul>
-            <h3>Actor Motivation:</h3>
-            <ul>
-                {%- for motive in metadata.threat_actor_motivation -%}
-                <li>{{ motive.threat_actor_motivation }}</li>
-                {%- endfor -%}
-            </ul>
+        <h3>Threat Actor:</h3>
+        <ul>
+            {%- for threat_actor in metadata.threat_actors -%}
+            <li>{{ threat_actor.threat_actor_name }}</li>
+            <li>{{ threat_actor.threat_actor_aliases }}</li>
+            {%- endfor -%}
+        </ul>
+        <h3>Victim Location:</h3>
+        <ul>
+            {%- for loc in metadata.victim_location -%}
+            <li>{{ loc.location }}</li>
+            {%- endfor -%}
+        </ul>
+        <h3>Sectors:</h3>
+        <ul>
+            {%- for sec in metadata.sectors -%}
+            <li>{{ sec.sector }}</li>
+            {%- endfor -%}
+        </ul>
+        <h3>Infrastructure Used</h3>
+        <ul>
+            {%- for inf in metadata.infrastructure_used -%} 
+            <li>{{ inf.infrastructure }}</li>
+            {%- endfor -%}
+        </ul>
+        <h3>Actor Motivation:</h3>
+        <ul>
+            {%- for motive in metadata.threat_actor_motivation -%}
+            <li>{{ motive.threat_actor_motivation }}</li>
+            {%- endfor -%}
+        </ul>
     </body>
 </html>

@@ -1,0 +1,23 @@
+<h2>Victims</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date Reported</th>
+            <th>Sector</th>
+            <th>City/State/Province/etc.</th>
+            <th>Country/Region</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for victim in victims -%}
+        <tr>
+            <td>{{ victim.victim_name }}</td>
+            <td>{{ victim.date_reported }}</td>
+            <td>{{ victim.sector }}</td>
+            <td>{{ victim.location_granular }}</td>
+            <td>{{ victim.location_region }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>
