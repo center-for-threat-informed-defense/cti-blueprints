@@ -6,6 +6,3 @@ output
 
 # Editor directories and files
 .vscode
-
-# Backups
-templates/Backups/
