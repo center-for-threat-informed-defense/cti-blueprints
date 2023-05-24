@@ -4,7 +4,7 @@ import os
 import json
 from pathlib import Path
 
-from liquid import Environment, FileSystemLoader
+from liquid import Template
 from htmldocx import HtmlToDocx
 from docx2pdf import convert
 
@@ -21,7 +21,7 @@ SECTIONS = {
     'threat_actor': 'threat_actor.html',
     'intelligence_gaps': 'intelligence_gaps.html',
     'mitre_attack_table': 'mitre_attack_table.html',
-    'mitre_attack_table_ttp': 'mitre_attack_table_ttp.html',
+    'mitre_attack_table_ia': 'mitre_attack_table_ia.html',
     'victims': 'victims.html',
     'timeline': 'timeline.html',
     'iocs': 'iocs.html',
@@ -98,7 +98,7 @@ def cli():
         section_choice = 0
         exclude_sections = set()
         # NOTE: If making no selections, prints 'set()' instead of nothing.
-        if report_type == 'Campaign':
+        if report_type == '1':
             while section_choice != 'exit':
                 print("\nCurrent selection: ", exclude_sections)
                 section_choice = input(
@@ -110,9 +110,10 @@ def cli():
                 \t5.  MITRE ATT&CK Table
                 \t6.  Timeline
                 \t7.  IOCs
-                \t8.  Intelligence Requirements
-                \t9.  Data Sources
-                \t10. Metadata
+                \t8. Signatures
+                \t9.  Intelligence Requirements
+                \t10.  Data Sources
+                \t11. Metadata
                 \tType 'exit' when finished.
                 >  """
                 )
@@ -134,13 +135,17 @@ def cli():
                 elif section_choice == '7':
                     exclude_sections.add("iocs")
                 elif section_choice == '8':
+                    exclude_sections.add("signatures")
+                elif section_choice == '9':
                     exclude_sections.add("intelligence_requirements")
                 elif section_choice == '10':
+                    exclude_sections.add("data_sources")
+                elif section_choice == '11':
                     exclude_sections.add("metadata")
                 else:
                     print("Choose a valid option from the list!\n")
 
-        elif report_type == 'Executive':
+        elif report_type == '2':
             while section_choice != 'exit':
                 print("\nCurrent selection: ", exclude_sections)
                 section_choice = input(
@@ -175,7 +180,7 @@ def cli():
                 else:
                     print("Choose a valid option from the list!\n")
                 
-        elif report_type == 'IA':
+        elif report_type == '3':
             while section_choice != 'exit':
                 print("\nCurrent selection: ", exclude_sections)
                 section_choice = input(
@@ -216,7 +221,7 @@ def cli():
                 else:
                     print("Choose a valid option from the list!\n")
             
-        elif report_type == 'TA':
+        elif report_type == '4':
             while section_choice != 'exit':
                 print("\nCurrent selection: ", exclude_sections)
                 section_choice = input(
@@ -316,15 +321,31 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
             data_json = json.load(_file_obj)
             return data_json
 
-    def _modular_template(exclude_sections):
+    def _modular_template(exclude_sections, report_type, data):
         """
         Create a template dynamically by adding sections as needed, without the criteria from `exclude_sections`.
         """
+        campaign = ["executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"]
+        executive = ["executive_summary", "key_points", "assessment", "outlook", "intelligence_gaps", "intelligence_requirements", "data_sources"]
+        ia = ["executive_summary", "key_points", "indicator_analysis", "mitre_attack_table_ia", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata_ia"]
+        ta = ["executive_summary", "key_points", "assessment", "threat_actor", "timeline", "intelligence_gaps", "mitre_attack_table", "victims", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"]
+        all_categories = [campaign, executive, ia, ta]
+
+        _sections = ["header", "intro"] + all_categories[["campaign","executive","ia","ta"].index(report_type)] + ["footer"]
+
         _template_ = ''
-        dummy = ['data_sources', 'metadata']
-        sec_dict = dict()
+        sect = 'templates/sections/'
+
         for key in exclude_sections:
-            sec_dict[key] = False
+            try:
+                _sections.remove(key)
+            except ValueError:
+                # Ignore invalid keys and continue
+                pass
+        for key in _sections:
+            with open(sect+SECTIONS[key], 'r') as _file_obj:
+                tem = Template(_file_obj.read())
+                _template_ += tem.render(data)
         return _template_
     
     _report_map = {
@@ -334,31 +355,9 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
         4: 'ta'
     }
     data = _load_data(data_input_filepath)
-    if report_type.isdigit():
-        report_type = _report_map[int(report_type)]
-    report_type = report_type.lower()
-    _env = Environment(
-        loader=FileSystemLoader('templates/')
-    )
-    if report_type == None or report_type == 'campaign':
-        # Default to campaign report.   
-        _template = 'CTID-CampaignReportTemplate.html'
-    elif report_type == 'executive':
-        _template = 'CTID-ExecutiveReportTemplate.html'
-    elif report_type == 'ia':
-        _template = 'CTID-IAReportTemplate.html'
-    elif report_type == 'ta':
-        _template = 'CTID-TAReportTemplate.html'
-    else:
-        # Must be an invalid, or example/test case:
-        _template = 'example_template.html'
+    report_type = _report_map[int(report_type)].lower()
 
-    temp = _env.get_template(_template)
-    # Iterate over dictionary keys instead
-    # Skip ones in exclude
-        # Concatenate to a growing template String
-        # And render it below
-    rendered_template = temp.render(data)
+    rendered_template = _modular_template(exclude_sections, report_type, data)
     filename = os.path.splitext(os.path.split(data_input_filepath)[-1])[0]+'.html'
     
     # Save rendered template as an HTML file
@@ -372,11 +371,8 @@ def export_report(filepath_to_html, doc_type = 'docx'):
     if doc_type == 'docx':
         new_parser = HtmlToDocx()
         new_parser.table_style = 'Light List Accent 1'
-        print(filepath_to_html)
-        print(filename)
         new_parser.parse_html_file(filepath_to_html, filename)
     elif doc_type == 'pdf':
-
         # Temporary workaround - with out current PDF creation, we require a DOCX.
         new_parser = HtmlToDocx()
         new_parser.table_style = 'Light List Accent 1'
@@ -386,7 +382,7 @@ def export_report(filepath_to_html, doc_type = 'docx'):
         input_f = Path(filename+'.docx')
         output_f = Path(filename+'.pdf')
         convert(input_f, output_f)
-    print("Done")
+    print("Document created")
 
 
 if __name__ == "__main__":
@@ -402,9 +398,8 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--data_input_filepath', help="An absolute path to the JSON data input", type=Path)
     args = parser.parse_args()  # Load arguments from console into a Namespace object
 
-    print(args)
+    # print(args)
     if len(sys.argv)-1 < 3 :  # Not enough parameters given. Initiate CLI
-        # Not all parameters were provided
         if args.report_type is None or args.data_input_filepath is None:
             print('Not enough arguments provided, please make selections within the CLI.\n')
             args.report_type, args.document_type, args.exclude_section, args.data_input_filepath = cli()
@@ -417,8 +412,6 @@ if __name__ == "__main__":
 
 def todo():
     """A running list of remaining TODO's
-        # TODO: Check for data_input_field and report_type check only.
-        # TODO: Implement `exclude_section` to do something in _modular_template()
         # TODO: Create a way to import published Attack Flow techniques (.json files) to ensure data can be pulled
         # TODO: Find a better way to document 'help' for `exclude_section`, so to not have invalid arguments (e.g., 'Executive Summary' instead of 'executive_summary')
             # Perhaps best to have it come from the HTML_dict?

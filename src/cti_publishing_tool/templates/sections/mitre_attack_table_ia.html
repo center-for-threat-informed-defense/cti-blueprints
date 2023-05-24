@@ -1,0 +1,52 @@
+<h2>MITRE ATT&amp;CK Table (based on v12): TTPs Likely to Be in the Network</h2>
+<p>This table should show the MITRE tactics and techniques/Sub-techniques not yet observed but likely to be in the network. The procedure column details a particular instance of how a technique/sub-technique has been used. The D3FEND column includes the corresponding MITRE D3FEND countermeasure technique, if available. If using the tool, the tactics and techniques can be automatically generated from an Attack Flow document using the plug-in.</p>
+<table>
+    <thead>
+        <tr>
+            <th>Attribution</th>
+            <th>Tactics</th>
+            <th>Techniques</th>
+            <th>Sub Technique</th>
+            <th>Procedure</th>
+            <th>D3FEND</th>
+            <th>Deployed Control</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attack_entry in mitre_attack_table.likely_in_network %}
+        <tr>
+            <td>{{ attack_entry.attribution }}</td>
+            <td>{{ attack_entry.tactic }}</td>
+            <td>{{ attack_entry.technique }}</td>
+            <td>{{ attack_entry.sub_technique }}</td>
+            <td>{{ attack_entry.procedure }}</td>
+            <td>{{ attack_entry.defend }}</td>
+            <td>{{ attack_entry.control }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h2>MITRE ATT&amp;CK Table (based on v12): TTPs Observed in the Intrusion</h2>
+<p>This table should show the MITRE tactics, techniques/sub-techniques, and procedures observed during the intrusion based on data provided by the SOC or IR team. Analysts can include the corresponding MITRE DEFEND countermeasure technique, if available. If using the tool, the tactics and techniques can be automatically generated from an Attack Flow document using the plug-in.</p>
+<table>
+    <thead>
+        <tr>
+            <th>Tactics</th>
+            <th>Techniques</th>
+            <th>Sub Technique</th>
+            <th>Prodecure</th>
+            <th>D3FEND</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for ttp_entry in mitre_attack_table.observed -%}
+        <tr>
+            <td>{{ ttp_entry.tactic }}</td>
+            <td>{{ ttp_entry.technique }}</td>
+            <td>{{ ttp _entry.sub_technique }}</td>
+            <td>{{ ttp_entry.procedure }}</td>
+            <td>{{ ttp_entry.defend }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>
