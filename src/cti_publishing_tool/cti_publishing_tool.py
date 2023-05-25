@@ -93,6 +93,29 @@ def cli():
             document_type = "pdf"
         return document_type
 
+    def _include_exclude(report_type):
+        """User inputs which sections to keep or remove from the rendered template based on `report_type`"""
+        while True:
+            try:
+                choice = int(input(
+                    """\n\tChoose an option below:
+                    \t1. Select the sections to exclude from the document
+                    \t2. Select the sections you would only want in the document
+                    \t3. Leave everything in the document.  
+                    >  """
+                ))
+                if choice not in range(1, 4):
+                    raise ValueError
+                break
+            except ValueError:
+                print("Choose a valid option from the list!\n")
+        if choice == 1:
+            return _cli_exclude(report_type)
+        elif choice == 2:
+            return _cli_only(report_type)
+        elif choice == 3:
+            return []
+
     def _cli_exclude(report_type):
         """User inputs which sections to keep out of the rendered template based on `report_type`"""
         section_choice = 0
@@ -110,7 +133,7 @@ def cli():
                 \t5.  MITRE ATT&CK Table
                 \t6.  Timeline
                 \t7.  IOCs
-                \t8. Signatures
+                \t8.  Signatures
                 \t9.  Intelligence Requirements
                 \t10.  Data Sources
                 \t11. Metadata
@@ -276,6 +299,201 @@ def cli():
             
         return list(exclude_sections)
 
+    def _cli_only(report_type):
+        """User inputs which sections for the rendered template based on `report_type` and is processed as `exclude_sections` to """
+        section_choice = 0
+        include_sections = set()
+        # NOTE: If making no selections, prints 'set()' instead of nothing.
+        if report_type == '1':
+            while section_choice != 'exit':
+                print("\nCurrent selection: ", include_sections)
+                section_choice = input(
+                """\t\nChoose what sections (if any) you would want to include:
+                \t1.  Executive Summary
+                \t2.  Key Points
+                \t3.  Assessment
+                \t4.  Intelligence Gaps
+                \t5.  MITRE ATT&CK Table
+                \t6.  Timeline
+                \t7.  IOCs
+                \t8.  Signatures
+                \t9.  Intelligence Requirements
+                \t10.  Data Sources
+                \t11. Metadata
+                \tType 'exit' when finished.
+                >  """
+                )
+                section_choice = section_choice.strip()
+                if section_choice == 'exit':
+                    break
+                elif section_choice == '1':
+                    include_sections.add("executive_summary")
+                elif section_choice == '2':
+                    include_sections.add("key_points")
+                elif section_choice == '3':
+                    include_sections.add("assessment")
+                elif section_choice == '4':
+                    include_sections.add("intelligence_gaps")
+                elif section_choice == '5':
+                    include_sections.add("mitre_attack_table")
+                elif section_choice == '6':
+                    include_sections.add("timeline")
+                elif section_choice == '7':
+                    include_sections.add("iocs")
+                elif section_choice == '8':
+                    include_sections.add("signatures")
+                elif section_choice == '9':
+                    include_sections.add("intelligence_requirements")
+                elif section_choice == '10':
+                    include_sections.add("data_sources")
+                elif section_choice == '11':
+                    include_sections.add("metadata")
+                else:
+                    print("Choose a valid option from the list!\n")
+
+        elif report_type == '2':
+            while section_choice != 'exit':
+                print("\nCurrent selection: ", include_sections)
+                section_choice = input(
+                """\tChoose what sections (if any) you would want to include:
+                \t1. Executive Summary
+                \t2. Key Points
+                \t3. Assessment
+                \t4. Outlook
+                \t5. Intelligence Gaps
+                \t6. Intelligence Requirements
+                \t7. Data Sources
+                \tType 'exit' when finished.
+                >  """
+                )
+                section_choice = section_choice.strip()
+                if section_choice == 'exit':
+                    break
+                elif section_choice == '1':
+                    include_sections.add("executive_summary")
+                elif section_choice == '2':
+                    include_sections.add("key_points")
+                elif section_choice == '3':
+                    include_sections.add("assessment")
+                elif section_choice == '4':
+                    include_sections.add("outlook")
+                elif section_choice == '5':
+                    include_sections.add("intelligence_gaps")
+                elif section_choice == '6':
+                    include_sections.add("intelligence_requirements")
+                elif section_choice == '7':
+                    include_sections.add("data_sources")
+                else:
+                    print("Choose a valid option from the list!\n")
+                
+        elif report_type == '3':
+            while section_choice != 'exit':
+                print("\nCurrent selection: ", include_sections)
+                section_choice = input(
+                """\tChoose what sections (if any) you would want to include:
+                \t1. Executive Summary
+                \t2. Key Points
+                \t3. Indicator Analysis
+                \t4. MITRE ATT&CK Table
+                \t5. IOCs
+                \t6. Signatures
+                \t7. Intelligence Requirements
+                \t8. Data Sources
+                \t9. Metadata
+                \tType 'exit' when finished.
+                >  """
+                )
+                section_choice = section_choice.strip()
+                if section_choice == 'exit':
+                    break
+                elif section_choice == '1':
+                    include_sections.add("executive_summary")
+                elif section_choice == '2':
+                    include_sections.add("key_points")
+                elif section_choice == '3':
+                    include_sections.add("indicator_analysis")
+                elif section_choice == '4':
+                    include_sections.add("mitre_attack_table")
+                elif section_choice == '5':
+                    include_sections.add("iocs")
+                elif section_choice == '6':
+                    include_sections.add("signatures")
+                elif section_choice == '7':
+                    include_sections.add("intelligence_requirements")
+                elif section_choice == '8':
+                    include_sections.add("data_sources")
+                elif section_choice == '9':
+                    include_sections.add("metadata")
+                else:
+                    print("Choose a valid option from the list!\n")
+            
+        elif report_type == '4':
+            while section_choice != 'exit':
+                print("\nCurrent selection: ", include_sections)
+                section_choice = input(
+                """\tChoose what sections (if any) you would want to include:
+                \t1.  Executive Summary
+                \t2.  Key Points
+                \t3.  Assessment
+                \t4.  Threat Actor
+                \t5.  Timeline
+                \t6.  Intelligence Gaps
+                \t7.  MITRE ATT&CK Table
+                \t8.  Victims
+                \t9.  IOCs
+                \t10. Signatures
+                \t11. Intelligence Requirements
+                \t12. Data Sources
+                \t13. Metadata
+                \tType 'exit' when finished.
+                >  """
+                )
+                section_choice = section_choice.strip()
+                if section_choice == 'exit':
+                    break
+                elif section_choice == '1':
+                    include_sections.add("executive_summary")
+                elif section_choice == '2':
+                    include_sections.add("key_points")
+                elif section_choice == '3':
+                    include_sections.add("assessment")
+                elif section_choice == '4':
+                    include_sections.add("threat_actor")
+                elif section_choice == '5':
+                    include_sections.add("timeline")
+                elif section_choice == '6':
+                    include_sections.add("intelligence_gaps")
+                elif section_choice == '7':
+                    include_sections.add("mitre_attack_table")
+                elif section_choice == '8':
+                    include_sections.add("victims")
+                elif section_choice == '9':
+                    include_sections.add("iocs")
+                elif section_choice == '10':
+                    include_sections.add("signatures")
+                elif section_choice == '11':
+                    include_sections.add("intelligence_requirements")
+                elif section_choice == '12':
+                    include_sections.add("data_sources")
+                elif section_choice == '13':
+                    include_sections.add("metadata")
+                else:
+                    print("Choose a valid option from the list!\n")
+        
+        if report_type == '1':
+            campaign = {"executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
+            return list(campaign-include_sections)
+        elif report_type == '2':
+            executive = {"executive_summary", "key_points", "assessment", "outlook", "intelligence_gaps", "intelligence_requirements", "data_sources"}
+            return list(executive-include_sections)
+        elif report_type == '3':
+            ia = {"executive_summary", "key_points", "indicator_analysis", "mitre_attack_table_ia", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata_ia"}
+            return list(ia-include_sections)
+        elif report_type == '4':
+            ta = {"executive_summary", "key_points", "assessment", "threat_actor", "timeline", "intelligence_gaps", "mitre_attack_table", "victims", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
+            return list(ta-include_sections)
+        return list()
+
     def _data_input_path():
         while True:
             data_input_path = input(
@@ -303,28 +521,22 @@ def cli():
 
     report_type = _report_type()
     document_type = _document_type()
-    exclude_sections = _cli_exclude(report_type)
+    exclude_sections = _include_exclude(report_type)
     data_input_path = _data_input_path()
     return [report_type, document_type, exclude_sections, data_input_path]
 
     
 def process_template(data_input_filepath, report_type, exclude_sections=None):
-    """
-    Load the `report_type` template from memory while excluding sections from `exclude_sections`
-    """
+    """Load the `report_type` template from memory while excluding sections from `exclude_sections`"""
 
     def _load_data(data_input_filepath):
-        """
-        Expects a str of the JSON to convert. Simply loads it into Python and returns it
-        """
+        """Expects a str of the JSON to convert. Simply loads it into Python and returns it"""
         with open(data_input_filepath, 'r') as _file_obj:
             data_json = json.load(_file_obj)
             return data_json
 
     def _modular_template(exclude_sections, report_type, data):
-        """
-        Create a template dynamically by adding sections as needed, without the criteria from `exclude_sections`.
-        """
+        """Create a template dynamically by adding sections as needed, without the criteria from `exclude_sections`."""
         campaign = ["executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"]
         executive = ["executive_summary", "key_points", "assessment", "outlook", "intelligence_gaps", "intelligence_requirements", "data_sources"]
         ia = ["executive_summary", "key_points", "indicator_analysis", "mitre_attack_table_ia", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata_ia"]
@@ -332,7 +544,6 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
         all_categories = [campaign, executive, ia, ta]
 
         _sections = ["header", "intro"] + all_categories[["campaign","executive","ia","ta"].index(report_type)] + ["footer"]
-
         _template_ = ''
         sect = 'templates/sections/'
 
@@ -355,18 +566,18 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
         4: 'ta'
     }
     data = _load_data(data_input_filepath)
-    report_type = _report_map[int(report_type)].lower()
+    report_type = _report_map[int(report_type)]
 
     rendered_template = _modular_template(exclude_sections, report_type, data)
     filename = os.path.splitext(os.path.split(data_input_filepath)[-1])[0]+'.html'
     
     # Save rendered template as an HTML file
-    # Rendered HTML can be converted to DOCX or PDF files.
-    with open("output/"+filename, 'w') as file:
+    # Rendered HTML can be converted to DOCX or PDF files or converted by the user.
+    with open("output/" + filename, 'w') as file:
         file.write(rendered_template)
 
 
-def export_report(filepath_to_html, doc_type = 'docx'):
+def export_report(filepath_to_html, doc_type='docx'):
     filename = os.path.splitext(filepath_to_html)[0]
     if doc_type == 'docx':
         new_parser = HtmlToDocx()
@@ -387,23 +598,38 @@ def export_report(filepath_to_html, doc_type = 'docx'):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-e', '--exclude_section', action='extend', nargs='*', default=[], choices=["executive_summary","key_points","assessment","indicator_analysis","outlook","threat_actor","intelligence_gaps","mitre_attack_table","victims","timeline","iocs","signatures","intelligence_requirements","data_sources","metadata"], help='A space separated list of fields to exclude from export. Invalid sections for a report will be ignored.')
+    group.add_argument('-o', '--only_section', action='extend', nargs='*', default=[], choices=["executive_summary","key_points","assessment","indicator_analysis","outlook","threat_actor","intelligence_gaps","mitre_attack_table","victims","timeline","iocs","signatures","intelligence_requirements","data_sources","metadata"], help='A space separated list of fields to include in the export. Invalid sections for a report will be ignored.')
     parser.add_argument('-r', '--report_type', choices=["1","2","3","4"],
                         help='The report type to generate. \n1: Campaign\n2: Executive\n3. Intrusion Analysis\n4: Threat Actor'
                         )
     parser.add_argument('-d', '--document_type', nargs='?', default='docx', help="Document type to export. Default value is a DOCX",
                         type=str.lower, choices=['docx', 'pdf'])
-    parser.add_argument('-e', '--exclude_section', action='extend', nargs='*', default=[], 
-                        help='Fields to exclude from export. Invalid sections for a report will be ignored.')
     
     parser.add_argument('-f', '--data_input_filepath', help="An absolute path to the JSON data input", type=Path)
     args = parser.parse_args()  # Load arguments from console into a Namespace object
 
-    # print(args)
     if len(sys.argv)-1 < 3 :  # Not enough parameters given. Initiate CLI
         if args.report_type is None or args.data_input_filepath is None:
             print('Not enough arguments provided, please make selections within the CLI.\n')
             args.report_type, args.document_type, args.exclude_section, args.data_input_filepath = cli()
     args.data_input_filepath = Path(args.data_input_filepath)
+    
+    if not args.exclude_section:
+        # only_section was inputted
+        if args.report_type == '1':
+            campaign = {"executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
+            args.exclude_section = list(campaign-args.only_section)
+        elif args.report_type == '2':
+            executive = {"executive_summary", "key_points", "assessment", "outlook", "intelligence_gaps", "intelligence_requirements", "data_sources"}
+            args.exclude_section = list(executive-args.only_section)
+        elif args.report_type == '3':
+            ia = {"executive_summary", "key_points", "indicator_analysis", "mitre_attack_table_ia", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata_ia"}
+            args.exclude_section = list(ia-args.only_section)
+        elif args.report_type == '4':
+            ta = {"executive_summary", "key_points", "assessment", "threat_actor", "timeline", "intelligence_gaps", "mitre_attack_table", "victims", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
+            args.exclude_section = list(ta-args.only_section)
 
     process_template(args.data_input_filepath, args.report_type, args.exclude_section) 
     filename = os.path.splitext(os.path.split(args.data_input_filepath)[-1])[0]+'.html'
@@ -413,10 +639,7 @@ if __name__ == "__main__":
 def todo():
     """A running list of remaining TODO's
         # TODO: Create a way to import published Attack Flow techniques (.json files) to ensure data can be pulled
-        # TODO: Find a better way to document 'help' for `exclude_section`, so to not have invalid arguments (e.g., 'Executive Summary' instead of 'executive_summary')
-            # Perhaps best to have it come from the HTML_dict?
-        # TODO: Rename HTML file in `sections`. This file deals with attaching Attack Flows and heat maps (to be implemented in the future)
-        # TODO: Go back and edit `TORENAMELATER.html` to handle attaching of AF JSONs & other files and how they will be handled within above HTML module
+        # TODO: Go back and modify `TORENAMELATER.html` to be operational. The file contains feedback and is meant for attaching Attack Flow & heatmap files
         
         * Ending tasks:
             -. Clean up comments
