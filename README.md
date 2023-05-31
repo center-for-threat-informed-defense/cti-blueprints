@@ -28,7 +28,7 @@ templates or the Blueprints Suite of tools.
 
 | Resource                                                                                        | Description                                        |
 | ----------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [Slip Sheet](#TODO)                                                                             | One page overview of CTI Blueprints                |
+| [Slip Sheet](https://github.com/center-for-threat-informed-defense/cti-blueprints/blob/main/CTI_Blueprints_Slip_Sheet.pdf) | One page overview of CTI Blueprints |
 | [Documentation](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki)      | Complete documentation for CTI Blueprints          |
 | [Templates](./templates)                                                                        | CTI report templates with inline guidance          |
 | [Sample Reports](./samples)                                                                     | Sample reports illustrating use of the templates   |
@@ -39,7 +39,7 @@ templates or the Blueprints Suite of tools.
 There are several ways that you can get involved with this project and help advance
 threat-informed defense:
 
-- **Review the [Slip Sheet](#TODO) and [sample reports](./samples).** This will give you
+- **Review the [Slip Sheet](https://github.com/center-for-threat-informed-defense/cti-blueprints/blob/main/CTI_Blueprints_Slip_Sheet.pdf) and [sample reports](./samples).** This will give you
   a quick overview of the project's goals and help to envision your own capability to
   use it.
 - **Read [the
