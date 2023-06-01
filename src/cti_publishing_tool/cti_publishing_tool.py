@@ -3,6 +3,7 @@ import argparse
 import os
 import json
 from pathlib import Path
+import base64
 
 from liquid import Template
 from htmldocx import HtmlToDocx
@@ -110,13 +111,13 @@ def cli():
             except ValueError:
                 print("Choose a valid option from the list!\n")
         if choice == 1:
-            return _cli_exclude(report_type)
+            return _cli_exclude_sections(report_type)
         elif choice == 2:
-            return _cli_only(report_type)
+            return _cli_only_sections(report_type)
         elif choice == 3:
             return []
 
-    def _cli_exclude(report_type):
+    def _cli_exclude_sections(report_type):
         """User inputs which sections to keep out of the rendered template based on `report_type`"""
         section_choice = 0
         exclude_sections = set()
@@ -299,7 +300,7 @@ def cli():
             
         return list(exclude_sections)
 
-    def _cli_only(report_type):
+    def _cli_only_sections(report_type):
         """User inputs which sections for the rendered template based on `report_type` and is processed as `exclude_sections` to """
         section_choice = 0
         include_sections = set()
@@ -503,6 +504,7 @@ def cli():
             data_input_path = data_input_path.strip()
             data_input_path = data_input_path.strip("'")
             data_input_path = data_input_path.strip("\"")
+            data_input_path = data_input_path.replace("\ ", "")
             data_input_path = Path(data_input_path)
             if data_input_path == Path():
                 # Blank paths are not allowed
@@ -554,11 +556,29 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
                 # Ignore invalid keys and continue
                 pass
         for key in _sections:
-            with open(sect+SECTIONS[key], 'r') as _file_obj:
-                tem = Template(_file_obj.read())
-                _template_ += tem.render(data)
+            if key == "file":
+                _embed_file(data)
+            else:
+                with open(sect + SECTIONS[key], 'r') as _file_obj:
+                    tem = Template(_file_obj.read())
+                    _template_ += tem.render(data)
         return _template_
     
+    def _embed_file(data):
+        # In order to implement, add `KEYNAME` to the section lists in _modular_template
+        filemap = data["file"]
+        bytes = base64.b64decode(filemap["byte_string"]).decode('utf-8')
+        filename = filemap["filename"]
+
+        try:
+            os.mkdir("./output/")
+        except FileExistsError:
+            pass
+
+        with open("./output/" + filename + ".json", "w") as file:
+            json.dump(json.loads(bytes), file, indent=4)
+        
+
     _report_map = {
         1: 'campaign',
         2: 'executive',
@@ -569,11 +589,16 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
     report_type = _report_map[int(report_type)]
 
     rendered_template = _modular_template(exclude_sections, report_type, data)
-    filename = os.path.splitext(os.path.split(data_input_filepath)[-1])[0]+'.html'
+    filename = os.path.splitext(os.path.split(data_input_filepath)[-1])[0] + '.html'
     
     # Save rendered template as an HTML file
     # Rendered HTML can be converted to DOCX or PDF files or converted by the user.
-    with open("output/" + filename, 'w') as file:
+    try:
+        os.mkdir("./output/")
+    except FileExistsError:
+        pass
+
+    with open("./output/" + filename, 'w') as file:
         file.write(rendered_template)
 
 
@@ -590,8 +615,8 @@ def export_report(filepath_to_html, doc_type='docx'):
         new_parser.parse_html_file(filepath_to_html, filename)
         # Remove all the above when we find a better transformer
         
-        input_f = Path(filename+'.docx')
-        output_f = Path(filename+'.pdf')
+        input_f = Path(filename + '.docx')
+        output_f = Path(filename + '.pdf')
         convert(input_f, output_f)
     print("Document created")
 
@@ -599,47 +624,45 @@ def export_report(filepath_to_html, doc_type='docx'):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-e', '--exclude_section', action='extend', nargs='*', default=[], choices=["executive_summary","key_points","assessment","indicator_analysis","outlook","threat_actor","intelligence_gaps","mitre_attack_table","victims","timeline","iocs","signatures","intelligence_requirements","data_sources","metadata"], help='A space separated list of fields to exclude from export. Invalid sections for a report will be ignored.')
-    group.add_argument('-o', '--only_section', action='extend', nargs='*', default=[], choices=["executive_summary","key_points","assessment","indicator_analysis","outlook","threat_actor","intelligence_gaps","mitre_attack_table","victims","timeline","iocs","signatures","intelligence_requirements","data_sources","metadata"], help='A space separated list of fields to include in the export. Invalid sections for a report will be ignored.')
-    parser.add_argument('-r', '--report_type', choices=["1","2","3","4"],
-                        help='The report type to generate. \n1: Campaign\n2: Executive\n3. Intrusion Analysis\n4: Threat Actor'
-                        )
-    parser.add_argument('-d', '--document_type', nargs='?', default='docx', help="Document type to export. Default value is a DOCX",
-                        type=str.lower, choices=['docx', 'pdf'])
+    group.add_argument('-e', '--exclude_section', action='extend', nargs='*', default=[], choices=["executive_summary","key_points","assessment","indicator_analysis","outlook","threat_actor","intelligence_gaps","mitre_attack_table","victims","timeline","iocs","signatures","intelligence_requirements","data_sources","metadata"],
+                       help='A space separated list of fields to exclude from export. Invalid sections for a report will be ignored.')
+    group.add_argument('-o', '--only_section', action='extend', nargs='*', default=[], choices=["executive_summary","key_points","assessment","indicator_analysis","outlook","threat_actor","intelligence_gaps","mitre_attack_table","victims","timeline","iocs","signatures","intelligence_requirements","data_sources","metadata"],
+                       help='A space separated list of fields to include in the export. Invalid sections for a report will be ignored.')
+    parser.add_argument('-r', '--report_type', choices=["1","2","3","4"], help='The report type to generate. \n1: Campaign\n2: Executive\n3. Intrusion Analysis\n4: Threat Actor')
+    parser.add_argument('-d', '--document_type', nargs='?', default='docx', help="Document type to export. Default value is a DOCX", type=str.lower, choices=['docx', 'pdf'])
     
     parser.add_argument('-f', '--data_input_filepath', help="An absolute path to the JSON data input", type=Path)
     args = parser.parse_args()  # Load arguments from console into a Namespace object
 
-    if len(sys.argv)-1 < 3 :  # Not enough parameters given. Initiate CLI
+    if len(sys.argv) - 1 < 3 :  # Not enough parameters given. Initiate CLI
         if args.report_type is None or args.data_input_filepath is None:
             print('Not enough arguments provided, please make selections within the CLI.\n')
             args.report_type, args.document_type, args.exclude_section, args.data_input_filepath = cli()
     args.data_input_filepath = Path(args.data_input_filepath)
-    
+
     if not args.exclude_section:
         # only_section was inputted
         if args.report_type == '1':
             campaign = {"executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
-            args.exclude_section = list(campaign-args.only_section)
+            args.exclude_section = list(campaign-set(args.only_section))
         elif args.report_type == '2':
             executive = {"executive_summary", "key_points", "assessment", "outlook", "intelligence_gaps", "intelligence_requirements", "data_sources"}
-            args.exclude_section = list(executive-args.only_section)
+            args.exclude_section = list(executive-set(args.only_section))
         elif args.report_type == '3':
             ia = {"executive_summary", "key_points", "indicator_analysis", "mitre_attack_table_ia", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata_ia"}
-            args.exclude_section = list(ia-args.only_section)
+            args.exclude_section = list(ia-set(args.only_section))
         elif args.report_type == '4':
             ta = {"executive_summary", "key_points", "assessment", "threat_actor", "timeline", "intelligence_gaps", "mitre_attack_table", "victims", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
-            args.exclude_section = list(ta-args.only_section)
+            args.exclude_section = list(ta-set(args.only_section))
 
     process_template(args.data_input_filepath, args.report_type, args.exclude_section) 
-    filename = os.path.splitext(os.path.split(args.data_input_filepath)[-1])[0]+'.html'
-    export_report("output/" + filename, args.document_type)
+    filename = os.path.splitext(os.path.split(args.data_input_filepath)[-1])[0] + '.html'
+    export_report("./output/" + filename, args.document_type)
 
 
 def todo():
     """A running list of remaining TODO's
-        # TODO: Create a way to import published Attack Flow techniques (.json files) to ensure data can be pulled
-        # TODO: Go back and modify `TORENAMELATER.html` to be operational. The file contains feedback and is meant for attaching Attack Flow & heatmap files
+       # TODO: Go back and modify `TORENAMELATER.html` to be operational. The file contains feedback and is meant for attaching Attack Flow & heatmap files
         
         * Ending tasks:
             -. Clean up comments
