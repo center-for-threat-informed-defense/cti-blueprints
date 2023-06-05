@@ -4,6 +4,7 @@ import os
 import json
 from pathlib import Path
 import base64
+import tempfile
 
 from liquid import Template
 from htmldocx import HtmlToDocx
@@ -529,13 +530,15 @@ def cli():
 
     
 def process_template(data_input_filepath, report_type, exclude_sections=None):
-    """Load the `report_type` template from memory while excluding sections from `exclude_sections`"""
+    """Load the `report_type` template from memory while excluding sections from `exclude_sections`.
+    Returns a tuple of the template as a string and the filename.
+    """
 
     def _load_data(data_input_filepath):
         """Expects a str of the JSON to convert. Simply loads it into Python and returns it"""
         with open(data_input_filepath, 'r') as _file_obj:
             data_json = json.load(_file_obj)
-            return data_json
+        return data_json
 
     def _modular_template(exclude_sections, report_type, data):
         """Create a template dynamically by adding sections as needed, without the criteria from `exclude_sections`."""
@@ -578,7 +581,6 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
         with open("./output/" + filename + ".json", "w") as file:
             json.dump(json.loads(bytes), file, indent=4)
         
-
     _report_map = {
         1: 'campaign',
         2: 'executive',
@@ -589,37 +591,36 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
     report_type = _report_map[int(report_type)]
 
     rendered_template = _modular_template(exclude_sections, report_type, data)
-    filename = os.path.splitext(os.path.split(data_input_filepath)[-1])[0] + '.html'
-    
-    # Save rendered template as an HTML file
-    # Rendered HTML can be converted to DOCX or PDF files or converted by the user.
+    filename = os.path.splitext(os.path.split(data_input_filepath)[-1])[0]
+    return (rendered_template, filename)
+
+
+def export_report(rendered_template, filename, doc_type='docx'):
     try:
         os.mkdir("./output/")
     except FileExistsError:
         pass
-
-    with open("./output/" + filename, 'w') as file:
-        file.write(rendered_template)
-
-
-def export_report(filepath_to_html, doc_type='docx'):
-    filename = os.path.splitext(filepath_to_html)[0]
-    if doc_type == 'docx':
-        new_parser = HtmlToDocx()
-        new_parser.table_style = 'Light List Accent 1'
-        new_parser.parse_html_file(filepath_to_html, filename)
-    elif doc_type == 'pdf':
-        # Temporary workaround - with out current PDF creation, we require a DOCX.
-        new_parser = HtmlToDocx()
-        new_parser.table_style = 'Light List Accent 1'
-        new_parser.parse_html_file(filepath_to_html, filename)
-        # Remove all the above when we find a better transformer
-        
-        input_f = Path(filename + '.docx')
-        output_f = Path(filename + '.pdf')
-        convert(input_f, output_f)
+    
+    with tempfile.TemporaryDirectory() as temporary_files:
+        if doc_type == 'docx':
+            new_parser = HtmlToDocx()
+            new_parser.table_style = 'Light List Accent 1'
+            docx = new_parser.parse_html_string(rendered_template)
+            temp_path = os.path.join("./output/", (filename + '.docx'))
+            docx.save(temp_path)
+        elif doc_type == 'pdf':
+            temp_path = os.path.join(temporary_files, (filename + '.docx'))
+            # Temporary workaround - with our current PDF conversion library, we require a DOCX.
+            new_parser = HtmlToDocx()
+            new_parser.table_style = 'Light List Accent 1'
+            docx = new_parser.parse_html_string(rendered_template)
+            docx.save(temp_path)
+            # Remove lines between comments when using a different transformer
+            input_f = temp_path
+            output_f = os.path.join("./output/", (filename + '.pdf'))
+            convert(input_f, output_f)
     print("Document created")
-
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -640,7 +641,7 @@ if __name__ == "__main__":
             args.report_type, args.document_type, args.exclude_section, args.data_input_filepath = cli()
     args.data_input_filepath = Path(args.data_input_filepath)
 
-    if not args.exclude_section:
+    if args.only_section:
         # only_section was inputted
         if args.report_type == '1':
             campaign = {"executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
@@ -655,17 +656,5 @@ if __name__ == "__main__":
             ta = {"executive_summary", "key_points", "assessment", "threat_actor", "timeline", "intelligence_gaps", "mitre_attack_table", "victims", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"}
             args.exclude_section = list(ta-set(args.only_section))
 
-    process_template(args.data_input_filepath, args.report_type, args.exclude_section) 
-    filename = os.path.splitext(os.path.split(args.data_input_filepath)[-1])[0] + '.html'
-    export_report("./output/" + filename, args.document_type)
-
-
-def todo():
-    """A running list of remaining TODO's
-       # TODO: Go back and modify `TORENAMELATER.html` to be operational. The file contains feedback and is meant for attaching Attack Flow & heatmap files
-        
-        * Ending tasks:
-            -. Clean up comments
-            -. Write docstrings
-        NOTE: Using a set in CLI_exclude will print elements in different orders.
-    """
+    template = process_template(args.data_input_filepath, args.report_type, args.exclude_section) 
+    export_report(template[0], template[1], args.document_type)

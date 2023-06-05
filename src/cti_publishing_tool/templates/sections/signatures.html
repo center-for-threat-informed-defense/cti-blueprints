@@ -1,9 +1,10 @@
 <h2>Signatures</h2>
-<p>This section should include detections (e.g., Yara signature) that correspond to the malware or malicious activity associated with the campaign.</p>
-<ol>
-    {%- for sig in iocs.signatures -%}
+<ul>
+    {%- for sig in signatures -%}
     <li>{{ sig.attribution }}</li>
-    <li>{{ sig.ioc_malware_name }}</li>
-    <li>{{ sig.signature_description }}</li>
+    <ul>
+        <li>{{ sig.ioc_malware_name }}</li>
+        <li>{{ sig.signature_description }}</li>
+    </ul>
     {%- endfor -%}
-</ol>
+</ul>
