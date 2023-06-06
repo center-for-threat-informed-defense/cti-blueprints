@@ -52,7 +52,7 @@ export class EventEmitter {
      * @param args
      *  The arguments to pass to the event listeners.
      */
-    protected emit(event: string, ...args: any[]) {
+    public emit(event: string, ...args: any[]) {
         if(this._listeners.has(event)) {
             let listeners = this._listeners.get(event)!;
             for(let i = listeners.length - 1; 0 <= i; i--) {

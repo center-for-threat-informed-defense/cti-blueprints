@@ -1,19 +1,24 @@
 import { Artifact } from "./Artifact";
 import { Attribution } from "./Attribution";
 import { LastObserved } from "./LastObserved";
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 import { FirstObserved } from "./FirstObserved";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { NetworkIntrusionPhase } from "./NetworkIntrusionPhase";
 
 export const IocsNetwork = {
     id: "ioc_network",
     name: "Network Indicators",
+    path: "*.iocs.network",
     type: PropertyType.ComplexTable,
     layout: {
         summary: "{{ attribution }}\n**{{ artifact }}**",
         cols: 2,
         rows: 3
     },
+    plugins: [
+        { module: ImportCSVPlugin }
+    ],
     properties: [
         {
             ...Attribution,

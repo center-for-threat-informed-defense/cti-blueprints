@@ -10,8 +10,11 @@ import { IntelligenceRequirementsSection } from "../sections/IntelligenceRequire
 import { IntrusionAnalysisMetadataSection } from "../sections/IntrusionAnalysisMetadataSection";
 
 export const IntrusionAnalysis: any = {
-    id: "intrusion_analysis_report",
+    id: "99664720-25a7-474f-b4ea-a6db68039203",
     name: "Intrusion Analysis Report",
+    keys: [
+        "general.report_title"
+    ],
     sections: [
         GeneralSection,
         ExecutiveSummarySection,

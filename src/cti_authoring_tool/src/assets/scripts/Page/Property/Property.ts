@@ -1,10 +1,10 @@
-import { IProperty } from "./IProperty";
-import { PageSection } from "../PageSection";
-import { EventEmitter, String } from "../../Utilities";
-import { PagePropertyTemplate, Plugin, PropertyTemplate, PropertyType } from "../../AppConfiguration";
-import { DateTimeProperty, EnumProperty, NumberProperty, StringProperty, BasicTableProperty, ComplexTableProperty } from "./";
+import { Section } from "../Section/Section";
+import { PageElement } from "../PageElement";
+import { PropertyAssembler } from "./PropertyAssembler";
+import { PropertyParameters } from "./PropertyParameters";
+import { PropertyAction, PropertyActionText } from "./PropertyAction";
 
-export abstract class Property extends EventEmitter implements IProperty {
+export abstract class Property extends PageElement {
 
     /**
      * The property's id.
@@ -17,9 +17,14 @@ export abstract class Property extends EventEmitter implements IProperty {
     public readonly name: string;
 
     /**
-     * The property's type.
+     * The property's export path.
      */
-    public readonly type: PropertyType;
+    public readonly path: string;
+
+    /**
+     * The property's help link.
+     */
+    public readonly link: string | null;
 
     /**
      * The property's row.
@@ -32,111 +37,114 @@ export abstract class Property extends EventEmitter implements IProperty {
     public readonly col: number | [number, number];
 
     /**
-     * The property's help link.
-     */
-    public readonly help: string | null;
-
-    /**
-     * The property's primary status.
-     */
-    public readonly isPrimary: boolean;
-
-    /**
-     * The property's plugins.
-     */
-    protected _plugins: Object[];
-
-    /**
      * The property's actions
      */
-    protected _actions: any[];
+    protected _actions: Map<string, PropertyAction> | null;
 
+    
     /**
-     * The property's section.
+     * The property's actions.
      */
-    protected _section: PageSection;
+    public get actions(): ReadonlyMap<string, PropertyActionText> | null {
+        return this._actions;
+    }
 
 
     /**
      * Creates a new {@link Property}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
+     * @param params
+     *  The property's parameters.
      */
-    constructor(section: PageSection, template: PropertyTemplate) {
-        super();
-        this._section = section;
-        this.id = template.id ?? String.formatId(template.name);
-        this.name = template.name;
-        this.type = template.type;
-        this.row = template.row;
-        this.col = template.col;
-        this.help = template.help ?? null;
-        this.isPrimary = template.is_primary ?? false;
-        this._plugins = [];
-        this._actions = [];
-    }
-
+    constructor(params: PropertyParameters);
+    
     /**
-     * Returns the instance id of the page the property belongs to.
-     * @returns
-     *  The instance id of the page the property belongs to.
+     * Creates a new {@link Property}.
+     * @param params
+     *  The property's parameters.
+     * @param assembler
+     *  The property's assembler.
      */
-    public getPageInstance(): string {
-        return this._section.getPageInstance();
+    constructor(params: PropertyParameters, assembler?: PropertyAssembler);
+    constructor(params: PropertyParameters, assembler?: PropertyAssembler) {
+        super();
+        // Configure state
+        this.id = params.id;
+        this.path = params.path ?? params.id;
+        this.name = params.name;
+        this.link = params.link ?? null;
+        this.row = params.row;
+        this.col = params.col;
+        this._parent = null;
+        this._actions = null;
+        // Configure assembler
+        if(assembler) {
+            this.__prepareAssembler(assembler);
+        }
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ///  1. IProperty Methods  ////////////////////////////////////////////////
+    ///  1. Action Management  ////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     
     /**
      * Registers a property action.
+     * @param id
+     *  The action's id.
      * @param name
-     *  The action's name.
-     * @param action
+     *  The action's text.
+     * @param func
      *  The action.
      */
-    public registerAction(name: string, action: () => void): void {
-        // TODO: Implement action registration
-        throw new Error("Method not implemented.");
+    public registerAction(id: string, text: string, func: () => void): void {
+        // Don't allocate Map until absolutely necessary
+        if(this._actions === null) {
+            this._actions = new Map();
+        }
+        this._actions.set(id, { text, function: func });
     }
 
     /**
-     * Adds an event listener to the property.
-     * @param event
-     *  The event to subscribe to.
-     * @param callback
-     *  The function to call once the event has fired.
+     * Invokes a property action.
+     * @param id
+     *  The action's id.
      */
-    public override on(event: string, callback: () => void): void {
-        super.on(event, callback);
-    }
-    
-    /**
-     * Adds an event listener to the property that will be fired once and then
-     * removed.
-     * @param event
-     *  The event to subscribe to.
-     * @param callback
-     *  The function to call once the event has fired. 
-     */
-    public override once(event: string, callback: () => void): void {
-        super.on(event, callback);
+    public invokeAction(id: string) {
+        if(this._actions === null || !this._actions.has(id)) {
+            throw new Error(`'${ id }' is not a registered action.`);
+        } else {
+            this._actions.get(id)!.function();
+        }
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. Property Cloning  /////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
     /**
-     * Removes all event listeners associated with a given event. If no event
-     * name is specified, all event listeners are removed.
-     * @param event
-     *  The name of the event.
+     * Clones the property.
+     * @returns
+     *  The cloned property.
      */
-    public override removeAllListeners(event?: string): void {
-        super.removeAllListeners(event);
-    }
+    public abstract override clone(): Property;
+
+    /**
+     * Clones the property.
+     * @param assembler
+     *  The cloned property's assembler.
+     * @returns
+     *  The cloned property.
+     */
+    public abstract override clone(assembler?: PropertyAssembler): Property;
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  3. toString  /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Returns a string representation of the property.
@@ -145,112 +153,40 @@ export abstract class Property extends EventEmitter implements IProperty {
      */
     public abstract override toString(): string | undefined;
 
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    ///  2. Event Methods  ////////////////////////////////////////////////////
+    ///  4. Assembler Preparation  ////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
     /**
-     * Property mount behavior.
-     * @param el
-     *  The property's HTML container.
-     */
-    public onMount(el: HTMLElement) {
-        super.emit("mount", el);
-    }
-
-    /**
-     * Property destroy behavior.
-     */
-    public onDestroy() {
-        super.emit("destroy");
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///  3. Plugins  //////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    
-    /**
-     * Initializes all plugins from a property's template.
-     * @param template
-     *  The property's template.
-     */
-    protected initializePlugins(template: PropertyTemplate) {
-        if(!template.plugins) {
-            return;
-        }
-        for(let plugin of template.plugins) {
-            this.tryRegisterPlugin(plugin);
-        }
-    }
-
-    /**
-     * Attempts to register a plugin with the property.
-     * @param plugin
-     *  The plugin to register.
+     * Prepares an assembler for the property.
      * @returns
-     *  True if the plugin was successfully registered, false otherwise.
+     *  The property's assembler.
+     * @remarks
+     *  Page API use only. Do not use.
+     * @internal
      */
-    private tryRegisterPlugin(plugin: Plugin<any>): boolean {
-        // Ensure plugin is not already registered
-        if(this._plugins.find(o => o.constructor === plugin.plugin)) {
-            let name = plugin.plugin.name;
-            throw new Error(`Plugin '${ name }' is already registered.`);
-        }
-        // Register plugin
-        let p;
-        try {
-            if(plugin.options) {
-                p = new plugin.plugin(this, plugin.options());
-            } else {
-                p = new plugin.plugin(this);
-            }
-        } catch(err) {
-            let name = plugin.plugin.name;
-            console.error(`Failed to initialize plugin '${ name }':`);
-            console.error(err);
-            return false;
-        }
-        this._plugins.push(p);
-        return true;
-    }
+    public __prepareAssembler(): PropertyAssembler
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///  4. Create Property Method  ///////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    
     /**
-     * Creates a new {@link Property}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @param value
-     *  The property's value.
+     * Prepares an assembler for the property.
+     * @param assembler
+     *  The assembler to use.
+     * @returns
+     *  The property's assembler.
+     * @remarks
+     *  Page API use only. Do not use.
+     * @internal
      */
-    public static create(section: PageSection, template: PagePropertyTemplate, value?: any): Property {
-        switch(template.type) {
-            case PropertyType.String:
-                return new StringProperty(section, template, value);
-            case PropertyType.Integer:
-            case PropertyType.Float:
-                return new NumberProperty(section, template, value);
-            case PropertyType.Date:
-            case PropertyType.Time:
-            case PropertyType.DateTime:
-                return new DateTimeProperty(section, template, value);
-            case PropertyType.Enum:
-                return new EnumProperty(section, template, value);
-            case PropertyType.BasicTable:
-                return new BasicTableProperty(section, template, value);
-            case PropertyType.ComplexTable:
-                return new ComplexTableProperty(section, template, value);
-        }
+    public __prepareAssembler(assembler?: PropertyAssembler): PropertyAssembler;
+    public __prepareAssembler(assembler: PropertyAssembler = new PropertyAssembler()): PropertyAssembler {
+        assembler.__injectAccessor({
+            property: this,
+            getParent: () => this._parent,
+            setParent: (p: Section | Property | null) => this._parent = p
+        });
+        return assembler;
     }
 
 }

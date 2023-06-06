@@ -12,8 +12,11 @@ import { KeyIntelligenceGapsSection } from "../sections/KeyIntelligenceGapsSecti
 import { IntelligenceRequirementsSection } from "../sections/IntelligenceRequirementsSection";
 
 export const Campaign: any = {
-    id: "campaign_report",
+    id: "a2d30a3c-49b5-42e5-a4cb-649009fa4c9d",
     name: "Campaign Report",
+    keys: [
+        "general.report_title"
+    ],
     sections: [
         GeneralSection,
         ExecutiveSummarySection,

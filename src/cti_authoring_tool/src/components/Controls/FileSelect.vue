@@ -6,7 +6,7 @@
       @click="$emit('switch', k)"
     >
       <File class="file-icon" />
-      <p class="file-title">{{ e.page.name }}</p>
+      <p class="file-title">{{ e.name }}</p>
       <p class="file-close" @click.stop="$emit('close', k)">✗</p>
     </div>
   </div>
@@ -14,7 +14,7 @@
 
 <script lang="ts">
 // Dependencies
-import { PageEditor } from "@/assets/scripts/Page/PageEditor";
+import { PageEditor } from "@/assets/scripts/PageEditor/PageEditor";
 import { defineComponent, PropType } from "vue";
 // Components
 import File from "@/components/Icons/File.vue";

@@ -1,6 +1,7 @@
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 import { ThreatActorName } from "./ThreatActorName";
 import { ThreatActorAliases } from "./ThreatActorAliases";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const ThreatActorAttributions = {        
     id: "threat_actors", 
@@ -9,6 +10,9 @@ export const ThreatActorAttributions = {
     layout: { 
         cols: 3, 
     },
+    plugins: [
+        { module: ImportCSVPlugin }
+    ],
     properties: [ 
         {        
             ...ThreatActorName,

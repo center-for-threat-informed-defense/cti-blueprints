@@ -6,9 +6,9 @@
 
 <script lang="ts">
 // Dependencies
-import { Hotkey } from "@/assets/scripts/HotkeyObserver";
+import { Hotkey } from "@/assets/scripts/Utilities/HotkeyObserver";
 import { defineComponent } from "vue";
-import { Command, CommandEmitter } from "@/assets/scripts/Commands/Command";
+import { Command, CommandEmitter } from "@/assets/scripts/Application/Command";
 import { mapGetters, mapMutations } from "vuex";
 // Components
 import HotkeyBox from "@/components/Containers/HotkeyBox.vue";

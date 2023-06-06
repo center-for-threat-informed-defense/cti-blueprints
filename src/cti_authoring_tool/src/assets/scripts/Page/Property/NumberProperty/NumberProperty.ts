@@ -1,15 +1,9 @@
-import { clamp } from "@/assets/scripts/Utilities";
-import { PageSection } from "../../PageSection";
 import { AtomicProperty } from "..";
-import { INumberProperty } from "./INumberProperty";
-import { NumberPropertyTemplate, PropertyType } from "../../../AppConfiguration";
+import { PropertyAssembler } from "../PropertyAssembler";
+import { Plugin, PluginManager } from "../../Plugins";
+import { NumberPropertyParameters } from "./NumberPropertyParameters";
 
-export class NumberProperty extends AtomicProperty implements INumberProperty {
-
-    /**
-     * The property's value.
-     */
-    public value: number | null;
+export abstract class NumberProperty extends AtomicProperty {
 
     /**
      * The property's minimum allowed value.
@@ -21,74 +15,99 @@ export class NumberProperty extends AtomicProperty implements INumberProperty {
      */
     public readonly max: number;
 
+    /**
+     * The property's value.
+     */
+    protected _value: number | null;
 
     /**
-     * Creates a new {@link NumberProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
+     * The property's plugin manager.
      */
-    constructor(section: PageSection, template: NumberPropertyTemplate);
+    protected _plugins: PluginManager<NumberProperty> | null;
 
-    /**
-     * Creates a new {@link NumberProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @param value
-     *  The property's value.
-     */
-    constructor(section: PageSection, template: NumberPropertyTemplate, value: number);
-    constructor(section: PageSection, template: NumberPropertyTemplate, value?: number) {
-        super(section, template);
-        this.value = null;
-        this.min = template.min ?? -Infinity;
-        this.max = template.max ?? Infinity;
-        if(value !== undefined) {
-            this.setValue(value);
-        } else if(template.default !== undefined) {
-            this.setValue(template.default);
-        } else {
-            this.setValue(null);
-        }
-        this.initializePlugins(template);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///  1. INumberProperty Methods  //////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * Sets the property's value directly.
-     * @param value
-     *  The property's new value.
-     */
-    public setValue(value: number | null): void {
-        // If null value
-        if(value === null) {
-            this.value = value;
-            return;
-        }
-        // If numeric value
-        let v = clamp(value, this.min, this.max);
-        if(this.type === PropertyType.Integer) {
-            this.value = Math.round(v);
-        } else {
-            this.value = v;
-        }
-    }
-
-    /**
-     * Creates a new command.
-     */
-    public newCommand(): void {
-        // TODO: Implement command construct
-        throw new Error("Method not implemented.");
-    }
     
+    /**
+     * The property's value.
+     */
+    public abstract get value(): number | null;
+
+    /**
+     * The property value's setter.
+     */
+    public abstract set value(value: number | null);
+
+
+    /**
+     * Creates a new {@link NumberProperty}.
+     * @param params
+     *  The property's parameters.
+     */
+    constructor(params: NumberPropertyParameters);
+
+    /**
+     * Creates a new {@link NumberProperty}.
+     * @param params
+     *  The property's parameters.
+     * @param assembler
+     *  The property's assembler.
+     */
+    constructor(params: NumberPropertyParameters, assembler?: PropertyAssembler);
+    constructor(params: NumberPropertyParameters, assembler?: PropertyAssembler) {
+        super(params, assembler);
+        this.min = params.min ?? -Infinity;
+        this.max = params.max ?? Infinity;
+        this._value = null;
+        this._plugins = null;
+    }
+
+    
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. Plugin Management  ////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attempts to install a plugin into the property.
+     * @param plugin
+     *  The plugin to install.
+     * @returns
+     *  True if the plugin was successfully installed, false otherwise.
+     */
+    public tryInstallPlugin(plugin: Plugin<NumberProperty>): boolean {
+        let result;
+        // Don't allocate manager until absolutely necessary
+        if(this._plugins === null) {
+            this._plugins = new PluginManager<NumberProperty>(this, this.root);
+        }
+        result = this._plugins.tryInstallPlugin(plugin);
+        // Deallocate manager if no plugins were installed
+        if(this._plugins.length === 0) {
+            this._plugins = null;
+        }
+        return result;
+    }
+
+    /**
+     * Attempts to install a list of plugins into the property.
+     * @param plugin
+     *  The plugins to install.
+     * @returns
+     *  True if all plugins were successfully installed, false otherwise.
+     */
+    public tryInstallPlugins(plugins: Plugin<NumberProperty>[]): boolean {
+        let result = true;
+        for(let plugin of plugins) {
+            result &&= this.tryInstallPlugin(plugin);
+        }
+        return result;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. toString  /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
     /**
      * Returns a string representation of the property.
      * @returns
@@ -96,25 +115,6 @@ export class NumberProperty extends AtomicProperty implements INumberProperty {
      */
     public override toString(): string | undefined {
         return this.value !== null ? `${ this.value }` : undefined;
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///  2. Event Methods  ////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * Property update behavior.
-     * @param newValue
-     *  The property's new value.
-     * @param oldValue
-     *  The property's old value.
-     */
-    public onUpdate(newValue: number, oldValue: number) {
-        // TODO: Link update event
-        this.emit("update", newValue, oldValue);
-        this._section.onPropertyUpdate(this, newValue, oldValue);
     }
 
 }

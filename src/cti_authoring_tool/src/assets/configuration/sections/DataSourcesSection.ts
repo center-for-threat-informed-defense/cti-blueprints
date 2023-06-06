@@ -1,8 +1,8 @@
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
 import { ReportCitations } from "../properties/ReportCitations";
-import { InternalTelemetry } from "../properties/InternalTelemetry";
+import { InternalTelemetryTable } from "../properties/InternalTelemetryTable";
 
 export const DataSourcesSection = {
+    id: "data_sources",
     name: "Data Sources",
     layout: {
         rows: 2,
@@ -15,20 +15,9 @@ export const DataSourcesSection = {
             col: 1
         },
         {
-            name: "Internal Telemetry",
-            type: PropertyType.BasicTable,
+            ...InternalTelemetryTable,
             row: 2,
-            col: 1,
-            layout: {
-                cols: 1,
-            },
-            properties: [
-                {
-                    ...InternalTelemetry,
-                    row: 0,
-                    col: 1
-                }
-            ]
+            col: 1
         }
     ]
 }

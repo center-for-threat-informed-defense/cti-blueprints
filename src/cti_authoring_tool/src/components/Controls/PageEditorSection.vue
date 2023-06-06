@@ -1,6 +1,6 @@
 <template>
   <div class="page-editor-section-control">
-    <div class="section-name" v-if="section.isNameDisplayed">
+    <div class="section-name" v-if="section.name !== null">
       {{ section.name }}
     </div>
     <FieldGrid 
@@ -8,16 +8,15 @@
       :rows="section.layout.rows"
       :cols="section.layout.cols"
       :properties="properties"
-      @command="c => $emit('command', c)"
+      @execute="c => $emit('execute', c)"
     />
   </div>
 </template>
 
 <script lang="ts">
-import * as App from "@/assets/scripts/Commands/AppCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
 // Dependencies
-import { Property } from '@/assets/scripts/Page/Property';
-import { PageSection } from '@/assets/scripts/Page/PageSection';
+import { Section, Property } from '@/assets/scripts/Page';
 import { defineComponent, PropType } from 'vue';
 // Components
 import FieldGrid from "@/components/Controls/Fields/FieldGrid.vue";
@@ -26,7 +25,7 @@ export default defineComponent({
   name: 'PageSection',
   props: {
     section: {
-      type: Object as PropType<PageSection>,
+      type: Object as PropType<Section>,
       required: true
     }
   },
@@ -42,14 +41,16 @@ export default defineComponent({
     }
 
   },
-  emits: ["command"],
+  emits: ["execute"],
   mounted() {
     // Execute mount command
-    this.$emit("command", new App.MountPageSection(this.section, this.$el))
+    let cmd = AppCommands.mountSection(this.section, this.$el);
+    this.$emit("execute", cmd);
   },
   unmounted() {
     // Execute destroy command
-    this.$emit("command", new App.DestroyPageSection(this.section));
+    let cmd = AppCommands.destroySection(this.section);
+    this.$emit("execute", cmd);
   },
   components: { FieldGrid }
 });

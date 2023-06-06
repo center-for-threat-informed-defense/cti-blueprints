@@ -1,5 +1,5 @@
 <template>
-  <TabularField class="basic-table-field-control" :property="property" @command="c => $emit('command', c)">
+  <TabularField class="basic-table-field-control" :property="property" @execute="c => $emit('execute', c)">
     <template #table-header="{ columns }">
       <template v-for="prop of columns" :key="prop.id">
         <th class="head-cell data-column" :colspan="getColspan(prop)" @click="onSort(prop)">
@@ -15,9 +15,9 @@
         <td class="data-column" :colspan="getColspan(prop)">
           <component
             class="data-field"
-            :is="getField(prop.type)"
+            :is="getField(prop)"
             :property="prop"
-            @command="c => $emit('command', c)"
+            @execute="c => $emit('execute', c)"
           />          
         </td>
       </template>
@@ -26,11 +26,14 @@
 </template>
 
 <script lang="ts">
-import * as Page from "@/assets/scripts/Commands/PageCommands";
+import * as PageCommands from "@/assets/scripts/PageEditor/Commands";
 // Dependencies
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
 import { defineComponent, PropType } from "vue";
-import { BasicTableProperty, Property, Sort, TablePropertyState } from "@/assets/scripts/Page/Property";
+import { 
+    BasicTableProperty, DateProperty, DateTimeProperty, 
+    EnumProperty, FloatProperty, IntegerProperty, Property,
+    Sort, StringProperty, TableColumnState, TimeProperty
+} from "@/assets/scripts/Page/Property";
 // Components
 import TextField from "./TextField.vue";
 import EnumField from "./EnumField.vue";
@@ -46,7 +49,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ["command"],
+  emits: ["execute"],
   methods: {
     
     /**
@@ -56,7 +59,7 @@ export default defineComponent({
      * @returns
      *  The property's column span.
      */
-    getColspan(prop: TablePropertyState | Property) {
+    getColspan(prop: TableColumnState | Property) {
       return Array.isArray(prop.col) ? (prop.col[1] + 1) - prop.col[0] : 1;
     },
 
@@ -67,7 +70,7 @@ export default defineComponent({
      * @returns
      *  The property's sort arrow.
      */
-    getSortArrow(prop: TablePropertyState): string {
+    getSortArrow(prop: TableColumnState): string {
       switch(prop.sort) {
         case Sort.Descending:
         case Sort.None:
@@ -81,23 +84,23 @@ export default defineComponent({
     
     /**
      * Returns a property's field type.
-     * @param type
-     *  The type of property.
+     * @param property
+     *  The property.
      * @returns
      *  The property's field type.
      */
-    getField(type: PropertyType): string | undefined {
-      switch(type) {
-        case PropertyType.String:
+    getField(property: Property): string | undefined {
+      switch(property.constructor.name) {
+        case StringProperty.name:
           return "TextField";
-        case PropertyType.Float:
-        case PropertyType.Integer:
+        case FloatProperty.name:
+        case IntegerProperty.name:
           return "NumberField";
-        case PropertyType.Date:
-        case PropertyType.Time:
-        case PropertyType.DateTime:
+        case DateProperty.name:
+        case TimeProperty.name:
+        case DateTimeProperty.name:
           return "DateTimeField";
-        case PropertyType.Enum:
+        case EnumProperty.name:
           return "EnumField";
       }
     },
@@ -107,7 +110,7 @@ export default defineComponent({
      * @param prop
      *  The property to sort on.
      */
-    onSort(prop: TablePropertyState) {
+    onSort(prop: TableColumnState) {
       // Determine next sort order
       let s: Sort;
       switch(prop.sort) {
@@ -121,8 +124,8 @@ export default defineComponent({
           break;
       }
       // Sort
-      let cmd = new Page.TabularPropertyReorder(this.property, prop.id, s);
-      this.$emit("command", cmd);
+      let cmd = PageCommands.reorderTabularProperty(this.property, prop.id, s);
+      this.$emit("execute", cmd);
     }
 
   },

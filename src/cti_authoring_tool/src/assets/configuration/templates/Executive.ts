@@ -8,8 +8,11 @@ import { KeyIntelligenceGapsSection } from "../sections/KeyIntelligenceGapsSecti
 import { IntelligenceRequirementsSection } from "../sections/IntelligenceRequirementsSection";
 
 export const Executive: any = {
-    id: "executive_report",
+    id: "790fc5be-f24c-4fd7-a7e1-20a761c37812",
     name: "Executive Report",
+    keys: [
+        "general.report_title"
+    ],
     sections: [
         GeneralSection,
         ExecutiveSummarySection,

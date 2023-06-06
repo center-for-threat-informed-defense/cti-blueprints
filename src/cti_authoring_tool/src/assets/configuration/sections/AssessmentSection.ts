@@ -1,6 +1,7 @@
 import { Assessment } from "../properties/Assessment";
 
 export const AssessmentSection = {
+    id: "assessment",
     name: "Assessment",
     layout: {
         rows: 7,

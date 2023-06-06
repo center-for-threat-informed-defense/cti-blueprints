@@ -1,8 +1,8 @@
-import { AppConfiguration, PropertyType } from "../scripts/AppConfiguration";
-import { ThreatActorProfile } from "./templates/ThreatActorProfile";
 import { Campaign } from "./templates/Campaign";
-import { IntrusionAnalysis } from "./templates/IntrusionAnalysis";
 import { Executive } from "./templates/Executive";
+import { IntrusionAnalysis } from "./templates/IntrusionAnalysis";
+import { ThreatActorProfile } from "./templates/ThreatActorProfile";
+import { AppConfiguration } from "@/assets/scripts/Application/AppConfiguration";
 
 const config: AppConfiguration = {
     is_web_hosted: false,

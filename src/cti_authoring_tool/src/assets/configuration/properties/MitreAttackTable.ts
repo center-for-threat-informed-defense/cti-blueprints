@@ -4,18 +4,23 @@ import { Tactic } from "./Tactic";
 import { Procedure } from "./Procedure";
 import { Techniques } from "./Technique";
 import { Attribution } from "./Attribution";
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 import { SubTechniques } from "./SubTechnique";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const MitreAttackTable = {
     id: "mitre_attack_table",
     name: "MITRE ATT&CK Table",
+    path: "*.mitre_attack_table",
     type: PropertyType.ComplexTable,
     layout: {
         summary: "{{ attribution }}\n**{{ tactic }} :: {{ technique }}**",
         rows: 5,
         cols: 2
     },
+    plugins: [
+        { module: ImportCSVPlugin }
+    ],
     properties: [
         {
             ...Attribution,

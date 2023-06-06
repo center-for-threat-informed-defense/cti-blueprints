@@ -5,6 +5,7 @@ import { ThreatActorAttribution } from "../properties/ThreatActorAttribution";
 import { ThreatActorInfrastructure } from "../properties/ThreatActorInfrastructure";
 
 export const ThreatActorSummarySection = {
+    id: "threat_actor_summary",
     name: "Threat Actor Summary",
     layout: {
         rows: 5,

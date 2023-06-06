@@ -19,13 +19,12 @@
 </template>
 
 <script lang="ts">
-import * as App from "@/assets/scripts/Commands/AppCommands";
-import * as Page from "@/assets/scripts/Commands/PageCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
+import * as PageCommands from "@/assets/scripts/PageEditor/Commands";
 // Dependencies
 import { clamp } from "@/assets/scripts/Utilities";
-import { NumberProperty } from "@/assets/scripts/Page/Property";
-import { Alignment, PropertyType } from "@/assets/scripts/AppConfiguration";
 import { defineComponent, PropType, ref } from "vue";
+import { Alignment, IntegerProperty, NumberProperty } from "@/assets/scripts/Page";
 
 export default defineComponent({
   name: "NumberField",
@@ -68,7 +67,7 @@ export default defineComponent({
     }
 
   },
-  emits: ["command"],
+  emits: ["execute"],
   methods: {
 
     /**
@@ -93,7 +92,8 @@ export default defineComponent({
      */
     onSelect() {
       // Execute select command
-      this.$emit("command", new App.SelectProperty(this.property));
+      let cmd = AppCommands.selectAtomicProperty(this.property);
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -103,7 +103,8 @@ export default defineComponent({
       // Update property
       this.updateProperty(0);
       // Execute deselect command
-      this.$emit("command", new App.DeselectProperty(this.property));
+      let cmd = AppCommands.deselectAtomicProperty(this.property)
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -147,13 +148,14 @@ export default defineComponent({
         let { min, max } = this.property;
         value = clamp(value, min, max);
         // Bound type
-        if(this.property.type === PropertyType.Integer) {
+        if(this.property instanceof IntegerProperty) {
           value = Math.round(value);
         }
       }
       if(this.property.value !== value) {
         // Execute update command
-        this.$emit("command", new Page.NumberPropertySet(this.property, value));
+        let cmd = PageCommands.setNumberProperty(this.property, value);
+        this.$emit("execute", cmd);
       }
       // Refresh value
       this.refreshValue();  
@@ -186,11 +188,13 @@ export default defineComponent({
     // Update field property value
     this.refreshValue();
     // Execute mount command
-    this.$emit("command", new App.MountProperty(this.property, this.$el))
+    let cmd = AppCommands.mountProperty(this.property, this.$el);
+    this.$emit("execute", cmd);
   },
   unmounted() {
     // Execute destroy command
-    this.$emit("command", new App.DestroyProperty(this.property));
+    let cmd = AppCommands.destroyProperty(this.property);
+    this.$emit("execute", cmd);
   }
 });
 </script>

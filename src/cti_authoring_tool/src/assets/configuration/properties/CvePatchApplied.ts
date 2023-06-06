@@ -1,4 +1,4 @@
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 
 export const CvePatchApplied =  {       
     id: "cve_patch_applied",

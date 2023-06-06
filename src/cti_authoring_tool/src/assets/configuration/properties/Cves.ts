@@ -2,20 +2,25 @@ import { CveNumber } from "./CveNumber";
 import { Attribution } from "./Attribution";
 import { CveCvssScore } from "./CveCvssScore";
 import { DateOfReport } from "./DateOfReport";
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 import { CveRemediation } from "./CveRemediation";
 import { CvePatchApplied } from "./CvePatchApplied";
 import { CvePatchAvailable } from "./CvePatchAvailable";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const Cves = {
     id: "cves",
     name: "Common Vulnerabilities and Exposures (CVE)",
+    path: "*.iocs.cves",
     type: PropertyType.ComplexTable,
     layout: {
         summary: "{{ attribution }}\n**{{ cve_number }}**",
         rows: 4,
         cols: 2
     },
+    plugins: [
+        { module: ImportCSVPlugin }
+    ],
     properties: [
         {
             ...Attribution,

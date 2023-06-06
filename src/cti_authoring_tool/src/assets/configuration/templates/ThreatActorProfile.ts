@@ -14,8 +14,11 @@ import { KeyIntelligenceGapsSection } from "../sections/KeyIntelligenceGapsSecti
 import { IntelligenceRequirementsSection } from "../sections/IntelligenceRequirementsSection";
 
 export const ThreatActorProfile: any = {
-    id: "threat_actor_profile",
+    id: "e4e907ac-f845-4b51-a73f-ab511456ce74",
     name: "Threat Actor Profile",
+    keys: [
+        "general.report_title"
+    ],
     sections: [
         GeneralSection,
         ExecutiveSummarySection,

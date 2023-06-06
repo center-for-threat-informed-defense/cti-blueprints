@@ -1,8 +1,9 @@
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 
 export const Criticality = { 
     id: "criticality", 
     name: "Criticality", 
+    path: "*.criticality",
     type: PropertyType.Enum,
     options: [ 
         { id: "fysa", text: "FYSA", value: "fysa" }, 

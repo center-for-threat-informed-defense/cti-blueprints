@@ -58,12 +58,11 @@
 </template>
 
 <script lang="ts">
-import * as App from "@/assets/scripts/Commands/AppCommands";
-import * as Page from "@/assets/scripts/Commands/PageCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
+import * as PageCommands from "@/assets/scripts/PageEditor/Commands";
 // Dependencies
-import { DateTimeProperty } from "@/assets/scripts/Page/Property";
-import { Alignment, PropertyType } from "@/assets/scripts/AppConfiguration";
 import { defineComponent, PropType, ref } from "vue";
+import { Alignment, DateProperty, DateTimeProperty, TimeProperty } from "@/assets/scripts/Page";
 
 const Segments = [
   "M", "D", "Y",
@@ -196,11 +195,11 @@ export default defineComponent({
      *  True if the field should include time, false otherwise.
      */
     includeTime(): boolean {
-      switch(this.property.type) {
-        case PropertyType.Time:
-        case PropertyType.DateTime:
+      switch(this.property.constructor.name) {
+        case TimeProperty.name:
+        case DateTimeProperty.name:
           return true;
-        case PropertyType.Date:
+        case DateProperty.name:
         default:
           return false;
       }
@@ -212,11 +211,11 @@ export default defineComponent({
      *  True if the field should include date, false otherwise.
      */
     includeDate(): boolean {
-      switch(this.property.type) {
-        case PropertyType.Date:
-        case PropertyType.DateTime:
+      switch(this.property.constructor.name) {
+        case DateProperty.name:
+        case DateTimeProperty.name:
           return true;
-        case PropertyType.Time:
+        case TimeProperty.name:
         default:
           return false;
       }
@@ -232,7 +231,7 @@ export default defineComponent({
     }
 
   },
-  emits: ["command"],
+  emits: ["execute"],
   methods: {
 
     /**
@@ -242,7 +241,8 @@ export default defineComponent({
       // Enter edit mode
       this.enterEditMode();
       // Execute select command
-      this.$emit("command", new App.SelectProperty(this.property));
+      let cmd = AppCommands.selectAtomicProperty(this.property);
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -256,7 +256,8 @@ export default defineComponent({
         this.exitEditMode();
       }
       // Execute deselect command
-      this.$emit("command", new App.DeselectProperty(this.property));
+      let cmd = AppCommands.deselectAtomicProperty(this.property)
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -368,9 +369,9 @@ export default defineComponent({
       }:${
         this.value_s.padStart(2, "0")
       }.000Z`;
-      if(this.property.type === PropertyType.Date) {
+      if(this.property instanceof DateProperty) {
         t = "00:00:00.000Z";
-      } else if(this.property.type === PropertyType.Time) {
+      } else if(this.property instanceof TimeProperty) {
         d = t === "00:00:00.000Z" ? "0000-00-00" : "1970-01-01";
       }
       let ISO8601 = `${ d }T${ t }`;
@@ -386,7 +387,8 @@ export default defineComponent({
       }
       if(this.property.value?.getTime() !== value?.getTime()) {
         // Execute update command
-        this.$emit("command", new Page.DateTimePropertySet(this.property, value));
+        let cmd = PageCommands.setDateTimeProperty(this.property, value);
+        this.$emit("execute", cmd);
       }
       // Refresh value
       this.refreshValue();
@@ -423,11 +425,13 @@ export default defineComponent({
     // Update field property value
     this.refreshValue();
     // Execute mount command
-    this.$emit("command", new App.MountProperty(this.property, this.$el))
+    let cmd = AppCommands.mountProperty(this.property, this.$el);
+    this.$emit("execute", cmd);
   },
   unmounted() {
     // Execute destroy command
-    this.$emit("command", new App.DestroyProperty(this.property));
+    let cmd = AppCommands.destroyProperty(this.property);
+    this.$emit("execute", cmd);
   }
 });
 </script>

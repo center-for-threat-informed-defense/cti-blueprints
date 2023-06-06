@@ -1,6 +1,7 @@
 import { IndicatorAnalysis } from "../properties/IndicatorAnalysis";
 
 export const IndicatorAnalysisSection = {
+    id: "indicator_analysis",
     name: "Indicator Analysis",
     layout: {
         rows: 7,

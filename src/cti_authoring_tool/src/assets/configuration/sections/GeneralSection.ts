@@ -5,7 +5,7 @@ import { ReportNumber } from "../properties/ReportNumber";
 import { TrafficLightProtocol } from "../properties/TrafficLightProtocol";
 
 export const GeneralSection = {
-    name: "General",
+    id: "general",
     layout: {
         rows: 2,
         cols: 3

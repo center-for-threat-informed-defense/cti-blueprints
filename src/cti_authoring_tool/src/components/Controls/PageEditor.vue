@@ -5,7 +5,7 @@
       v-for="[key, sec] in page.sections"
       :key="key"
       :section="sec"
-      @command="c => $emit('command', c)"
+      @execute="c => $emit('execute', c)"
     />
   </div>
 </template>
@@ -25,7 +25,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ["command"],
+  emits: ["execute"],
   components: { PageEditorSection }
 });
 </script>

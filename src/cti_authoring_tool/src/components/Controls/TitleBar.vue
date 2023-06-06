@@ -24,7 +24,7 @@
 <script lang="ts">
 // Dependencies
 import { defineComponent, PropType } from 'vue';
-import { ContextMenu } from "@/assets/scripts/ContextMenuTypes";
+import { ContextMenu } from "@/assets/scripts/Application/ContextMenuTypes";
 // Components
 import FocusBox from "@/components/Containers/FocusBox.vue";
 import ContextMenuListing from "./ContextMenuListing.vue";

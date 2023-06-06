@@ -1,8 +1,8 @@
-import * as App from "@/assets/scripts/Commands/AppCommands";
-import * as Page from "@/assets/scripts/Commands/PageCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
 import { Module } from "vuex"
-import { Hotkey } from "@/assets/scripts/HotkeyObserver"
-import { CommandEmitter } from "../../assets/scripts/Commands/Command";
+import { Hotkey } from "@/assets/scripts/Utilities/HotkeyObserver"
+import { PageEditor } from "@/assets/scripts/PageEditor/PageEditor";
+import { CommandEmitter } from "@/assets/scripts/Application/Command";
 import { HotkeyStore, ModuleStore } from "../StoreTypes";
 
 export default {
@@ -59,19 +59,20 @@ export default {
          */
         fileHotkeys(_s, _g, rootState, rootGetters): Hotkey<CommandEmitter>[] {
             let ctx = rootState.ApplicationStore;
-            let page = ctx.activeEditor.page;
+            let page = ctx.activeEditor;
             let file = ctx.settings.hotkeys.file;
             return [
-                // {
-                //     data: () => App.LoadFile.fromFileSystem(ctx),
-                //     shortcut: file.open_file,
-                //     repeatable: false
-                // },
-                // {
-                //     data: () => new App.SavePageToDevice(ctx, page.id),
-                //     shortcut: file.save_file,
-                //     repeatable: false
-                // }
+                {
+                    data: () => AppCommands.loadPageFromFileSystem(ctx),
+                    shortcut: file.open_file,
+                    repeatable: false
+                },
+                {
+                    data: () => AppCommands.savePageToDevice(ctx, page.id),
+                    shortcut: file.save_file,
+                    repeatable: false,
+                    disabled: page.id === PageEditor.Phantom.id
+                }
             ];
         },
 
@@ -92,12 +93,12 @@ export default {
             let edit = ctx.settings.hotkeys.edit;
             return [
                 {
-                    data: () => new App.UndoPageCommand(ctx, page.instance),
+                    data: () => AppCommands.undoPageCommand(ctx, page.instance),
                     shortcut: edit.undo,
                     repeatable: true
                 },
                 {
-                    data: () => new App.RedoPageCommand(ctx, page.instance),
+                    data: () => AppCommands.redoPageCommand(ctx, page.instance),
                     shortcut: edit.redo,
                     repeatable: true
                 }
@@ -136,7 +137,7 @@ export default {
             let view = ctx.settings.hotkeys.view;
             return  [
                 {
-                    data: () => new App.SwitchToFullscreen(),
+                    data: () => AppCommands.switchToFullscreen(),
                     shortcut: view.fullscreen,
                     repeatable: false
                 }

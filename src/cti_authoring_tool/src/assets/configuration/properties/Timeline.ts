@@ -1,20 +1,25 @@
 import { Sector } from "./Sector";
 import { Activity } from "./Activity";
 import { Attribution } from "./Attribution";
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 import { LocationRegion } from "./LocationRegion";
 import { TimelineEndDate } from "./TimelineEndDate";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { TimelineStartDate } from "./TimelineStartDate";
 
 export const Timeline = {
     id: "timeline",
     name: "Timeline of Activity",
+    path: "*.timeline",
     type: PropertyType.ComplexTable,
     layout: {
         summary: "{{ attribution }}\n**{{ location }} :: {{ sector }}**",
         rows: 4,
         cols: 3
     },
+    plugins: [
+        { module: ImportCSVPlugin }
+    ],
     properties: [
         {
             ...Attribution,

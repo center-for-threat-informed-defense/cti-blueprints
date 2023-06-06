@@ -1,8 +1,9 @@
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 
 export const TrafficLightProtocol = { 
     id: "traffic_light_protocol", 
     name: "Traffic Light Protocol", 
+    path: "*.traffic_light_protocol",
     type: PropertyType.Enum, 
     options: [ 
         { id: "red", text: "Red", value: "red" }, 

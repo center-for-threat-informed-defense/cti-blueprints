@@ -1,5 +1,5 @@
 <template>
-  <TabularField class="complex-table-field-control" :property="property" @command="c => $emit('command', c)">
+  <TabularField class="complex-table-field-control" :property="property" @execute="c => $emit('execute', c)">
     <template #table-header>
       <th class="head-cell data-column">
         <span class="text">
@@ -23,7 +23,7 @@
           :rows="property.layout.rows"
           :cols="property.layout.cols"
           :properties="row"
-          @command="c => $emit('command', c)"
+          @execute="c => $emit('execute', c)"
         />
       </td>
     </template>
@@ -31,14 +31,18 @@
 </template>
 
 <script lang="ts">
-import * as Page from "@/assets/scripts/Commands/PageCommands";
+import * as PageCommands from "@/assets/scripts/PageEditor/Commands";
 // Dependencies
 import { defineComponent, PropType } from "vue";
-import { ComplexTableProperty, FormattedText, Property, Sort, SummaryParser, TablePropertyState } from "@/assets/scripts/Page/Property";
+import { ComplexTableProperty, FormattedText, Property, Sort, SummaryParser, TableColumnState } from "@/assets/scripts/Page";
 // Components
 import TabularField from "./TabularField.vue";
 
 // TODO: Implement collapse / uncollapse all when table header clicked
+
+// TODO: Implement abridged summary for tables with 100+ rows
+
+// TODO: Implement cloning command
 
 export default defineComponent({
   name: "ComplexTableField",
@@ -48,7 +52,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ["command"],
+  emits: ["execute"],
   methods: {
     
     /**
@@ -70,7 +74,7 @@ export default defineComponent({
      *  The property to sort on.
      */
     // TODO: Implement sort action
-    onSort(prop: TablePropertyState) {
+    onSort(prop: TableColumnState) {
       // Determine next sort order
       let s: Sort;
       switch(prop.sort) {
@@ -84,8 +88,8 @@ export default defineComponent({
           break;
       }
       // Sort
-      let cmd = new Page.TabularPropertyReorder(this.property, prop.id, s);
-      this.$emit("command", cmd);
+      let cmd = PageCommands.reorderTabularProperty(this.property, prop.id, s);
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -97,8 +101,8 @@ export default defineComponent({
       // Determine collapse state
       let c = !this.property.collapsed.get(id);
       // Collapse
-      let cmd = new Page.ComplexTablePropertySetRowCollapse(this.property, id, c);
-      this.$emit("command", cmd);
+      let cmd = PageCommands.collapseComplexTablePropertyRow(this.property, id, c);
+      this.$emit("execute", cmd);
     }
 
   },

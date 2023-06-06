@@ -3,7 +3,7 @@
  * For more information, refer to: https://wits.worldbank.org/wits/wits/witshelp/content/codes/country_codes.htm
  */
 
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 
 export const LocationRegion = {
     id: "location",

@@ -8,9 +8,9 @@
       <component
         class="field-value"
         :style="propFieldGridStyle(prop)"
-        :is="getField(prop.type)"
+        :is="getField(prop)"
         :property="prop"
-        @command="c => $emit('command', c)"
+        @execute="c => $emit('execute', c)"
       />
     </template>
   </div> 
@@ -19,7 +19,6 @@
 <script lang="ts">
 // Dependencies
 import { Property } from '@/assets/scripts/Page/Property/Property';
-import { PropertyType } from '@/assets/scripts/AppConfiguration';
 import { defineComponent, PropType } from 'vue';
 // Components
 import TextField from "./TextField.vue";
@@ -28,6 +27,11 @@ import NumberField from "./NumberField.vue";
 import DateTimeField from "./DateTimeField.vue";
 import BasicTableField from "./BasicTableField.vue";
 import ComplexTableField from "./ComplexTableField.vue";
+import { 
+    BasicTableProperty, ComplexTableProperty, DateProperty, 
+    DateTimeProperty, EnumProperty, FloatProperty, 
+    IntegerProperty, StringProperty, TimeProperty
+} from '@/assets/scripts/Page';
 
 export default defineComponent({
   name: 'FieldGrid',
@@ -60,7 +64,7 @@ export default defineComponent({
     }
 
   },
-  emits: ["command"],
+  emits: ["execute"],
   methods: {
     
     /**
@@ -108,27 +112,27 @@ export default defineComponent({
 
     /**
      * Returns a property's field type.
-     * @param
-     *  The type of property.
+     * @param property
+     *  The property.
      * @returns
      *  The property's field type.
      */
-    getField(type: PropertyType): string | undefined {
-      switch(type) {
-        case PropertyType.String:
+    getField(property: Property): string | undefined {
+      switch(property.constructor.name) {
+        case StringProperty.name:
           return "TextField";
-        case PropertyType.Float:
-        case PropertyType.Integer:
+        case FloatProperty.name:
+        case IntegerProperty.name:
           return "NumberField";
-        case PropertyType.Date:
-        case PropertyType.Time:
-        case PropertyType.DateTime:
+        case DateProperty.name:
+        case TimeProperty.name:
+        case DateTimeProperty.name:
           return "DateTimeField";
-        case PropertyType.Enum:
+        case EnumProperty.name:
           return "EnumField";
-        case PropertyType.BasicTable:
+        case BasicTableProperty.name:
           return "BasicTableField";
-        case PropertyType.ComplexTable:
+        case ComplexTableProperty.name:
           return "ComplexTableField";
       }
     }

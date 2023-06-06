@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Hotkey, HotkeyObserver } from "@/assets/scripts/HotkeyObserver";
+import { Hotkey, HotkeyObserver } from "@/assets/scripts/Utilities/HotkeyObserver";
 import { defineComponent, markRaw, PropType } from "vue";
 
 export default defineComponent({

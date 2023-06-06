@@ -27,17 +27,28 @@
       </tbody>
     </table>
     <div class="actions">
-      <button @click="onCreate">+ Add</button>
+      <div class="builtin">
+        <button @click="onCreate">+ Add</button>
+      </div>
+      <template v-if="property.actions !== null && 0 !== property.actions.size">
+        <span></span>
+        <div class="registered">
+          <button v-for="[k, a] of property.actions" :key="k" @click="onAction(k)">
+            {{ a.text }}
+          </button>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import * as Page from "@/assets/scripts/Commands/PageCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
+import * as PageCommands from "@/assets/scripts/PageEditor/Commands";
 // Dependencies
 import { clamp } from "@/assets/scripts/Utilities";
 import { PointerTracker } from "@/assets/scripts/Utilities/PointerTracker";
-import { TablePropertyState, TabularProperty } from "@/assets/scripts/Page/Property";
+import { TableColumnState, TabularProperty } from "@/assets/scripts/Page/Property";
 import { defineComponent, markRaw, PropType, ref } from "vue";
 // Components
 import Trash from "@/components/Icons/Trash.vue";
@@ -70,20 +81,20 @@ export default defineComponent({
      * @returns
      *  The table's columns.
      */
-    columns(): TablePropertyState[] {
-      return this.property.properties;
+    columns(): ReadonlyArray<TableColumnState> {
+      return this.property.columnState;
     }
 
   },
-  emits: ["command"],
+  emits: ["execute"],
   methods: {
 
     /**
      * Row create behavior.
      */
     onCreate() {
-      let cmd = new Page.TabularPropertyCreateRow(this.property);
-      this.$emit("command", cmd);
+      let cmd = PageCommands.createTabularPropertyRow(this.property);
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -92,8 +103,18 @@ export default defineComponent({
      *  The row's id.
      */
     onDelete(id: string) {
-      let cmd = new Page.TabularPropertyDeleteRow(this.property, id);
-      this.$emit("command", cmd);
+      let cmd = PageCommands.deleteTabularPropertyRow(this.property, id);
+      this.$emit("execute", cmd);
+    },
+
+    /**
+     * Row action behavior.
+     * @param id
+     *  The action's id. 
+     */
+    onAction(id: string) {
+      let cmd = AppCommands.invokePropertyAction(this.property, id);
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -200,8 +221,8 @@ export default defineComponent({
         return;
       }
       // If movement
-      let cmd = new Page.TabularPropertyMoveRow(this.property, id, dst);
-      this.$emit("command", cmd);
+      let cmd = PageCommands.moveTabularPropertyRow(this.property, id, dst);
+      this.$emit("execute", cmd);
     }
 
   },
@@ -218,13 +239,13 @@ export default defineComponent({
     // // Update field property value
     // this.refreshValue();
     // // Execute mount command
-    // this.$emit("command", new Page.MountProperty(this.property, this.$el))
+    // this.$emit("execute", new Page.MountProperty(this.property, this.$el))
   },
   unmounted() {
     // // Disconnect resize observer
     // this.onResizeObserver!.disconnect();
     // // Execute destroy command
-    // this.$emit("command", new Page.DestroyProperty(this.property));
+    // this.$emit("execute", new Page.DestroyProperty(this.property));
   },
   components: { Trash, MoveDots, MoveArrow }
 });
@@ -327,7 +348,17 @@ th, td {
 /** === Actions === */
 
 .actions {
+  display: flex;
+  align-items: center;
   margin: 12px 0px 0px;
+}
+
+.actions span {
+  display: block;
+  height: 25px;
+  padding-right: 12px;
+  border-right: solid 1px #d9d9d9;
+  margin-right: 12px;
 }
 
 button {

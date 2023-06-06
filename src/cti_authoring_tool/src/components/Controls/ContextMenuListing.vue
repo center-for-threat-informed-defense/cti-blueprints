@@ -58,7 +58,7 @@ import { defineComponent, PropType } from 'vue';
 import { 
   ContextMenu, ContextMenuItem, 
   ContextMenuSection, MenuType
-} from "@/assets/scripts/ContextMenuTypes";
+} from "@/assets/scripts/Application/ContextMenuTypes";
 
 const KeyToText: { [key: string]: string } = {
   Control    : "Ctrl",

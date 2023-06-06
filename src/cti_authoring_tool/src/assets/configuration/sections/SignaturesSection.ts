@@ -1,6 +1,7 @@
 import { Signatures } from "../properties/Signatures";
 
 export const SignaturesSection = {
+    id: "signatures",
     name: "Signatures",
     layout: {
         rows: 1,

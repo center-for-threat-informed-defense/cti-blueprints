@@ -1,8 +1,9 @@
 import Configuration from "@/assets/configuration/app.config";
-import * as App from "@/assets/scripts/Commands/AppCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
 import { Module } from "vuex";
+import { PageEditor } from "@/assets/scripts/PageEditor/PageEditor";
 import { ContextMenuStore, ModuleStore } from "../StoreTypes";
-import { ContextMenu, ContextMenuItem, ContextMenuSection, MenuType } from "@/assets/scripts/ContextMenuTypes";
+import { ContextMenu, ContextMenuItem, ContextMenuSection, MenuType } from "@/assets/scripts/Application/ContextMenuTypes";
 
 export default {
     namespaced: true,
@@ -54,7 +55,7 @@ export default {
             let nfo: ContextMenuItem[] = Configuration.templates.map(t => ({
                 text: t.name,
                 type: MenuType.Item,
-                data: () => App.LoadFile.fromNew(ctx, t)
+                data: () => AppCommands.loadNewPageFile(ctx, t)
             }));
             
             return {
@@ -73,9 +74,8 @@ export default {
                     {
                         text: `Open File...`,
                         type: MenuType.Item,
-                        data: () => App.LoadFile.fromFileSystem(ctx),
-                        shortcut: file.open_file,
-                        disabled: true
+                        data: () => AppCommands.loadPageFromFileSystem(ctx),
+                        shortcut: file.open_file
                     }
                 ],
             }
@@ -95,16 +95,16 @@ export default {
         saveFileMenu(_s, _g, rootState): ContextMenuSection {
             let ctx = rootState.ApplicationStore;
             let file = ctx.settings.hotkeys.file;
-            let page = ctx.activeEditor.page;
+            let page = ctx.activeEditor;
             return {
                 id: "save_file_options",
                 items: [
                     {
                         text: "Save",
                         type: MenuType.Item,
-                        data: () => new App.SavePageToDevice(ctx, page.id),
+                        data: () => AppCommands.savePageToDevice(ctx, page.id),
                         shortcut: file.save_file,
-                        disabled: true
+                        disabled: page.id === PageEditor.Phantom.id
                     }
                 ]
             }
@@ -160,14 +160,14 @@ export default {
                     {
                         text: "Undo",
                         type: MenuType.Item,
-                        data: () => new App.UndoPageCommand(ctx, page.instance),
+                        data: () => AppCommands.undoPageCommand(ctx, page.instance),
                         shortcut: edit.undo,
                         disabled: !canUndo
                     },
                     {
                         text: "Redo",
                         type: MenuType.Item,
-                        data: () => new App.RedoPageCommand(ctx, page.instance),
+                        data: () => AppCommands.redoPageCommand(ctx, page.instance),
                         shortcut: edit.redo,
                         disabled: !canRedo
                     }
@@ -244,7 +244,7 @@ export default {
                     {
                         text: "Fullscreen",
                         type: MenuType.Item,
-                        data: () => new App.SwitchToFullscreen(),
+                        data: () => AppCommands.switchToFullscreen(),
                         shortcut: view.fullscreen,
                     }
                 ],
@@ -275,7 +275,7 @@ export default {
             let items: ContextMenu[] = links.map(link => ({
                 text: link.text,
                 type: MenuType.Item,
-                data: () => new App.OpenHyperlink(link.url)
+                data: () => AppCommands.openHyperlink(link.url)
             }));
             // Menu
             return {
