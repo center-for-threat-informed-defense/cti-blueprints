@@ -542,10 +542,10 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
 
     def _modular_template(exclude_sections, report_type, data):
         """Create a template dynamically by adding sections as needed, without the criteria from `exclude_sections`."""
-        campaign = ["executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"]
-        executive = ["executive_summary", "key_points", "assessment", "outlook", "intelligence_gaps", "intelligence_requirements", "data_sources"]
-        ia = ["executive_summary", "key_points", "indicator_analysis", "mitre_attack_table_ia", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata_ia"]
-        ta = ["executive_summary", "key_points", "assessment", "threat_actor", "timeline", "intelligence_gaps", "mitre_attack_table", "victims", "iocs", "signatures", "intelligence_requirements", "data_sources", "metadata"]
+        campaign = ["executive_summary", "key_points", "assessment", "intelligence_gaps", "mitre_attack_table", "timeline", "iocs", "signatures", "intelligence_requirements", "feedback", "data_sources"]
+        executive = ["executive_summary", "key_points", "assessment", "outlook", "intelligence_gaps", "intelligence_requirements",  "feedback", "data_sources"]
+        ia = ["executive_summary", "key_points", "indicator_analysis", "mitre_attack_table_ia", "iocs", "signatures", "intelligence_requirements", "feedback",  "data_sources"]
+        ta = ["executive_summary", "key_points", "assessment", "threat_actor", "timeline", "intelligence_gaps", "mitre_attack_table", "victims", "iocs", "signatures", "intelligence_requirements", "feedback", "data_sources"]
         all_categories = [campaign, executive, ia, ta]
 
         _sections = ["header", "intro"] + all_categories[["campaign","executive","ia","ta"].index(report_type)] + ["footer"]
