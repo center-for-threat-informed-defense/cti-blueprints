@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](///compare/v0.1.2...v0.1.3) (2023-06-06)
+
+
+### Features
+
+* add file save/open functionality 3a4bdc8
+* add redesigned Page library 9dc899b
+* add redesigned Page Management library 7bc0821
+* restructure and expand Web Utilities library b8a66fa
+* restructure core application library 9c6f877
+
 ### [0.1.2](///compare/v0.1.1...v0.1.2) (2023-04-10)
 
 

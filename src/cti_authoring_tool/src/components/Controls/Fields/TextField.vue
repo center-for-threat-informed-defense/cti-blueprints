@@ -31,12 +31,11 @@
 </template>
 
 <script lang="ts">
-import * as App from "@/assets/scripts/Commands/AppCommands";
-import * as Page from "@/assets/scripts/Commands/PageCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
+import * as PageCommands from "@/assets/scripts/PageEditor/Commands";
 // Dependencies
 import { MD5 } from "@/assets/scripts/Utilities";
-import { Alignment } from "@/assets/scripts/AppConfiguration";
-import { StringProperty } from "@/assets/scripts/Page/Property/";
+import { Alignment, StringProperty } from "@/assets/scripts/Page/";
 import { defineComponent, PropType, ref } from "vue";
 // Components
 import FocusBox from "@/components/Containers/FocusBox.vue";
@@ -112,7 +111,7 @@ export default defineComponent({
     }
 
   },
-  emits: ["command"],
+  emits: ["execute"],
   methods: {
     
     /**
@@ -126,7 +125,8 @@ export default defineComponent({
         this.promptSuggestions();
       }
       // Execute select command
-      this.$emit("command", new App.SelectProperty(this.property));
+      let cmd = AppCommands.selectAtomicProperty(this.property);
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -136,7 +136,8 @@ export default defineComponent({
       // Stop suggestions
       this.stopSuggestions();
       // Execute deselect command
-      this.$emit("command", new App.DeselectProperty(this.property));
+      let cmd = AppCommands.deselectAtomicProperty(this.property);
+      this.$emit("execute", cmd);
     },
 
     /**
@@ -248,7 +249,8 @@ export default defineComponent({
       if(this.property.value !== value) {
         let v = value || null;
         // Execute update command
-        this.$emit("command", new Page.StringPropertySet(this.property, v));
+        let cmd = PageCommands.setStringProperty(this.property, v);
+        this.$emit("execute", cmd);
       }
       // Refresh value
       this.refreshValue();
@@ -299,13 +301,15 @@ export default defineComponent({
     // Update field property value
     this.refreshValue();
     // Execute mount command
-    this.$emit("command", new App.MountProperty(this.property, this.$el))
+    let cmd = AppCommands.mountProperty(this.property, this.$el);
+    this.$emit("execute", cmd);
   },
   unmounted() {
     // Disconnect resize observer
     this.onResizeObserver!.disconnect();
     // Execute destroy command
-    this.$emit("command", new App.DestroyProperty(this.property));
+    let cmd = AppCommands.destroyProperty(this.property);
+    this.$emit("execute", cmd);
   },
   components: { FocusBox, OptionsList }
 });

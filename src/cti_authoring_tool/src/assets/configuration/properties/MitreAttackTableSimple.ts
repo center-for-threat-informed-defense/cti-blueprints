@@ -2,8 +2,9 @@ import { Defend } from "./Defend";
 import { Tactic } from "./Tactic";
 import { Procedure } from "./Procedure";
 import { Techniques } from "./Technique";
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 import { SubTechniques } from "./SubTechnique";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const MitreAttackTableSimple = {
     id: "mitre_attack_table",
@@ -14,6 +15,9 @@ export const MitreAttackTableSimple = {
         rows: 4,
         cols: 2
     },
+    plugins: [
+        { module: ImportCSVPlugin }
+    ],
     properties: [
         {
             ...Tactic,

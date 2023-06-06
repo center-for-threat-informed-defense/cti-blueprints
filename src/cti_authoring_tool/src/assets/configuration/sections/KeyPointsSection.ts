@@ -1,6 +1,7 @@
 import { KeyPoints } from "../properties/KeyPoints";
 
 export const KeyPointsSection = {
+    id: "key_points",
     name: "Key Points",
     layout: {
         rows: 4,

@@ -1,6 +1,7 @@
 import { ExecutiveSummary } from "../properties/ExecutiveSummary";
 
 export const ExecutiveSummarySection = {
+    id: "executive_summary",
     name: "Executive Summary",
     layout: {
         rows: 4,

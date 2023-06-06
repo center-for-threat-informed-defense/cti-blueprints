@@ -1,88 +1,91 @@
-import { PageSection } from "../../PageSection";
-import { Crypto, String } from "@/assets/scripts/Utilities";
+import * as Crypto from "@/assets/scripts/Utilities";
 import { ColumnSnapshot } from "./ColumnSnapshot";
-import { ITabularProperty } from "./ITabularProperty";
-import { AtomicPagePropertyTemplate, PropertyType, TabularPropertyRowValue, TabularPropertyTemplate } from "../../../AppConfiguration";
-import { AtomicProperty, DateTimeProperty, EnumProperty, NumberProperty, Property, Sort, StringProperty, TablePropertyState } from "..";
+import { PropertyParameters } from "../PropertyParameters";
+import { Plugin, PluginManager } from "../../Plugins";
+import { TabularPropertyAssembler } from "./TabularPropertyAssembler";
+import {
+    Sort,
+    Property,
+    PropertyAssembler, 
+    AtomicProperty,
+    EnumProperty,
+    TimeProperty,
+    DateProperty,
+    DateTimeProperty,
+    FloatProperty,
+    IntegerProperty,
+    NumberProperty,
+    StringProperty,
+    TableColumnState
+} from "..";
 
-export abstract class TabularProperty extends Property implements ITabularProperty {
-
-    // TODO: Consume update events from child properties
-    // TODO: Link row events
+export abstract class TabularProperty extends Property {
 
     /**
      * The property's value.
      */
-    public value: Map<string, AtomicProperty[]>;
+    protected _value: Map<string, AtomicProperty[]>;
+    
+    /**
+     * The table's default row.
+     */
+    protected _defaultRow: AtomicProperty[];
 
     /**
-     * The table's property state.
+     * The table's column state.
      */
-    public properties: TablePropertyState[];
+    protected _columnState: TableColumnState[];
 
     /**
-     * The table's property templates.
+     * The property's plugin manager.
      */
-    protected readonly _templates: AtomicPagePropertyTemplate[];
+    protected _plugins: PluginManager<TabularProperty> | null;
 
+    
+    /**
+     * The property's value.
+     */
+    public get value(): ReadonlyMap<string, AtomicProperty[]> {
+        return this._value;
+    }
+
+    /**
+     * The table's column state.
+     */
+    public get columnState(): ReadonlyArray<TableColumnState> {
+        return this._columnState;
+    }
+
+    
+    /**
+     * Creates a new {@link TabularProperty}.
+     * @param params
+     *  The property's parameters.
+     */
+    constructor(params: PropertyParameters);
 
     /**
      * Creates a new {@link TabularProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @throws { Error }
-     *  If `template` defines a non-atomic property.
+     * @param params
+     *  The property's parameters.
+     * @param assembler
+     *  The property's assembler.
      */
-    constructor(section: PageSection, template: TabularPropertyTemplate);
-
-    /**
-     * Creates a new {@link TabularProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @param value
-     *  The property's value.
-     * @throws { Error }
-     *  If `template` defines a non-atomic property.
-     */
-    constructor(section: PageSection, template: TabularPropertyTemplate, value: TabularPropertyRowValue[]);
-    constructor(section: PageSection, template: TabularPropertyTemplate, value?: TabularPropertyRowValue[]) {
-        super(section, template);
-        this.value = new Map();
-        this.properties = [];
-        this._templates = [];
-        // Configure header
-        let templates = template.properties;
-        for(let t of templates) {
-            this._templates.push(structuredClone(t));
-            this.properties.push({
-                id   : t.id ?? String.formatId(t.name),
-                name : t.name,
-                sort : Sort.None,
-                col  : Array.isArray(t.col) ? [...t.col] : t.col,
-                row  : Array.isArray(t.row) ? [...t.row] : t.row,
-            });
+    constructor(params: PropertyParameters, assembler?: TabularPropertyAssembler);
+    constructor(params: PropertyParameters, assembler?: TabularPropertyAssembler) {
+        super(params, assembler);
+        this._value = new Map();
+        this._plugins = null;
+        this._defaultRow = [];
+        this._columnState = [];
+        if(assembler) {
+            this.__prepareAssembler(assembler);
         }
-        // Configure values
-        if(value !== undefined) {
-            for(let v of value) {
-                this.insertRow(this.createRow(v));
-            }
-        } else if(template.default !== undefined) {
-            for(let v of template.default) {
-                this.insertRow(this.createRow(v));
-            }
-        }
-        // Initialize Plugins
-        this.initializePlugins(template);
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ///  1. ITabularProperty Methods  /////////////////////////////////////////
+    ///  1. Row Management  ///////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -93,8 +96,8 @@ export abstract class TabularProperty extends Property implements ITabularProper
      * @returns
      *  The row's id, undefined if no row at `index`.
      */
-    public getId(index: number): string | undefined {
-        return [...this.value.keys()][index];
+    public getRowId(index: number): string | undefined {
+        return [...this._value.keys()][index];
     }
 
     /**
@@ -104,8 +107,8 @@ export abstract class TabularProperty extends Property implements ITabularProper
      * @returns
      *  The row's index, -1 if no row matches `id`.
      */
-    public getIndex(id: string): number {
-        return [...this.value.keys()].findIndex(o => o === id);
+    public getRowIndex(id: string): number {
+        return [...this._value.keys()].findIndex(o => o === id);
     }
 
     /**
@@ -117,8 +120,8 @@ export abstract class TabularProperty extends Property implements ITabularProper
      */
     public getRow(id: string): [string, AtomicProperty[]] | undefined {
         let result: [string, AtomicProperty[]] | undefined;
-        if(this.value.has(id)) {
-            result = [id, this.value.get(id)!]
+        if(this._value.has(id)) {
+            result = [id, this._value.get(id)!]
         }
         return result;
     }
@@ -127,8 +130,6 @@ export abstract class TabularProperty extends Property implements ITabularProper
      * Creates a new table row.
      * @returns
      *  The row's id and properties.
-     * @throws { Error }
-     *  If the table's `template` defines a non-atomic property.
      */
     public createRow(): [string, AtomicProperty[]];
     
@@ -138,20 +139,25 @@ export abstract class TabularProperty extends Property implements ITabularProper
      *  The row's id and properties.
      * @param values
      *  The row's values.
-     * @throws { Error }
-     *  If the table's `template` defines a non-atomic property.
      */
     public createRow(values: { [key: string]: any }): [string, AtomicProperty[]];
     public createRow(values?: { [key: string]: any }): [string, AtomicProperty[]] {
         let row = [];
-        for(let template of this._templates) {
-            let value = values && template.id && values[template.id];
-            let prop = Property.create(this._section, template, value);
-            if(prop instanceof AtomicProperty) {
-                row.push(prop);
-            } else {
-                throw new Error(`'${ prop.id }' is not an atomic property.`);
+        for(let cell of this._defaultRow) {
+            let asm = new PropertyAssembler();
+            let prop = cell.clone(asm);
+            if(
+                values && cell.id in values &&
+                (
+                    prop instanceof DateTimeProperty ||
+                    prop instanceof StringProperty || 
+                    prop instanceof NumberProperty ||
+                    prop instanceof EnumProperty
+                )
+            ) {
+                prop.value = values[cell.id];
             }
+            row.push(prop);
         }
         return [Crypto.randomUUID(), row];
     }
@@ -163,28 +169,33 @@ export abstract class TabularProperty extends Property implements ITabularProper
      * @param index
      *  The row's index.
      * @throws { Error }
-     *  If `row` does not match the table's property schema.
+     *  If `row` does not match the table's structure.
      */
     public insertRow(row: [string, AtomicProperty[]], index?: number) {
+        let assembler = this.__prepareAssembler();
         // Create row
         let props: AtomicProperty[] = [];
-        for(let template of this._templates) {
+        for(let cell of this._defaultRow) {
             // TODO: Need better comparison
-            let p = row[1].find(o => o.id === template.id);
+            let p = row[1].find(o => o.id === cell.id);
             if(p) {
                 props.push(p);
             } else {
-                throw Error("Row does not match the table's property schema.")
+                throw Error("Row does not match the table's structure.")
             }
+        }
+        for(let prop of props) {
+            prop.__prepareAssembler().attachToTabularProperty(assembler);
         }
         // Insert row
         if(index === undefined) {
-            this.value.set(row[0], props);
+            this._value.set(row[0], props);
         } else {
-            let v = [...this.value.entries()];
+            let v = [...this._value.entries()];
             v.splice(index, 0, [row[0], props]);
-            this.value = new Map(v);
+            this._value = new Map(v);
         }
+        this.emit("insert-row", row[0], [...props]);
     }
 
     /**
@@ -196,11 +207,12 @@ export abstract class TabularProperty extends Property implements ITabularProper
      */
     public moveRow(src: number, dst: number) {
         // Get rows
-        let rows = [...this.value.entries()]
+        let rows = [...this._value.entries()]
         // Move row
         rows.splice(dst, 0, rows.splice(src, 1)[0]);
         // Update rows
-        this.value = new Map(rows);
+        this._value = new Map(rows);
+        this.emit("move-row", src, dst);
     }
 
     /**
@@ -220,12 +232,20 @@ export abstract class TabularProperty extends Property implements ITabularProper
      *  True if the row was removed, false otherwise.
      */
     public deleteRow(id: string): boolean;
-    public deleteRow(_: string | number): boolean {
-        if(typeof _ === "number") {
-            _ = [...this.value.keys()][_]   
+    public deleteRow(id: string | number): boolean {
+        if(typeof id === "number") {
+            id = [...this._value.keys()][id]   
         }
-        return _ !== undefined ? this.value.delete(_) : false;
+        let result = id !== undefined ? this._value.delete(id) : false;
+        this.emit("delete-row", id);
+        return result;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. Column Management  ////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Captures a snapshot of a column.
@@ -252,16 +272,16 @@ export abstract class TabularProperty extends Property implements ITabularProper
     public captureColumnSnapshot(id: string, sort: Sort): ColumnSnapshot;
     public captureColumnSnapshot(id: string, sort?: Sort): ColumnSnapshot {
         // Resolve column
-        let column = this.properties.findIndex(o => o.id === id);
+        let column = this._columnState.findIndex(o => o.id === id);
         if(column === -1) {
             throw new Error(`Column '${ id }' does not exist.`);
         }
         // If no sort order, capture as is
         if(sort === undefined) {
             return {
-                id: this.properties[column].id,
-                sort: this.properties[column].sort,
-                ids: [...this.value.keys()]
+                id: this._columnState[column].id,
+                sort: this._columnState[column].sort,
+                ids: [...this._value.keys()]
             }
         }
         // If sort order, capture applied sort order
@@ -273,16 +293,16 @@ export abstract class TabularProperty extends Property implements ITabularProper
                 break;
             case Sort.Ascending:
                 dir = -1
-                break;
+                break;``
             case Sort.None:
                 dir = 0;
                 break;
         }
-        switch(this._templates[column].type) {
-            case PropertyType.String:
-                ids = [...this.value.keys()].sort((a,b) => {
-                    let rowA = this.value.get(a)![column];
-                    let rowB = this.value.get(b)![column];
+        switch(this._defaultRow[column].constructor.name) {
+            case StringProperty.name:
+                ids = [...this._value.keys()].sort((a,b) => {
+                    let rowA = this._value.get(a)![column];
+                    let rowB = this._value.get(b)![column];
                     if(
                         rowA instanceof StringProperty && 
                         rowB instanceof StringProperty
@@ -295,11 +315,11 @@ export abstract class TabularProperty extends Property implements ITabularProper
                     }
                 });
                 break;
-            case PropertyType.Float:
-            case PropertyType.Integer:
-                ids = [...this.value.keys()].sort((a,b) => {
-                    let rowA = this.value.get(a)![column];
-                    let rowB = this.value.get(b)![column];
+            case FloatProperty.name:
+            case IntegerProperty.name:
+                ids = [...this._value.keys()].sort((a,b) => {
+                    let rowA = this._value.get(a)![column];
+                    let rowB = this._value.get(b)![column];
                     if(
                         rowA instanceof NumberProperty && 
                         rowB instanceof NumberProperty
@@ -312,10 +332,12 @@ export abstract class TabularProperty extends Property implements ITabularProper
                     }
                 });
                 break;
-            case PropertyType.Date:
-                ids = [...this.value.keys()].sort((a,b) => {
-                    let rowA = this.value.get(a)![column];
-                    let rowB = this.value.get(b)![column];
+            case DateProperty.name:
+            case TimeProperty.name:
+            case DateTimeProperty.name:
+                ids = [...this._value.keys()].sort((a,b) => {
+                    let rowA = this._value.get(a)![column];
+                    let rowB = this._value.get(b)![column];
                     if(
                         rowA instanceof DateTimeProperty && 
                         rowB instanceof DateTimeProperty
@@ -328,10 +350,10 @@ export abstract class TabularProperty extends Property implements ITabularProper
                     }
                 });
                 break;
-            case PropertyType.Enum:
-                ids = [...this.value.keys()].sort((a,b) => {
-                    let rowA = this.value.get(a)![column];
-                    let rowB = this.value.get(b)![column];
+            case EnumProperty.name:
+                ids = [...this._value.keys()].sort((a,b) => {
+                    let rowA = this._value.get(a)![column];
+                    let rowB = this._value.get(b)![column];
                     if(
                         rowA instanceof EnumProperty && 
                         rowB instanceof EnumProperty
@@ -347,7 +369,7 @@ export abstract class TabularProperty extends Property implements ITabularProper
             default:
                 throw new Error(`Cannot sort non-atomic property type.`);
         }
-        return { id: this._templates[column].id!, sort, ids }
+        return { id: this._defaultRow[column].id, sort, ids }
     }
 
     /**
@@ -360,16 +382,16 @@ export abstract class TabularProperty extends Property implements ITabularProper
      */
     public applyColumnSnapshot(snapshot: ColumnSnapshot) {
         // Validate snapshot
-        let isValid = this.value.size === snapshot.ids.length;
+        let isValid = this._value.size === snapshot.ids.length;
         for(let id of snapshot.ids) {
-            isValid &&= this.value.has(id);
+            isValid &&= this._value.has(id);
         }
         if(!isValid) {
             throw new Error("Invalid snapshot.")
         }
         // Resolve column
         let id = snapshot.id;
-        let column = this.properties.find(o => o.id === id);
+        let column = this._columnState.find(o => o.id === id);
         if(!column) {
             throw new Error(`Column '${ id }' does not exist.`);
         }
@@ -378,18 +400,60 @@ export abstract class TabularProperty extends Property implements ITabularProper
         // Apply row ordering
         let order: [string, AtomicProperty[]][] = [];
         for(let id of snapshot.ids) {
-            order.push([id, this.value.get(id)!]);
+            order.push([id, this._value.get(id)!]);
         }
-        this.value = new Map(order);
+        this._value = new Map(order);
+        this.emit("reorder-row");
+    }
+
+    
+    ///////////////////////////////////////////////////////////////////////////
+    ///  3. Plugin Management  ////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attempts to install a plugin into the property.
+     * @param plugin
+     *  The plugin to install.
+     * @returns
+     *  True if the plugin was successfully installed, false otherwise.
+     */
+    public tryInstallPlugin(plugin: Plugin<TabularProperty>): boolean {
+        let result;
+        // Don't allocate manager until absolutely necessary
+        if(this._plugins === null) {
+            this._plugins = new PluginManager<TabularProperty>(this, this.root);
+        }
+        result = this._plugins.tryInstallPlugin(plugin);
+        // Deallocate manager if no plugins were installed
+        if(this._plugins.length === 0) {
+            this._plugins = null;
+        }
+        return result;
     }
 
     /**
-     * Creates a new command.
+     * Attempts to install a list of plugins into the property.
+     * @param plugin
+     *  The plugins to install.
+     * @returns
+     *  True if all plugins were successfully installed, false otherwise.
      */
-    newCommand(): void {
-        // TODO: Implement command construct
-        throw new Error("Method not implemented.");
+    public tryInstallPlugins(plugins: Plugin<TabularProperty>[]): boolean {
+        let result = true;
+        for(let plugin of plugins) {
+            result &&= this.tryInstallPlugin(plugin);
+        }
+        return result;
     }
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  4. toString  /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Returns a string representation of the property.
@@ -397,15 +461,74 @@ export abstract class TabularProperty extends Property implements ITabularProper
      *  A string representation of the property.
      */
     public override toString(): string | undefined {
-        let primaryColumn = this._templates.findIndex(o => o.is_primary);
-        if(primaryColumn === -1 || this.value.size === 0) {
-            return undefined;
-        }
-        let name = [...this.value.values()]  
-            .map(o => o[primaryColumn].toString())
-            .filter(Boolean)
-            .join(", ")
-        return name || undefined;
+        return "[ Not Supported ]";
+        // let primaryColumn = this._templates.findIndex(o => o.is_primary);
+        // if(primaryColumn === -1 || this._value.size === 0) {
+        //     return undefined;
+        // }
+        // let name = [...this._value.values()]  
+        //     .map(o => o[primaryColumn].toString())
+        //     .filter(Boolean)
+        //     .join(", ")
+        // return name || undefined;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  5. Assembler Preparation  ////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Prepares an assembler for the property.
+     * @returns
+     *  The property's assembler.
+     * @remarks
+     *  Page API use only. Do not use.
+     * @internal
+     */
+    public override __prepareAssembler(): TabularPropertyAssembler
+
+    /**
+     * Prepares an assembler for the property.
+     * @param assembler
+     *  The assembler to use.
+     * @returns
+     *  The property's assembler.
+     * @remarks
+     *  Page API use only. Do not use.
+     * @internal
+     */
+    public override __prepareAssembler(
+        assembler?: TabularPropertyAssembler
+    ): TabularPropertyAssembler;
+
+    public override __prepareAssembler(
+        assembler: TabularPropertyAssembler = new TabularPropertyAssembler()
+    ): TabularPropertyAssembler {
+        // Prepare property assembler
+        super.__prepareAssembler(assembler);
+        // Prepare tabular property assembler
+        assembler.__injectTabularAccessor({
+            property: this,
+            setDefaultRow: (row: AtomicProperty[]) => {
+                // Reset values
+                this._value = new Map();
+                // Set default row
+                this._defaultRow = row;
+                // Set column state
+                for(let cell of this._defaultRow) {
+                    this._columnState.push({
+                        id   : cell.id,
+                        name : cell.name,
+                        sort : Sort.None,
+                        col  : Array.isArray(cell.col) ? [...cell.col] : cell.col,
+                        row  : Array.isArray(cell.row) ? [...cell.row] : cell.row,
+                    });
+                }
+            }
+        });
+        return assembler;
     }
 
 }

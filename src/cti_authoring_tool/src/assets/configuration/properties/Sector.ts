@@ -3,7 +3,7 @@
  * For more information, refer to: https://www.bls.gov/iag/tgs/iag_index_naics.htm
  */
 
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 
 export const Sector = {
     id: "sector",

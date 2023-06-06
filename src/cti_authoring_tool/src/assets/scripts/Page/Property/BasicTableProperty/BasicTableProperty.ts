@@ -1,56 +1,79 @@
-import { PageSection } from "../../PageSection";
-import { TabularProperty } from "..";
-import { IBasicTableProperty } from "./IBasicTableProperty";
-import { BasicTablePropertyTemplate, TabularPropertyRowValue } from "../../../AppConfiguration";
+import { BasicTablePropertyLayout } from "./BasicTablePropertyLayout";
+import { BasicTablePropertyParameters, TabularProperty, TabularPropertyAssembler } from "..";
 
-export class BasicTableProperty extends TabularProperty implements IBasicTableProperty {
+export class BasicTableProperty extends TabularProperty {
 
     /**
      * The table's layout.
      */
-    public readonly layout: {
-
-        /**
-         * The table's number of columns.
-         */
-        readonly cols: number;
-
-    }
+    public readonly layout: BasicTablePropertyLayout;
     
 
     /**
      * Creates a new {@link BasicTableProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @throws { Error }
-     *  If `template` defines a non-atomic property.
+     * @param params
+     *  The property's parameters.
      */
-    constructor(section: PageSection, template: BasicTablePropertyTemplate);
+    constructor(params: BasicTablePropertyParameters);
     
     /**
      * Creates a new {@link BasicTableProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @param value
-     *  The property's value.
-     * @throws { Error }
-     *  If `template` defines a non-atomic property.
+     * @param params
+     *  The property's parameters.
+     * @param assembler
+     *  The property's assembler.
      */
-    constructor(section: PageSection, template: BasicTablePropertyTemplate, value: TabularPropertyRowValue[]) 
-    constructor(section: PageSection, template: BasicTablePropertyTemplate, value?: TabularPropertyRowValue[]) {
-        if(value === undefined) {
-            super(section, template);  
-        } else {
-            super(section, template, value);  
-        }
+    constructor(params: BasicTablePropertyParameters, assembler?: TabularPropertyAssembler);
+    constructor(params: BasicTablePropertyParameters, assembler?: TabularPropertyAssembler) {
+        super(params, assembler);
         this.layout = {
-            cols: template.layout.cols
+            cols: params.layout.cols
         }
-        this.initializePlugins(template);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. Property Cloning  /////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Clones the property.
+     * @returns
+     *  The cloned property.
+     */
+    public override clone(): BasicTableProperty
+
+    /**
+     * Clones the property.
+     * @param assembler
+     *  The cloned property's assembler.
+     * @returns
+     *  The cloned property.
+     */
+    public override clone(assembler?: TabularPropertyAssembler): BasicTableProperty {
+        // Create property
+        let prop = new BasicTableProperty({
+            id        : this.id,
+            name      : this.name,
+            path      : this.path,
+            link      : this.link,
+            row       : this.row,
+            col       : this.col,
+            layout: {
+                cols  : this.layout.cols
+            }
+        }, assembler);
+        // Clone values
+        for(let [id, row] of this._value) {
+            prop.insertRow([id, row.map(o => o.clone())]);
+        }
+        // Clone plugins
+        this._plugins?.forEach(({ plugin }) => {
+            prop.tryInstallPlugin(plugin);
+        });
+        // Return
+        return prop;
     }
 
 }

@@ -1,12 +1,15 @@
 import { Sector } from "../properties/Sector";
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 import { LocationRegion } from "../properties/LocationRegion";
+import { Infrastructure } from "../properties/Infrastructure";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { ThreatActorMotivation } from "../properties/ThreatActorMotivation";
 import { ThreatActorAttributions } from "../properties/ThreatActorAttributions";
-import { Infrastructure } from "../properties/Infrastructure";
 
 export const CampaignMetadataSection = {
+    id: "metadata",
     name: "Metadata",
+    path: "*.metadata",
     layout: {
         rows: 5,
         cols: 1
@@ -18,6 +21,7 @@ export const CampaignMetadataSection = {
             col: 1
         },
         {
+            id: "victim_location",
             name: "Victim Location",
             type: PropertyType.BasicTable,
             row: 2,
@@ -25,6 +29,9 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1  
             },
+            plugins: [
+                { module: ImportCSVPlugin }
+            ],
             properties: [
                 {
                     ...LocationRegion,
@@ -34,6 +41,7 @@ export const CampaignMetadataSection = {
             ]
         },
         {
+            id: "sectors",
             name: "Sectors",
             type: PropertyType.BasicTable,
             row: 3,
@@ -41,6 +49,9 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1
             },
+            plugins: [
+                { module: ImportCSVPlugin }
+            ],
             properties: [
                 {
                     ...Sector,
@@ -50,6 +61,7 @@ export const CampaignMetadataSection = {
             ]
         },
         {
+            id: "infrastructure_used",
             name: "Infrastructure Used",
             type: PropertyType.BasicTable,
             row: 4,
@@ -57,6 +69,9 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1
             },
+            plugins: [
+                { module: ImportCSVPlugin }
+            ],
             properties: [
                 {
                     ...Infrastructure,
@@ -66,6 +81,7 @@ export const CampaignMetadataSection = {
             ]
         },
         {
+            id: "threat_actor_motivation",
             name: "Threat Actor Motivation",
             type: PropertyType.BasicTable,
             row: 5,
@@ -73,6 +89,9 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1,
             },
+            plugins: [
+                { module: ImportCSVPlugin }
+            ],
             properties: [
                 {
                     ...ThreatActorMotivation,

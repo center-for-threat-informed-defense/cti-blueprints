@@ -1,4 +1,4 @@
-import { IStringProperty } from "@/assets/scripts/Page/Property/StringProperty/IStringProperty";
+import { StringProperty } from "@/assets/scripts/Page";
 
 export class ReportNumberPlugin {
 
@@ -7,7 +7,7 @@ export class ReportNumberPlugin {
      * @param property
      *  The report number property.
      */
-    constructor(property: IStringProperty) {
+    constructor(property: StringProperty) {
         // property.setValue(`${ crypto.randomUUID().substring(0, 6) }`);
     }
 

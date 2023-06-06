@@ -1,120 +1,193 @@
-import { PageSection } from "../../PageSection";
 import { AtomicProperty } from "..";
-import { IAtomicProperty } from "../AtomicProperty/IAtomicProperty";
-import { EnumPropertyTemplate } from "@/assets/scripts/AppConfiguration";
+import { PropertyAssembler } from "../PropertyAssembler";
+import { Plugin, PluginManager } from "../../Plugins";
+import { EnumPropertyParameters } from "./EnumPropertyParameters";
 
-export class EnumProperty extends AtomicProperty implements IAtomicProperty {
-
-    /**
-     * The property's value.
-     */
-    public value: string | null;
+export class EnumProperty extends AtomicProperty {
 
     /**
      * The property's set of options.
      */
-    public readonly options: Map<string, { text: string, value: any }>
+    public readonly options: ReadonlyMap<string, { text: string, value: any }>
+
+    /**
+     * The property's value.
+     */
+    private _value: string | null;
+
+    /**
+     * The property's plugin manager.
+     */
+    private _plugins: PluginManager<EnumProperty> | null;
+
+
+    /**
+     * The property's value.
+     */
+    public get value(): string | null {
+        return this._value;
+    }
+
+    /**
+     * The property value's setter.
+     */
+    public set value(value: string | null) {
+        let lastValue = this._value;
+        if(value === null) {
+            this._value = null;
+        } else if(this.options.has(value)) {
+            this._value = value;
+        } else {
+            throw new Error(`Enum value '${ value }' is not a valid option.`);
+        }
+        this.emit("update", this._value, lastValue);
+    }
+
+    /**
+     * The property's enum value.
+     */
+    public get enumValue(): any {
+        return this._value === null ? null : this.options.get(this._value)!.value;
+    }
 
 
     /**
      * Creates a new {@link EnumProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
+     * @param params
+     *  The property's parameters.
      */
-    constructor(section: PageSection, template: EnumPropertyTemplate);
+    constructor(params: EnumPropertyParameters);
 
     /**
      * Creates a new {@link EnumProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @param value
-     *  The property's value.
+     * @param params
+     *  The property's parameters.
+     * @param assembler
+     *  The property's assembler.
      */
-    constructor(section: PageSection, template: EnumPropertyTemplate, value: string);
-    constructor(section: PageSection, template: EnumPropertyTemplate, value?: string) {
-        super(section, template);
-        this.value = null;
-        this.options = new Map();
+    constructor(params: EnumPropertyParameters, assembler?: PropertyAssembler);
+    constructor(params: EnumPropertyParameters, assembler?: PropertyAssembler) {
+        super(params, assembler);
         // Validate options
-        for(let option of template.options) {
+        let options = new Map();
+        for(let option of params.options) {
             let { id, text, value } = option;
-            if(!this.options.has(id)) {
-                this.options.set(id, { text, value })
+            if(!options.has(id)) {
+                options.set(id, { text, value })
             } else {
                 throw new Error("All enum ids must be unique.");
             }
         }
+        this.options = options;
         // Set value
-        if(value !== undefined) {
-            this.setValue(value);
-        } else if(template.default !== undefined) {
-            this.setValue(template.default);
-        } else {
-            this.setValue(null);
-        }
-        this.initializePlugins(template);
+        this._value = null;
+        this._plugins = null;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. Property Cloning  /////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    
+    /**
+     * Clones the property.
+     * @returns
+     *  The cloned property.
+     */
+    public override clone(): EnumProperty;
+
+    /**
+     * Clones the property.
+     * @param assembler
+     *  The cloned property's assembler.
+     * @returns
+     *  The cloned property.
+     */
+    public override clone(assembler?: PropertyAssembler): EnumProperty {
+        // Clone options
+        let options = [...this.options.entries()].map(o => ({ 
+            id    : o[0], 
+            text  : o[1].text,
+            value : o[1].value
+        }));
+        // Create property
+        let prop = new EnumProperty({
+            id        : this.id,
+            name      : this.name,
+            path      : this.path,
+            link      : this.link,
+            row       : this.row,
+            col       : this.col,
+            required  : this.required,
+            alignment : this.alignment,
+            options
+        }, assembler);
+        // Clone values
+        prop.value = this._value;
+        // Clone plugins
+        this._plugins?.forEach(({ plugin }) => {
+            prop.tryInstallPlugin(plugin)
+        });
+        // Return
+        return prop;
     }
 
     
     ///////////////////////////////////////////////////////////////////////////
-    ///  1. INumberProperty Methods  //////////////////////////////////////////
+    ///  2. Plugin Management  ////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
     /**
-     * Sets the property's value directly.
-     * @param value
-     *  The property's new value.
+     * Attempts to install a plugin into the property.
+     * @param plugin
+     *  The plugin to install.
+     * @returns
+     *  True if the plugin was successfully installed, false otherwise.
      */
-    public setValue(value: string | null): void {
-        // Validate value
-        if(value === null) {
-            this.value = null;
-        } else if(this.options.has(value)) {
-            this.value = value;
-        } else {
-            throw new Error(`Enum value '${ value }' is not a valid option.`);
+    public tryInstallPlugin(plugin: Plugin<EnumProperty>): boolean {
+        let result;
+        // Don't allocate manager until absolutely necessary
+        if(this._plugins === null) {
+            this._plugins = new PluginManager<EnumProperty>(this, this.root);
         }
+        result = this._plugins.tryInstallPlugin(plugin);
+        // Deallocate manager if no plugins were installed
+        if(this._plugins.length === 0) {
+            this._plugins = null;
+        }
+        return result;
     }
 
     /**
-     * Creates a new command.
+     * Attempts to install a list of plugins into the property.
+     * @param plugin
+     *  The plugins to install.
+     * @returns
+     *  True if all plugins were successfully installed, false otherwise.
      */
-    public newCommand(): void {
-        // TODO: Implement command construct
-        throw new Error("Method not implemented.");
+    public tryInstallPlugins(plugins: Plugin<EnumProperty>[]): boolean {
+        let result = true;
+        for(let plugin of plugins) {
+            result &&= this.tryInstallPlugin(plugin);
+        }
+        return result;
     }
-    
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  3. toString  /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
     /**
      * Returns a string representation of the property.
      * @returns
      *  A string representation of the property.
      */
     public override toString(): string | undefined {
-        return this.value !== null ? this.options.get(this.value)!.text : undefined;
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///  2. Event Methods  ////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * Property update behavior.
-     * @param newValue
-     *  The property's new value.
-     * @param oldValue
-     *  The property's old value.
-     */
-    public onUpdate(newValue: any, oldValue: any) {
-        // TODO: Link update event
-        this.emit("update", newValue, oldValue);
-        this._section.onPropertyUpdate(this, newValue, oldValue);
+        return this._value !== null ? this.options.get(this._value)!.text : undefined;
     }
 
 }

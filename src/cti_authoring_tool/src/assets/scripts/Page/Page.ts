@@ -1,73 +1,174 @@
-import { Crypto } from "../Utilities/Crypto";
-import { PageSection } from "./PageSection";
-import { PageTemplate } from "../AppConfiguration";
+import { PageElement } from "./PageElement";
+import { PageAssembler } from "./PageAssembler";
+import { PageParameters } from "./PageParameters";
+import { Plugin, PluginManager } from "./Plugins";
+import { Section, SectionAssembler } from "./Section";
 
-export class Page {
-
-    /**
-     * The page's instance id.
-     */
-    public instance: string;
+export class Page extends PageElement {
 
     /**
-     * The page template's id.
+     * The page's id.
      */
-    public id: string;
+    public readonly id: string;
 
     /**
-     * The page template's name.
+     * The page's export path.
      */
-    public template: string;
+    public readonly path: string;
 
     /**
      * The page's sections.
      */
-    public sections: Map<string, PageSection>;
-
+    public readonly sections: ReadonlyMap<string, Section>;
 
     /**
-     * The page's name.
+     * The section's plugins.
      */
-    public get name(): string {
-        let name = "";
-        for(let section of this.sections.values()) {
-            if(!section.isPrimary)
-                continue;
-            name = [...section.properties.values()]
-                .filter(o => o.isPrimary && o.toString())
-                .map(o => o.toString())
-                .join(" - ");
-            break;
-        }
-        return name || `Untitled ${ this.template }`;
-    };
+    private _plugins: PluginManager<Page> | null;
 
 
     /**
      * Creates a new {@link Page}.
-     * @param template
-     *  The page's template.
+     * @param params
+     *  The page's parameters.
      */
-    constructor(template: PageTemplate) {
-        // Init state
-        this.instance = Crypto.randomUUID();
-        this.id = template.id;
-        this.template = template.name;
-        // this.name = template.name;
-        this.sections = new Map();
-        // Init sections
-        for(let s of template.sections) {
-            let section = new PageSection(this, s);
-            if(!this.sections.has(section.id)) {
-                this.sections.set(section.id, section);
-            } else {
-                throw new Error(`Section '${ 
-                    section.id 
-                }' is defined twice in page '${ 
-                    this.id
-                }'.`);
-            }
+    constructor(params: PageParameters);
+
+    /**
+     * Creates a new {@link Page}.
+     * @param params
+     *  The page's parameters.
+     * @param assembler
+     *  The page's assembler.
+     */
+    constructor(params: PageParameters, assembler?: PageAssembler);
+    constructor(params: PageParameters, assembler?: PageAssembler) {
+        super();
+        let sections = new Map();
+        // Configure state
+        this.id = params.id;
+        this.path = params.path ?? params.id;
+        this.sections = sections;
+        this._plugins = null;
+        // Configure page assembler
+        if(assembler) {
+            this.__prepareAssembler(assembler);
         }
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. Section Cloning  //////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Clones the page.
+     * @returns
+     *  The cloned page.
+     */
+    public clone(): Page
+
+    /**
+     * Clones the page.
+     * @param assembler
+     *  The cloned page's assembler.
+     * @returns
+     *  The cloned page.
+     */
+    public clone(assembler?: PageAssembler): Page;
+    public clone(assembler?: PageAssembler): Page {
+        assembler ??= new PageAssembler();
+        // Create page
+        let page = new Page({
+            id   : this.id,
+            path : this.path
+        }, assembler);
+        // Clone sections
+        for(let section of this.sections.values()) {
+            let sectionAssembler = new SectionAssembler();
+            section.clone(sectionAssembler);
+            assembler.attachSection(sectionAssembler);
+        }
+        // Return
+        return page;
+    }
+
+    
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. Plugin Management  ////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attempts to install a plugin into the property.
+     * @param plugin
+     *  The plugin to install.
+     * @returns
+     *  True if the plugin was successfully installed, false otherwise.
+     */
+    public tryInstallPlugin(plugin: Plugin<Page>): boolean {
+        let result;
+        // Don't allocate manager until absolutely necessary
+        if(this._plugins === null) {
+            this._plugins = new PluginManager<Page>(this, this.root);
+        }
+        result = this._plugins.tryInstallPlugin(plugin);
+        // Deallocate manager if no plugins were installed
+        if(this._plugins.length === 0) {
+            this._plugins = null;
+        }
+        return result;
+    }
+
+    /**
+     * Attempts to install a list of plugins into the property.
+     * @param plugin
+     *  The plugins to install.
+     * @returns
+     *  True if all plugins were successfully installed, false otherwise.
+     */
+    public tryInstallPlugins(plugins: Plugin<Page>[]): boolean {
+        let result = true;
+        for(let plugin of plugins) {
+            result &&= this.tryInstallPlugin(plugin);
+        }
+        return result;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  3. Assembler Preparation  ////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Prepares an assembler for the page.
+     * @returns
+     *  The page's assembler.
+     * @remarks
+     *  Page API use only. Do not use.
+     * @internal
+     */
+    public __prepareAssembler(): PageAssembler
+
+    /**
+     * Prepares an assembler for the page.
+     * @param assembler
+     *  The assembler to use.
+     * @returns
+     *  The page's assembler.
+     * @remarks
+     *  Page API use only. Do not use.
+     * @internal
+     */
+    public __prepareAssembler(assembler?: PageAssembler): PageAssembler;
+    public __prepareAssembler(assembler: PageAssembler = new PageAssembler()): PageAssembler {
+        assembler.__injectAccessor({
+            page: this,
+            sections: this.sections as Map<string, Section>
+        });
+        return assembler;
     }
 
 }

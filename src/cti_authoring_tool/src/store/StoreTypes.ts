@@ -1,6 +1,6 @@
 import { Property } from "@/assets/scripts/Page/Property/Property"
-import { PageEditor } from "@/assets/scripts/Page/PageEditor"
-import { AppSettings } from "@/assets/scripts/AppSettings"
+import { PageEditor } from "@/assets/scripts/PageEditor/PageEditor"
+import { AppSettings } from "@/assets/scripts/Application/AppSettings"
 
 /**
  * Central Module Store

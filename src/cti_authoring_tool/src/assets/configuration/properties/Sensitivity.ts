@@ -1,7 +1,8 @@
-import { PropertyType } from "@/assets/scripts/AppConfiguration";
+import { PropertyType } from "@/assets/scripts/PageEditor";
 
 export const Sensitivity = {
     id: "sensitivity", 
-    name: "Sensitivity", 
+    name: "Sensitivity",
+    path: "*.sensitivity",
     type: PropertyType.String
 }

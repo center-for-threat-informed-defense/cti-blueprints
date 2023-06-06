@@ -24,7 +24,7 @@
 
 <script lang="ts">
 // Dependencies
-import { Alignment } from "@/assets/scripts/AppConfiguration";
+import { Alignment } from "@/assets/scripts/Page";
 import { defineComponent, PropType, ref } from "vue";
 // Components
 import ScrollBox from "@/components/Containers/ScrollBox.vue";

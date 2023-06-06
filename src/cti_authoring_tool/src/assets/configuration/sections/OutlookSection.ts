@@ -1,6 +1,7 @@
 import { Outlook } from "../properties/Outlook";
 
 export const OutlookSection = {
+    id: "outlook",
     name: "Outlook",
     layout: {
         rows: 1,

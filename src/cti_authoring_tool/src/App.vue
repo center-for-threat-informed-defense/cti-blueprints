@@ -1,10 +1,10 @@
 <template>
   <AppHotkeyBox id="main">
     <AppTitleBar id="app-title-bar"/>
-    <div class id="tool-bar"></div>
+    <!-- <div class id="tool-bar"></div> -->
     <div id="app-body">
       <ScrollBox id="page-container" :alwaysShowScrollBar="true">
-        <PageEditorControl id="page" :page="editor.page" @command="onCommand" />
+        <PageEditorControl id="page" :page="editor.page" @execute="onExecute" />
       </ScrollBox>
     </div>
     <FileSelect 
@@ -21,11 +21,11 @@
 
 <script lang="ts">
 import * as Store from "@/store/StoreTypes";
-import * as App from "@/assets/scripts/Commands/AppCommands";
+import * as AppCommands from "@/assets/scripts/Application/Commands";
 import Configuration from "@/assets/configuration/app.config"
 // Dependencies
-import { Command } from "./assets/scripts/Commands/Command";
-import { PageEditor } from "./assets/scripts/Page/PageEditor";
+import { Command } from "./assets/scripts/Application/Command";
+import { PageEditor } from "./assets/scripts/PageEditor/PageEditor";
 import { defineComponent } from 'vue';
 import { mapMutations, mapState } from 'vuex';
 // Components
@@ -69,11 +69,11 @@ export default defineComponent({
     ...mapMutations("ApplicationStore", ["execute"]),
 
     /**
-     * Page command behavior.
+     * Page execute behavior.
      * @param emitter
      *  The page's command.
      */
-    async onCommand(cmd: Command) {
+    async onExecute(cmd: Command) {
       try {
         if(cmd instanceof Promise) {
           this.execute(await cmd);
@@ -91,7 +91,7 @@ export default defineComponent({
      *  The editor's id.
      */
     onEditorSwitch(id: string) {
-      this.execute(new App.SwitchActiveFile(this.ctx, id));
+      this.execute(AppCommands.switchActivePage(this.ctx, id));
     },
 
     /**
@@ -100,7 +100,7 @@ export default defineComponent({
      *  The editor's id.
      */
     onEditorClose(id: string) {
-      this.execute(new App.UnloadFile(this.ctx, id));
+      this.execute(AppCommands.unloadPage(this.ctx, id));
     }
 
 
@@ -114,7 +114,7 @@ export default defineComponent({
       settings = require("../public/settings.json");
     }
     // Load settings
-    this.execute(new App.LoadSettings(this.ctx, settings));
+    this.execute(AppCommands.loadSettings(this.ctx, settings));
   },
   components: {
     ScrollBox, AppTitleBar, AppHotkeyBox, 

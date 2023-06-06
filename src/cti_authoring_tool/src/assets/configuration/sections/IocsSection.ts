@@ -4,6 +4,7 @@ import { IocsNetwork } from "../properties/IocsNetwork";
 import { SystemArtifacts } from "../properties/SystemArtifacts";
 
 export const IocsSection = {
+    id: "iocs",
     name: "Indicators of Compromise for Hunting",
     layout: {
         rows: 4,

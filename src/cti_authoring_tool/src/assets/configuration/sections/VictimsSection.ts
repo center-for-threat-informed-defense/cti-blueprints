@@ -1,6 +1,7 @@
 import { Victims } from "../properties/Victims";
 
 export const VictimsSection = {
+    id: "victims",
     name: "Victims",
     layout: {
         rows: 1,

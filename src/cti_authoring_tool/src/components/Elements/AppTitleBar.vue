@@ -8,8 +8,8 @@
 
 <script lang="ts">
 // Dependencies
-import { ContextMenu } from "@/assets/scripts/ContextMenuTypes";
-import { CommandEmitter } from "../../assets/scripts/Commands/Command";
+import { ContextMenu } from "@/assets/scripts/Application/ContextMenuTypes";
+import { CommandEmitter } from "../../assets/scripts/Application/Command";
 import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
 // Components

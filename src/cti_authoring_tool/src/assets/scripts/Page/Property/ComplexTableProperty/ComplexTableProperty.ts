@@ -1,90 +1,62 @@
-import { PageSection } from "../../PageSection";
-import { IComplexTableProperty } from "./IComplexTableProperty";
-import { AtomicProperty, TabularProperty } from "..";
-import { ComplexTablePropertyTemplate, TabularPropertyRowValue } from "../../../AppConfiguration";
 
-export class ComplexTableProperty extends TabularProperty implements IComplexTableProperty {
+import { ComplexTablePropertyLayout } from "./ComplexTablePropertyLayout";
+import {
+    AtomicProperty,
+    ComplexTablePropertyParameters,
+    TabularProperty,
+    TabularPropertyAssembler
+} from "..";
+
+export class ComplexTableProperty extends TabularProperty {
     
     /**
      * The data region's layout.
      */
-    public readonly layout: {
-
-        /**
-         * The data region's summary template.
-         */
-        readonly summary: string;
-
-        /**
-         * The number of rows in each data region.
-         */
-        readonly rows: number;
-
-        /**
-         * The number of columns in each data region.
-         */
-        readonly cols: number;
-    
-    }
+    public readonly layout: ComplexTablePropertyLayout
 
     /**
      * The table row's collapsed state.
-     * @remarks
-     *  Because the overridden `insertRow()` is used in the base constructor, 
-     * `collapsed` is accessed before it's defined. To avoid this, `collapsed`
-     * is backed by `_collapsed` which is initialized on first access of 
-     * `collapsed`. 
      */
-    public get collapsed(): Map<string, boolean> {
-        if(this._collapsed === undefined) {
-            this._collapsed = new Map();
-        }
-        return this._collapsed;
-    }
-
-    /**
-     * The table row's (internal) collapsed state.
-     */
-    // @ts-ignore
     private _collapsed: Map<string, boolean>;
 
 
     /**
-     * Creates a new {@link ComplexTableProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @throws { Error }
-     *  If `template` defines a non-atomic property.
+     * The table row's collapsed state.
      */
-    constructor(section: PageSection, template: ComplexTablePropertyTemplate);
+    public get collapsed(): ReadonlyMap<string, boolean> {
+        return this._collapsed;
+    }
+
+
+    /**
+     * Creates a new {@link ComplexTableProperty}.
+     * @param params
+     *  The property's parameters.
+     */
+    constructor(params: ComplexTablePropertyParameters);
     
     /**
      * Creates a new {@link ComplexTableProperty}.
-     * @param section
-     *  The property's section.
-     * @param template
-     *  The property's template.
-     * @param value
-     *  The property' value.
-     * @throws { Error }
-     *  If `template` defines a non-atomic property.
+     * @param params
+     *  The property's parameters.
+     * @param assembler
+     *  The property's assembler.
      */
-    constructor(section: PageSection, template: ComplexTablePropertyTemplate, value: TabularPropertyRowValue[]);
-    constructor(section: PageSection, template: ComplexTablePropertyTemplate, value?: TabularPropertyRowValue[]) {
-        if(value === undefined) {
-            super(section, template);  
-        } else {
-            super(section, template, value);  
-        }
+    constructor(params: ComplexTablePropertyParameters, assembler?: TabularPropertyAssembler);
+    constructor(params: ComplexTablePropertyParameters, assembler?: TabularPropertyAssembler) {
+        super(params, assembler);
         this.layout = {
-            summary: template.layout.summary,
-            rows: template.layout.rows,
-            cols: template.layout.cols
+            summary: params.layout.summary,
+            rows: params.layout.rows,
+            cols: params.layout.cols
         };
-        this.initializePlugins(template);
+        this._collapsed = new Map();
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. Row Collapse Management  //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
 
     /**
@@ -94,11 +66,11 @@ export class ComplexTableProperty extends TabularProperty implements IComplexTab
      * @param index
      *  The row's index.
      * @throws { Error }
-     *  If `row` does not match the table's property schema.
+     *  If `row` does not match the table's structure.
      */
     public override insertRow(row: [string, AtomicProperty[]], index?: number) {
         // Update collapsed state
-        this.collapsed.set(row[0], true);
+        this._collapsed.set(row[0], true);
         // Insert row
         super.insertRow(row, index);
     }
@@ -123,10 +95,10 @@ export class ComplexTableProperty extends TabularProperty implements IComplexTab
     public override deleteRow(_: string | number): boolean {
         // Update collapsed state
         if(typeof _ === "number") {
-            _ = [...this.value.keys()][_];
+            _ = [...this._value.keys()][_];
         }
         if(_ !== undefined) {
-            this.collapsed.delete(_);
+            this._collapsed.delete(_);
         }
         // Delete row
         return super.deleteRow(_);
@@ -140,9 +112,57 @@ export class ComplexTableProperty extends TabularProperty implements IComplexTab
      *  True to collapse, false to uncollapse. 
      */
     public setRowCollapse(id: string, collapse: boolean) {
-        if(this.collapsed.has(id)) {
-            this.collapsed.set(id, collapse);
+        if(this._collapsed.has(id)) {
+            this._collapsed.set(id, collapse);
         }
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. Property Cloning  /////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Clones the property.
+     * @returns
+     *  The cloned property.
+     */
+    public override clone(): ComplexTableProperty
+
+    /**
+     * Clones the property.
+     * @param assembler
+     *  The cloned property's assembler.
+     * @returns
+     *  The cloned property.
+     */
+    public override clone(assembler?: TabularPropertyAssembler): ComplexTableProperty {
+        // Create property
+        let prop = new ComplexTableProperty({
+            id          : this.id,
+            name        : this.name,
+            path        : this.path,
+            link        : this.link,
+            row         : this.row,
+            col         : this.col,
+            layout: {
+                cols    : this.layout.cols,
+                rows    : this.layout.rows,
+                summary : this.layout.summary
+            }
+        }, assembler);
+        // Clone values
+        for(let [id, row] of this._value) {
+            prop.insertRow([id, row.map(o => o.clone())]);
+            prop.setRowCollapse(id, this._collapsed.get(id)!);
+        }
+        // Clone plugins
+        this._plugins?.forEach(({ plugin }) => {
+            prop.tryInstallPlugin(plugin);
+        });
+        // Return
+        return prop;
     }
 
 }
