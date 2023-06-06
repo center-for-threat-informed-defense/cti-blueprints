@@ -1,0 +1,14 @@
+<h2>Metadata</h2>
+<h3>Threat Actor:</h3>
+<ul>
+    {%- for threat_actor in metadata.threat_actors -%}
+    <li>{{ threat_actor.threat_actor_name }}</li>
+    <li>{{ threat_actor.threat_actor_aliases }}</li>
+    {%- endfor -%}
+</ul>
+<h3>Actor Motivation:</h3>
+<ul>
+    {%- for motive in metadata.threat_actor_motivation -%}
+    <li>{{ motive.threat_actor_motivation }}</li>
+    {%- endfor -%}
+</ul>

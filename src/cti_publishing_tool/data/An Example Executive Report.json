@@ -1,0 +1,46 @@
+{
+    "report_title": "An Example Executive Report",
+    "report_number": "ER-123",
+    "sensitivity": "Unknown",
+    "traffic_light_protocol": "clear",
+    "criticality": "fysa",
+    "executive_summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis neque id purus convallis lobortis. Cras imperdiet ipsum ut quam scelerisque facilisis. Nunc tincidunt tellus arcu, vel dapibus ante tempus a. In hac habitasse platea dictumst. Nunc aliquet et massa quis consectetur. Curabitur quis erat vel quam volutpat tempus quis sed lectus. Ut rhoncus eget sem sit amet convallis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut mattis quis mauris ac posuere. Nunc at augue felis.",
+    "key_points": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis neque id purus convallis lobortis. Cras imperdiet ipsum ut quam scelerisque facilisis.\\n\\nNunc tincidunt tellus arcu, vel dapibus ante tempus a. In hac habitasse platea dictumst. Nunc aliquet et massa quis consectetur. Curabitur quis erat vel quam volutpat tempus quis sed lectus.\\n\\nUt rhoncus eget sem sit amet convallis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut mattis quis mauris ac posuere. Nunc at augue felis.",
+    "assessment": "Quisque quis ligula sit amet tellus imperdiet accumsan. In hac habitasse platea dictumst. Nam maximus posuere nibh, vestibulum bibendum neque. Fusce sit amet velit in ante viverra semper vitae ac enim. Etiam vulputate metus quam, quis varius dui sollicitudin a. Pellentesque vulputate vitae augue ac bibendum. Quisque massa lacus, posuere vel nunc ac, euismod pellentesque est. Cras suscipit venenatis vehicula. Fusce elementum libero id libero pellentesque consequat. Praesent egestas magna nisi, ut molestie neque efficitur at. Morbi malesuada nisl urna, ut hendrerit tellus lobortis sed. Cras leo sem, tempor a quam ut, egestas porta velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a lectus malesuada elit suscipit sollicitudin.\n    ",
+    "outlook": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis neque id purus convallis lobortis. Cras imperdiet ipsum ut quam scelerisque facilisis.\\n\\nNunc tincidunt tellus arcu, vel dapibus ante tempus a. In hac habitasse platea dictumst. Nunc aliquet et massa quis consectetur. Curabitur quis erat vel quam volutpat tempus quis sed lectus.\\n\\nUt rhoncus eget sem sit amet convallis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut mattis quis mauris ac posuere. Nunc at augue felis.",
+    "intelligence_gaps": "Nulla iaculis ut nisl in mattis. Pellentesque dapibus nisi quis sollicitudin molestie. Ut eu nisi scelerisque, pretium augue eu, egestas massa. Ut odio nulla, luctus eget ante gravida, commodo pulvinar nibh. Morbi consequat, sapien imperdiet bibendum vestibulum, dolor lacus varius risus",
+    "intelligence_requirements": [
+        {
+            "intelligence_requirement": "S-TA-2"
+        },
+        {
+            "intelligence_requirement": "OP-3"
+        }
+    ],
+    "data_sources": {
+        "report_citations": [
+            {
+                "description": "Morbi vitae nisl diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
+                "hyperlink": "www.google.com"
+            },
+            {
+                "description": "Vestibulum ac nisl fermentum, volutpat ex vel, sodales erat. Suspendisse sem mi, hendrerit vitae euismod ac, ultrices sit amet leo.",
+                "hyperlink": "www.google.com"
+            }
+        ],
+        "internal_telemetry": [
+            {
+                "internal_telemetry": "Nulla iaculis ut nisl in mattis. Pellentesque dapibus nisi quis sollicitudin molestie. Ut eu nisi scelerisque, pretium augue eu, egestas massa. Ut odio nulla, luctus eget ante gravida, commodo pulvinar nibh. Morbi consequat, sapien imperdiet bibendum vestibulum, dolor lacus varius risus,"
+            },
+            {
+                "internal_telemetry": "Ut facilisis orci mauris a ligula. Phasellus blandit euismod magna ornare tempor. Sed pharetra elit sit amet nisl tempus, sit amet finibus quam laoreet."
+            }
+        ]
+    },
+    "__document": {
+        "authoring_tool_version": "0.1.2",
+        "template_name": "Executive Report",
+        "template_version": "1.0.0",
+        "template_identifier": "790fc5be-f24c-4fd7-a7e1-20a761c37812"
+    }
+}

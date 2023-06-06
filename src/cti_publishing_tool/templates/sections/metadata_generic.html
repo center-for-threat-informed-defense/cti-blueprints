@@ -1,0 +1,32 @@
+<h2>Metadata</h2>
+<h3>Threat Actor:</h3>
+<ul>
+    {%- for threat_actor in metadata.threat_actors -%}
+    <li>{{ threat_actor.threat_actor_name }}</li>
+    <li>{{ threat_actor.threat_actor_aliases }}</li>
+    {%- endfor -%}
+</ul>
+<h3>Victim Location:</h3>
+<ul>
+    {%- for loc in metadata.victim_location -%}
+    <li>{{ loc.location }}</li>
+    {%- endfor -%}
+</ul>
+<h3>Sectors:</h3>
+<ul>
+    {%- for sec in metadata.sectors -%}
+    <li>{{ sec.sector }}</li>
+    {%- endfor -%}
+</ul>
+<h3>Infrastructure Used</h3>
+<ul>
+    {%- for inf in metadata.infrastructure_used -%} 
+    <li>{{ inf.infrastructure }}</li>
+    {%- endfor -%}
+</ul>
+<h3>Actor Motivation:</h3>
+<ul>
+    {%- for motive in metadata.threat_actor_motivation -%}
+    <li>{{ motive.threat_actor_motivation }}</li>
+    {%- endfor -%}
+</ul>

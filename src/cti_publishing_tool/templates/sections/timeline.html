@@ -1,0 +1,25 @@
+<h2>Timeline of Activity</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Atthibution</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Location</th>
+            <th>Sector</th>
+            <th>Activity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for timelineRow in timeline -%}
+        <tr>
+            <td>{{ timelineRow.attribution }}</td>
+            <td>{{ timelineRow.start_data }}</td>
+            <td>{{ timelineRow.end_data }}</td>
+            <td>{{ timelineRow.location }}</td>
+            <td>{{ timelineRow.sector }}</td>
+            <td>{{ timelineRow.activity }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>

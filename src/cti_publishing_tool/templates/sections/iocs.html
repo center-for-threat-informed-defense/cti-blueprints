@@ -1,0 +1,112 @@
+<p class="page-break"></p>
+<h2>Indicators of Compromise (IOC)</h2>
+<h2>Malware</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Attribution</th>
+            <th>Malicious Tool Name</th>
+            <th>Hash Type</th>
+            <th>File Hash</th>
+            <th>Associated Files Hash</th>
+            <th>Brief Description</th>
+            <th>Malware Analysis Report (Hyperlink, or N/A)</th>
+            <th>First Reported</th>
+            <th>Last Reported</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for malwareRow in iocs.malware -%}
+        <tr>
+            <td>{{ malwareRow.attribution }}</td>
+            <td>{{ malwareRow.ioc_malware_name }} </td>
+            <td>{{ malwareRow.ioc_malware_hash_type }} </td>
+            <td class="hash">{{ malwareRow.ioc_malware_hash }} </td>
+            <td class="hash">{{ malwareRow.ioc_associated_file_hash }} </td>
+            <td>{{ malwareRow.ioc_malware_description }}</td>
+            <td>{{ malwareRow.ioc_malware_description }}</td>
+            <td>{{ malwareRow.timestamp }}</td>
+            <td>{{ malwareRow.timestamp }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>
+<h2>Network</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Attribution</th>
+            <th>Network Artifact</th>
+            <th>Details</th>
+            <th>Intrusion Phase</th>
+            <th>First Reported</th>
+            <th>Last Reported</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for networkRow in iocs.network -%}
+        <tr>
+            <td>{{ networkRow.attribution }}</td>
+            <td>{{ networkRow.artifact }}</td>
+            <td>{{ networkRow.details }}</td>
+            <td>{{ networkRow.network_intrusion_phase }}</td>
+            <td>{{ networkRow.first_observed }}</td>
+            <td>{{ networkRow.last_observed }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>
+<h2>System Artifacts</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Attribution</th>
+            <th>Host Artifact</th>
+            <th>Type</th>
+            <th>Details</th>
+            <th>Tactic</th>
+            <th>First Reported</th>
+            <th>Last Reported</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for sysArtifactRow in iocs.system_artifacts -%}
+        <tr>
+            <td>{{ sysArtifactRow.attribution }}</td>
+            <td>{{ sysArtifactRow.artifact }}</td>
+            <td>{{ sysArtifactRow.type }}</td>
+            <td>{{ sysArtifactRow.system_details }}</td>
+            <td>{{ sysArtifactRow.tactic }}</td>
+            <td>{{ sysArtifactRow.first_observed }}</td>
+            <td>{{ sysArtifactRow.last_observed }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>
+<h2>Common Vulnerabilities and Exposures (CVEs)</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Attribution</th>
+            <th>CVE Number</th>
+            <th>CVSS Score</th>
+            <th>Patch Available (Y/N)</th>
+            <th>Other Remediation</th>
+            <th>Date Reported</th>
+            <th>Patch Applied  (Y/N/UNK/NA)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for CVE in iocs.cves -%}
+        <tr>
+            <td>{{ CVE.attribution }}</td>
+            <td>{{ CVE.cve_number }}</td>
+            <td>{{ CVE.cve_cvss_score }}</td>
+            <td>{{ CVE.cve_patch_available }}</td>
+            <td>{{ CVE.cve_remediation }}</td>
+            <td>{{ CVE.date_of_report }}</td>
+            <td>{{ CVE.cve_patch_applied }}</td>
+        </tr>
+        {%- endfor -%}
+    </tbody>
+</table>

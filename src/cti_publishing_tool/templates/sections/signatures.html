@@ -1,0 +1,10 @@
+<h2>Signatures</h2>
+<ul>
+    {%- for sig in signatures -%}
+    <li>{{ sig.attribution }}</li>
+    <ul>
+        <li>{{ sig.ioc_malware_name }}</li>
+        <li>{{ sig.signature_description }}</li>
+    </ul>
+    {%- endfor -%}
+</ul>
