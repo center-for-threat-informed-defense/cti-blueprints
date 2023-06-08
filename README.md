@@ -21,14 +21,14 @@ threat-informed defense globally. The project is funded by our [research partici
 
 ## Getting Started
 
-To get started, we suggest reading the Slip Sheet for an overview of the project and
+To get started, we suggest reading the One Pager for an overview of the project and
 then read the sample reports. For a deeper dive, read the wiki documentation and review
 the CTI templates. From there, try creating your own reports using either the Word
 templates or the Blueprints Suite of tools.
 
 | Resource                                                                                        | Description                                        |
 | ----------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [Slip Sheet](https://github.com/center-for-threat-informed-defense/cti-blueprints/blob/main/CTI_Blueprints_Slip_Sheet.pdf) | One page overview of CTI Blueprints |
+| [One Pager](https://hubs.ly/Q01SYBjK0)                                                          | Overview of CTI Blueprints                         |
 | [Documentation](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki)      | Complete documentation for CTI Blueprints          |
 | [Templates](./templates)                                                                        | CTI report templates with inline guidance          |
 | [Sample Reports](./samples)                                                                     | Sample reports illustrating use of the templates   |
@@ -39,9 +39,9 @@ templates or the Blueprints Suite of tools.
 There are several ways that you can get involved with this project and help advance
 threat-informed defense:
 
-- **Review the [Slip Sheet](https://github.com/center-for-threat-informed-defense/cti-blueprints/blob/main/CTI_Blueprints_Slip_Sheet.pdf) and [sample reports](./samples).** This will give you
-  a quick overview of the project's goals and help to envision your own capability to
-  use it.
+- **Review the [One Pager](https://hubs.ly/Q01SYBjK0) and [sample reports](./samples).**
+  This will give you a quick overview of the project's goals and help to envision your
+  own capability to use it.
 - **Read [the
   documentation](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki).**
   The project wiki goes deeper into the project's goals and objectives.
