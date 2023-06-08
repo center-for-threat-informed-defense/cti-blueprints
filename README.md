@@ -21,7 +21,7 @@ threat-informed defense globally. The project is funded by our [research partici
 
 ## Getting Started
 
-To get started, we suggest reading the Slip Sheet for an overview of the project and
+To get started, we suggest reading the One Pager for an overview of the project and
 then read the sample reports. For a deeper dive, read the wiki documentation and review
 the CTI templates. From there, try creating your own reports using either the Word
 templates or the Blueprints Suite of tools.
