@@ -43,15 +43,9 @@ threat-informed defense:
   This will give you a quick overview of the project's goals and help to envision your
   own capability to use it.
 - **Read [the
-  documentation](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki).**
   The project wiki goes deeper into the project's goals and objectives.
 - **Create your own reports.** Choose one of two approaches for creating reports:
   - Build reports with the [Word templates](./templates), which are user friendly and
-    are the fastest way to get up and running with CTI Blueprints.
-  - Build reports with the CTI Blueprints Suite, which is a set of tools for authoring
-    and publishing CTI reports that is highly flexible and has time-saving features.
-    This approach requires more initial investment in setup and learning.
-
 ## Questions and Feedback
 
 Please submit issues for any technical questions/concerns or contact
