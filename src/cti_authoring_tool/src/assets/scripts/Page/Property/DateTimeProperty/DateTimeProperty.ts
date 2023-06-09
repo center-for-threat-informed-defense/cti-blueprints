@@ -1,9 +1,10 @@
 import { AtomicProperty } from "..";
+import { PlugableElement } from "../../PlugableElement";
 import { PropertyAssembler } from "../PropertyAssembler";
 import { Plugin, PluginManager } from "../../Plugins";
 import { AtomicPropertyParameters } from "../AtomicProperty/AtomicPropertyParameters";
 
-export class DateTimeProperty extends AtomicProperty {
+export class DateTimeProperty extends AtomicProperty implements PlugableElement<DateTimeProperty> {
 
     /**
      * The property's value.
@@ -19,14 +20,14 @@ export class DateTimeProperty extends AtomicProperty {
     /**
      * The property value's getter.
      */
-    public get value(): Date | null {
+    public override get value(): Date | null {
         return this._value;
     }
 
     /**
      * The property value's setter.
      */
-    public set value(value: Date | string | null) {
+    public override set value(value: Date | string | null) {
         let _value = this._value;
         if(value === null) {
             this._value = null;
@@ -35,9 +36,8 @@ export class DateTimeProperty extends AtomicProperty {
         } else {
             this._value = value;
         }
-        let prev = _value === null ? null : new Date(_value);
-        let next = this._value === null ? null : new Date(this._value);
-        this.emit("update", next, prev);
+        let lastValue = _value === null ? null : new Date(_value);
+        this.emit("update", this, lastValue);
     }
 
 
@@ -73,16 +73,20 @@ export class DateTimeProperty extends AtomicProperty {
      * @returns
      *  The cloned property.
      */
-    public override clone(): DateTimeProperty
+    public override clone(): DateTimeProperty;
 
     /**
      * Clones the property.
      * @param assembler
      *  The cloned property's assembler.
+     * @param excludePlugins
+     *  If true, plugins will not be installed on the cloned property.
+     *  (Default: false)
      * @returns
      *  The cloned property.
      */
-    public override clone(assembler?: PropertyAssembler): DateTimeProperty {
+    public override clone(assembler?: PropertyAssembler, excludePlugins?: boolean): DateTimeProperty;
+    public override clone(assembler?: PropertyAssembler, excludePlugins: boolean = false): DateTimeProperty {
         // Create property
         let prop = new DateTimeProperty({
             id        : this.id,
@@ -94,12 +98,12 @@ export class DateTimeProperty extends AtomicProperty {
             required  : this.required,
             alignment : this.alignment
         }, assembler);
+        // Clone plugins
+        if(!excludePlugins) {
+            this._plugins?.forEach(({ plugin }) => prop.tryInstallPlugin(plugin));
+        }
         // Clone values
         prop.value = this._value;
-        // Clone plugins
-        this._plugins?.forEach(({ plugin }) => {
-            prop.tryInstallPlugin(plugin)
-        });
         // Return
         return prop;
     }
@@ -152,14 +156,13 @@ export class DateTimeProperty extends AtomicProperty {
     ///////////////////////////////////////////////////////////////////////////
 
 
-
     /**
      * Returns a string representation of the property.
      * @returns
      *  A string representation of the property.
      */
-    public override toString(): string | undefined {
-        return this._value !== null ? `${ this._value }` : undefined;
+    public override toString(): string {
+        return this._value !== null ? `${ this._value }` : "";
     }
 
 }

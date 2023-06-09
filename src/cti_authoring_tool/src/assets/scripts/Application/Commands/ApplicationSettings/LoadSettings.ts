@@ -1,5 +1,5 @@
 import { AppCommand } from "../AppCommand";
-import { AppSettings } from "@/assets/scripts/Application/AppSettings";
+import { AppSettings } from "@/assets/scripts/Application";
 import { ApplicationStore } from "@/store/StoreTypes";
 
 export class LoadSettings extends AppCommand {

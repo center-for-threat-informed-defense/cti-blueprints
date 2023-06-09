@@ -1,12 +1,11 @@
 import { CveNumber } from "./CveNumber";
 import { Attribution } from "./Attribution";
 import { CveCvssScore } from "./CveCvssScore";
-import { DateOfReport } from "./DateOfReport";
+import { DateReported } from "./DateReported";
 import { PropertyType } from "@/assets/scripts/PageEditor";
 import { CveRemediation } from "./CveRemediation";
 import { CvePatchApplied } from "./CvePatchApplied";
 import { CvePatchAvailable } from "./CvePatchAvailable";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const Cves = {
     id: "cves",
@@ -18,9 +17,6 @@ export const Cves = {
         rows: 4,
         cols: 2
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             ...Attribution,
@@ -48,7 +44,7 @@ export const Cves = {
             col: 1
         },
         {
-            ...DateOfReport,
+            ...DateReported,
             row: 4,
             col: 1
         },

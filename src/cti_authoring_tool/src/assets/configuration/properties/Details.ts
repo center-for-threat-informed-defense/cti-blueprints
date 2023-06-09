@@ -1,7 +1,7 @@
 import { PropertyType } from "@/assets/scripts/PageEditor";
 
-export const SystemDetails = {       
-    id: "system_details",
+export const Details = {       
+    id: "details",
     name: "Details",
     type: PropertyType.String
 }

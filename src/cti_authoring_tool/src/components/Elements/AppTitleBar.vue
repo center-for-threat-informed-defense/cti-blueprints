@@ -1,7 +1,7 @@
 <template>
   <TitleBar class="app-title-bar-element" :menus="menus" @select="onItemSelect">
     <template v-slot:icon>
-      <span class="logo">TE</span>
+      <span class="logo">AT</span>
     </template>
   </TitleBar>
 </template>

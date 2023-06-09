@@ -1,10 +1,10 @@
 import { Artifact } from "./Artifact";
 import { Attribution } from "./Attribution";
-import { LastObserved } from "./LastObserved";
+import { LastReported } from "./LastReported";
 import { PropertyType } from "@/assets/scripts/PageEditor";
-import { FirstObserved } from "./FirstObserved";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
+import { FirstReported } from "./FirstReported";
 import { NetworkIntrusionPhase } from "./NetworkIntrusionPhase";
+import { Details } from "./Details";
 
 export const IocsNetwork = {
     id: "ioc_network",
@@ -14,11 +14,8 @@ export const IocsNetwork = {
     layout: {
         summary: "{{ attribution }}\n**{{ artifact }}**",
         cols: 2,
-        rows: 3
+        rows: 4
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             ...Attribution,
@@ -32,18 +29,23 @@ export const IocsNetwork = {
         },
         {
             ...Artifact,
+            name: "Network Artifact",
             row: 2,
             col: [1,2]
         },
-        
         {
-            ...FirstObserved,
+            ...Details,
             row: 3,
+            col: [1,2]
+        },
+        {
+            ...FirstReported,
+            row: 4,
             col: 1
         },
         {
-            ...LastObserved,
-            row: 3,
+            ...LastReported,
+            row: 4,
             col: 2
         }
     ]

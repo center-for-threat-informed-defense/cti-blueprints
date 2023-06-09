@@ -1,7 +1,7 @@
 import { ApplicationStore } from "@/store/StoreTypes";
 import { AppCommand } from "../AppCommand";
 import { LoadSettings } from "./LoadSettings";
-import { AppSettings } from "@/assets/scripts/Application/AppSettings";
+import { AppSettings } from "@/assets/scripts/Application";
 
 /**
  * Loads the application's settings.

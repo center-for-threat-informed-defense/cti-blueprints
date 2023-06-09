@@ -34,16 +34,20 @@ export class TimeProperty extends DateTimeProperty {
      * @returns
      *  The cloned property.
      */
-    public override clone(): TimeProperty
+    public override clone(): TimeProperty;
 
     /**
      * Clones the property.
      * @param assembler
      *  The cloned property's assembler.
+     * @param excludePlugins
+     *  If true, plugins will not be installed on the cloned property.
+     *  (Default: false)
      * @returns
      *  The cloned property.
      */
-    public override clone(assembler?: PropertyAssembler): TimeProperty {
+    public override clone(assembler?: PropertyAssembler, excludePlugins?: boolean): TimeProperty;
+    public override clone(assembler?: PropertyAssembler, excludePlugins: boolean = false): TimeProperty {
         // Create property
         let prop = new TimeProperty({
             id        : this.id,
@@ -55,12 +59,12 @@ export class TimeProperty extends DateTimeProperty {
             required  : this.required,
             alignment : this.alignment
         }, assembler);
+        // Clone plugins
+        if(!excludePlugins) {
+            this._plugins?.forEach(({ plugin }) => prop.tryInstallPlugin(plugin));
+        }
         // Clone values
         prop.value = this.value;
-        // Clone plugins
-        this._plugins?.forEach(({ plugin }) => {
-            prop.tryInstallPlugin(plugin)
-        });
         // Return
         return prop;
     }

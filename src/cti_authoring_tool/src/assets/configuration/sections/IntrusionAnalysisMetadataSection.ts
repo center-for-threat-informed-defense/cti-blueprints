@@ -1,5 +1,4 @@
 import { PropertyType } from "@/assets/scripts/PageEditor";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { ThreatActorMotivation } from "../properties/ThreatActorMotivation";
 import { ThreatActorAttributions } from "../properties/ThreatActorAttributions";
 
@@ -26,9 +25,6 @@ export const IntrusionAnalysisMetadataSection = {
             layout: {
                 cols: 1,
             },
-            plugins: [
-                { module: ImportCSVPlugin }
-            ],
             properties: [
                 {
                     ...ThreatActorMotivation,

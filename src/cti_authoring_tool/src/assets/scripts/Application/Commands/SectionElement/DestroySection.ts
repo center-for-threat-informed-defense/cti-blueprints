@@ -24,7 +24,7 @@ export class DestroySection extends AppCommand {
      * Executes the command.
      */
     public execute(): void {
-        this._section.emit("destroy");
+        this._section.emit("destroy", this._section);
     }
 
 }

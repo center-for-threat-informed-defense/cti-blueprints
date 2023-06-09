@@ -38,11 +38,7 @@ import { ComplexTableProperty, FormattedText, Property, Sort, SummaryParser, Tab
 // Components
 import TabularField from "./TabularField.vue";
 
-// TODO: Implement collapse / uncollapse all when table header clicked
-
 // TODO: Implement abridged summary for tables with 100+ rows
-
-// TODO: Implement cloning command
 
 export default defineComponent({
   name: "ComplexTableField",

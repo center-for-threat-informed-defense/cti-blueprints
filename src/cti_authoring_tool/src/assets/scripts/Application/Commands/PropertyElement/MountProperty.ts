@@ -33,7 +33,7 @@ export class MountProperty extends AppCommand {
      * Executes the command.
      */
     public execute(): void {
-        this._property.emit("mount", this._el);
+        this._property.emit("mount", this._property, this._el);
     }
 
 }

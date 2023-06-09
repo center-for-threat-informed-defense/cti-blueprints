@@ -1,6 +1,5 @@
 import { AtomicProperty } from "..";
 import { PropertyAssembler } from "../PropertyAssembler";
-import { Plugin, PluginManager } from "../../Plugins";
 import { NumberPropertyParameters } from "./NumberPropertyParameters";
 
 export abstract class NumberProperty extends AtomicProperty {
@@ -20,21 +19,16 @@ export abstract class NumberProperty extends AtomicProperty {
      */
     protected _value: number | null;
 
-    /**
-     * The property's plugin manager.
-     */
-    protected _plugins: PluginManager<NumberProperty> | null;
-
     
     /**
      * The property's value.
      */
-    public abstract get value(): number | null;
+    public abstract override get value(): number | null;
 
     /**
      * The property value's setter.
      */
-    public abstract set value(value: number | null);
+    public abstract override set value(value: number | null);
 
 
     /**
@@ -57,54 +51,11 @@ export abstract class NumberProperty extends AtomicProperty {
         this.min = params.min ?? -Infinity;
         this.max = params.max ?? Infinity;
         this._value = null;
-        this._plugins = null;
-    }
-
-    
-    ///////////////////////////////////////////////////////////////////////////
-    ///  1. Plugin Management  ////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * Attempts to install a plugin into the property.
-     * @param plugin
-     *  The plugin to install.
-     * @returns
-     *  True if the plugin was successfully installed, false otherwise.
-     */
-    public tryInstallPlugin(plugin: Plugin<NumberProperty>): boolean {
-        let result;
-        // Don't allocate manager until absolutely necessary
-        if(this._plugins === null) {
-            this._plugins = new PluginManager<NumberProperty>(this, this.root);
-        }
-        result = this._plugins.tryInstallPlugin(plugin);
-        // Deallocate manager if no plugins were installed
-        if(this._plugins.length === 0) {
-            this._plugins = null;
-        }
-        return result;
-    }
-
-    /**
-     * Attempts to install a list of plugins into the property.
-     * @param plugin
-     *  The plugins to install.
-     * @returns
-     *  True if all plugins were successfully installed, false otherwise.
-     */
-    public tryInstallPlugins(plugins: Plugin<NumberProperty>[]): boolean {
-        let result = true;
-        for(let plugin of plugins) {
-            result &&= this.tryInstallPlugin(plugin);
-        }
-        return result;
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ///  2. toString  /////////////////////////////////////////////////////////
+    ///  1. toString  /////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 

@@ -1,13 +1,17 @@
 import { Campaign } from "./templates/Campaign";
 import { Executive } from "./templates/Executive";
+import { AppConfiguration } from "@/assets/scripts/Application";
 import { IntrusionAnalysis } from "./templates/IntrusionAnalysis";
 import { ThreatActorProfile } from "./templates/ThreatActorProfile";
-import { AppConfiguration } from "@/assets/scripts/Application/AppConfiguration";
 
 const config: AppConfiguration = {
     is_web_hosted: false,
     file_type_name: "CTI Template",
     file_type_extension: "json",
+    branding: {
+        product: "./product.png",
+        organization: "./organization.png",
+    },
     templates: [
         ThreatActorProfile,
         Campaign,

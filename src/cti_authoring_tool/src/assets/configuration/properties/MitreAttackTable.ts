@@ -6,7 +6,9 @@ import { Techniques } from "./Technique";
 import { Attribution } from "./Attribution";
 import { PropertyType } from "@/assets/scripts/PageEditor";
 import { SubTechniques } from "./SubTechnique";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
+import { MitreDefendPlugin } from "../plugins/MitreDefendPlugin";
+import { MitreAttackFlowPlugin } from "../plugins/MitreAttackFlowPlugin";
+import { MitreAttackSmartDropdownsPlugin } from "../plugins/MitreAttackSmartDropdownsPlugin";
 
 export const MitreAttackTable = {
     id: "mitre_attack_table",
@@ -19,7 +21,9 @@ export const MitreAttackTable = {
         cols: 2
     },
     plugins: [
-        { module: ImportCSVPlugin }
+        { module: MitreAttackSmartDropdownsPlugin },
+        { module: MitreAttackFlowPlugin },
+        { module: MitreDefendPlugin },
     ],
     properties: [
         {

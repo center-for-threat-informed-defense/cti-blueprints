@@ -1,6 +1,12 @@
 export abstract class PageCommand  {
 
     /**
+     * The null page's id.
+     */
+    public static NullPage = "$__null_page"
+
+    
+    /**
      * The page the command is operating on.
      */
     public page: string;

@@ -2,7 +2,7 @@ import { PropertyType } from "@/assets/scripts/PageEditor";
 
 export const SubTechniques = {       
     id: "sub_technique", 
-    name: "Sub Technique",
+    name: "Sub-technique",
     type: PropertyType.Enum,
     options: [
         { id: "T1001.001", text: "T1001.001 - Data Obfuscation: Junk Data", value: "T1001.001"},

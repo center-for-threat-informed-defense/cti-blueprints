@@ -1,5 +1,6 @@
 import * as Crypto from "@/assets/scripts/Utilities";
 import { ColumnSnapshot } from "./ColumnSnapshot";
+import { PlugableElement } from "../../PlugableElement";
 import { PropertyParameters } from "../PropertyParameters";
 import { Plugin, PluginManager } from "../../Plugins";
 import { TabularPropertyAssembler } from "./TabularPropertyAssembler";
@@ -36,17 +37,19 @@ export abstract class TabularProperty extends Property {
      */
     protected _columnState: TableColumnState[];
 
-    /**
-     * The property's plugin manager.
-     */
-    protected _plugins: PluginManager<TabularProperty> | null;
-
     
     /**
      * The property's value.
      */
     public get value(): ReadonlyMap<string, AtomicProperty[]> {
         return this._value;
+    }
+
+    /**
+     * The table's default row.
+     */
+    public get defaultRow(): ReadonlyArray<AtomicProperty> {
+        return this._defaultRow;
     }
 
     /**
@@ -75,7 +78,6 @@ export abstract class TabularProperty extends Property {
     constructor(params: PropertyParameters, assembler?: TabularPropertyAssembler) {
         super(params, assembler);
         this._value = new Map();
-        this._plugins = null;
         this._defaultRow = [];
         this._columnState = [];
         if(assembler) {
@@ -140,21 +142,13 @@ export abstract class TabularProperty extends Property {
      * @param values
      *  The row's values.
      */
-    public createRow(values: { [key: string]: any }): [string, AtomicProperty[]];
+    public createRow(values?: { [key: string]: any }): [string, AtomicProperty[]];
     public createRow(values?: { [key: string]: any }): [string, AtomicProperty[]] {
         let row = [];
         for(let cell of this._defaultRow) {
             let asm = new PropertyAssembler();
             let prop = cell.clone(asm);
-            if(
-                values && cell.id in values &&
-                (
-                    prop instanceof DateTimeProperty ||
-                    prop instanceof StringProperty || 
-                    prop instanceof NumberProperty ||
-                    prop instanceof EnumProperty
-                )
-            ) {
+            if(values && cell.id in values) {
                 prop.value = values[cell.id];
             }
             row.push(prop);
@@ -195,7 +189,7 @@ export abstract class TabularProperty extends Property {
             v.splice(index, 0, [row[0], props]);
             this._value = new Map(v);
         }
-        this.emit("insert-row", row[0], [...props]);
+        this.emit("insert-row", this, [...props], row[0]);
     }
 
     /**
@@ -212,7 +206,7 @@ export abstract class TabularProperty extends Property {
         rows.splice(dst, 0, rows.splice(src, 1)[0]);
         // Update rows
         this._value = new Map(rows);
-        this.emit("move-row", src, dst);
+        this.emit("move-row", this, src, dst);
     }
 
     /**
@@ -233,12 +227,21 @@ export abstract class TabularProperty extends Property {
      */
     public deleteRow(id: string): boolean;
     public deleteRow(id: string | number): boolean {
+        // Resolve row
         if(typeof id === "number") {
             id = [...this._value.keys()][id]   
         }
-        let result = id !== undefined ? this._value.delete(id) : false;
-        this.emit("delete-row", id);
-        return result;
+        if(id === undefined || !this._value.has(id)) {
+            return false;
+        }
+        // Remove row
+        let row = this._value.get(id)!;
+        for(let cell of row) {
+            cell.__prepareAssembler().detachFromParent();
+        }
+        this._value.delete(id);
+        this.emit("delete-row", this, row, id);
+        return true;
     }
 
 
@@ -403,55 +406,12 @@ export abstract class TabularProperty extends Property {
             order.push([id, this._value.get(id)!]);
         }
         this._value = new Map(order);
-        this.emit("reorder-row");
-    }
-
-    
-    ///////////////////////////////////////////////////////////////////////////
-    ///  3. Plugin Management  ////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * Attempts to install a plugin into the property.
-     * @param plugin
-     *  The plugin to install.
-     * @returns
-     *  True if the plugin was successfully installed, false otherwise.
-     */
-    public tryInstallPlugin(plugin: Plugin<TabularProperty>): boolean {
-        let result;
-        // Don't allocate manager until absolutely necessary
-        if(this._plugins === null) {
-            this._plugins = new PluginManager<TabularProperty>(this, this.root);
-        }
-        result = this._plugins.tryInstallPlugin(plugin);
-        // Deallocate manager if no plugins were installed
-        if(this._plugins.length === 0) {
-            this._plugins = null;
-        }
-        return result;
-    }
-
-    /**
-     * Attempts to install a list of plugins into the property.
-     * @param plugin
-     *  The plugins to install.
-     * @returns
-     *  True if all plugins were successfully installed, false otherwise.
-     */
-    public tryInstallPlugins(plugins: Plugin<TabularProperty>[]): boolean {
-        let result = true;
-        for(let plugin of plugins) {
-            result &&= this.tryInstallPlugin(plugin);
-        }
-        return result;
+        this.emit("reorder-row", this);
     }
 
 
-
     ///////////////////////////////////////////////////////////////////////////
-    ///  4. toString  /////////////////////////////////////////////////////////
+    ///  3. toString  /////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -460,7 +420,7 @@ export abstract class TabularProperty extends Property {
      * @returns
      *  A string representation of the property.
      */
-    public override toString(): string | undefined {
+    public override toString(): string {
         return "[ Not Supported ]";
         // let primaryColumn = this._templates.findIndex(o => o.is_primary);
         // if(primaryColumn === -1 || this._value.size === 0) {
@@ -475,7 +435,7 @@ export abstract class TabularProperty extends Property {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ///  5. Assembler Preparation  ////////////////////////////////////////////
+    ///  4. Assembler Preparation  ////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
 
