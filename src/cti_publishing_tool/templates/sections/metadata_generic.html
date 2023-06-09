@@ -2,8 +2,8 @@
 <h3>Threat Actor:</h3>
 <ul>
     {%- for threat_actor in metadata.threat_actors -%}
-    <li>{{ threat_actor.threat_actor_name }}</li>
-    <li>{{ threat_actor.threat_actor_aliases }}</li>
+    <li>{{ threat_actor.threat_actor_name | newline_to_br }}</li>
+    <li>{{ threat_actor.threat_actor_aliases | newline_to_br }}</li>
     {%- endfor -%}
 </ul>
 <h3>Victim Location:</h3>
@@ -21,7 +21,7 @@
 <h3>Infrastructure Used</h3>
 <ul>
     {%- for inf in metadata.infrastructure_used -%} 
-    <li>{{ inf.infrastructure }}</li>
+    <li>{{ inf.infrastructure | newline_to_br }}</li>
     {%- endfor -%}
 </ul>
 <h3>Actor Motivation:</h3>

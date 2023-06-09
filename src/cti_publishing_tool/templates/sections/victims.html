@@ -12,10 +12,10 @@
     <tbody>
         {%- for victim in victims -%}
         <tr>
-            <td>{{ victim.victim_name }}</td>
+            <td>{{ victim.victim_name | newline_to_br }}</td>
             <td>{{ victim.date_reported }}</td>
             <td>{{ victim.sector }}</td>
-            <td>{{ victim.location_granular }}</td>
+            <td>{{ victim.location_granular | newline_to_br }}</td>
             <td>{{ victim.location_region }}</td>
         </tr>
         {%- endfor -%}

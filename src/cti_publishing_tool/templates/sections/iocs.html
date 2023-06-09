@@ -18,15 +18,15 @@
     <tbody>
         {%- for malwareRow in iocs.malware -%}
         <tr>
-            <td>{{ malwareRow.attribution }}</td>
-            <td>{{ malwareRow.ioc_malware_name }} </td>
+            <td>{{ malwareRow.attribution | newline_to_br }}</td>
+            <td>{{ malwareRow.ioc_malware_name | newline_to_br }} </td>
             <td>{{ malwareRow.ioc_malware_hash_type }} </td>
             <td class="hash">{{ malwareRow.ioc_malware_hash }} </td>
             <td class="hash">{{ malwareRow.ioc_associated_file_hash }} </td>
-            <td>{{ malwareRow.ioc_malware_description }}</td>
-            <td>{{ malwareRow.ioc_malware_description }}</td>
-            <td>{{ malwareRow.timestamp }}</td>
-            <td>{{ malwareRow.timestamp }}</td>
+            <td>{{ malwareRow.ioc_malware_description | newline_to_br }}</td>
+            <td>{{ malwareRow.ioc_malware_sandbox | newline_to_br }}</td>
+            <td>{{ malwareRow.first_reported }}</td>
+            <td>{{ malwareRow.last_reported }}</td>
         </tr>
         {%- endfor -%}
     </tbody>
@@ -46,12 +46,12 @@
     <tbody>
         {%- for networkRow in iocs.network -%}
         <tr>
-            <td>{{ networkRow.attribution }}</td>
-            <td>{{ networkRow.artifact }}</td>
-            <td>{{ networkRow.details }}</td>
+            <td>{{ networkRow.attribution | newline_to_br }}</td>
+            <td>{{ networkRow.artifact | newline_to_br }}</td>
+            <td>{{ networkRow.details | newline_to_br }}</td>
             <td>{{ networkRow.network_intrusion_phase }}</td>
-            <td>{{ networkRow.first_observed }}</td>
-            <td>{{ networkRow.last_observed }}</td>
+            <td>{{ networkRow.first_reported }}</td>
+            <td>{{ networkRow.last_reported }}</td>
         </tr>
         {%- endfor -%}
     </tbody>
@@ -72,13 +72,13 @@
     <tbody>
         {%- for sysArtifactRow in iocs.system_artifacts -%}
         <tr>
-            <td>{{ sysArtifactRow.attribution }}</td>
-            <td>{{ sysArtifactRow.artifact }}</td>
-            <td>{{ sysArtifactRow.type }}</td>
-            <td>{{ sysArtifactRow.system_details }}</td>
+            <td>{{ sysArtifactRow.attribution | newline_to_br }}</td>
+            <td>{{ sysArtifactRow.artifact | newline_to_br }}</td>
+            <td>{{ sysArtifactRow.type | newline_to_br }}</td>
+            <td>{{ sysArtifactRow.details | newline_to_br }}</td>
             <td>{{ sysArtifactRow.tactic }}</td>
-            <td>{{ sysArtifactRow.first_observed }}</td>
-            <td>{{ sysArtifactRow.last_observed }}</td>
+            <td>{{ sysArtifactRow.first_reported }}</td>
+            <td>{{ sysArtifactRow.last_reported }}</td>
         </tr>
         {%- endfor -%}
     </tbody>
@@ -99,12 +99,12 @@
     <tbody>
         {%- for CVE in iocs.cves -%}
         <tr>
-            <td>{{ CVE.attribution }}</td>
+            <td>{{ CVE.attribution | newline_to_br }}</td>
             <td>{{ CVE.cve_number }}</td>
             <td>{{ CVE.cve_cvss_score }}</td>
             <td>{{ CVE.cve_patch_available }}</td>
-            <td>{{ CVE.cve_remediation }}</td>
-            <td>{{ CVE.date_of_report }}</td>
+            <td>{{ CVE.cve_remediation | newline_to_br }}</td>
+            <td>{{ CVE.date_reported }}</td>
             <td>{{ CVE.cve_patch_applied }}</td>
         </tr>
         {%- endfor -%}
