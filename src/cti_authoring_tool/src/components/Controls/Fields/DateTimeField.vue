@@ -241,7 +241,7 @@ export default defineComponent({
       // Enter edit mode
       this.enterEditMode();
       // Execute select command
-      let cmd = AppCommands.selectAtomicProperty(this.property);
+      let cmd = PageCommands.selectAtomicProperty(this.property);
       this.$emit("execute", cmd);
     },
 
@@ -256,7 +256,7 @@ export default defineComponent({
         this.exitEditMode();
       }
       // Execute deselect command
-      let cmd = AppCommands.deselectAtomicProperty(this.property)
+      let cmd = PageCommands.deselectAtomicProperty(this.property)
       this.$emit("execute", cmd);
     },
 

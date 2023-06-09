@@ -4,9 +4,10 @@ import { SectionLayout } from "./SectionLayout";
 import { SectionAssembler } from "./SectionAssembler";
 import { SectionParameters } from "./SectionParameters";
 import { Plugin, PluginManager } from "../Plugins";
+import { PlugableElement } from "../PlugableElement";
 import { Property, PropertyAssembler } from "../Property";
 
-export class Section extends PageElement {
+export class Section extends PageElement implements PlugableElement<Section> {
 
     /**
      * The section's id.
@@ -84,7 +85,7 @@ export class Section extends PageElement {
      * @returns
      *  The cloned section.
      */
-    public clone(): Section
+    public clone(): Section;
 
     /**
      * Clones the section.

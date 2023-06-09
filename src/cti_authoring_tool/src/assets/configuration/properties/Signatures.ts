@@ -2,7 +2,6 @@ import { Attribution } from "./Attribution";
 import { IocMalwareName } from "./IocMalwareName";
 import { PropertyType } from "@/assets/scripts/PageEditor";
 import { SignatureDescription } from "./SignatureDescription";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const Signatures = {
     id: "signatures",
@@ -14,9 +13,6 @@ export const Signatures = {
         rows: 2,
         cols: 2
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             ...Attribution,

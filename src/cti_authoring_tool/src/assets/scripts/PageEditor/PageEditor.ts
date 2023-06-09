@@ -1,8 +1,9 @@
-import * as PageImporter from "./PageImporter";
 import * as PageExporter from "./PageExporter";
 import { version } from "@/../package.json";
 import { PageCommand } from "./Commands/PageCommand";
-import { Page, Property } from "../Page";
+import { GroupCommand } from "./Commands";
+import { PageImporter, PageTemplate } from "./PageImporter";
+import { AtomicProperty, Page, ReactivitySystem, Property } from "../Page";
 
 export class PageEditor {
     
@@ -41,19 +42,31 @@ export class PageEditor {
     /**
      * The editor's redo stack.
      */
-    private _redoStack: PageCommand[];      
+    private _redoStack: PageCommand[];
+    
+    /**
+     * The currently selected property.
+     */
+    private _selected: AtomicProperty | null;
  
-
+    
     /**
      * The page's name.
      */
     public get name(): string {
         let name = this.keys
             .map(o => o.toString())
-            .filter(o => o !== undefined)
+            .filter(o => o !== "")
             .join(" - ");
         return name || `Untitled ${ this.template }`;
     };
+
+    /**
+     * The currently selected property.
+     */
+    public get selected(): AtomicProperty | null {
+        return this._selected;
+    }
 
 
     /**
@@ -67,12 +80,13 @@ export class PageEditor {
      */
     private constructor(template: string, keys: string[], page: Page) {
        
-        // Initialize state
+        // Configure state
         this.id = page.instance;
         this.page = page;
         this.template = template;
         this._undoStack = [];
         this._redoStack = [];
+        this._selected = null;
         
         // Resolve keys
         let _keys = [];
@@ -88,9 +102,25 @@ export class PageEditor {
         }
         this.keys = _keys;
         
-        // Subscribe to execute event
-        this.page.on("execute", (command: PageCommand) => {
-            this.execute(command);
+        // Create reactive 'this' if working in a reactive context
+        let _this = this;
+        if(ReactivitySystem.makeReactive) {
+            _this = ReactivitySystem.makeReactive(this);
+        }
+
+        // Configure select behavior
+        this.page.on("select", (property: AtomicProperty) => {
+            _this._selected = property;
+        });
+
+        // Configure deselect behavior
+        this.page.on("deselect", () => {
+            _this._selected = null;
+        });
+
+        // Configure command execution behavior
+        this.page.on("execute", (...commands: PageCommand[]) => {
+            _this.execute(...commands);
         });
 
     }
@@ -102,19 +132,37 @@ export class PageEditor {
 
 
     /**
-     * Executes a page command.
-     * @param command
-     *  The command.
+     * Executes one or more page commands.
+     * @param commands
+     *  The commands.
      */
-    public execute(command: PageCommand) {
-        if(command.page !== this.page.instance) {
+    public execute(...commands: PageCommand[]) {
+        // Package command
+        let cmd: PageCommand;
+        if(commands.length === 0) {
+            return;
+        } else if(commands.length === 1) {
+            cmd = commands[0];
+        } else {
+            let grp = new GroupCommand();
+            for(let command of commands) {
+                grp.add(command);
+            }
+            cmd = grp;
+        }
+        // Validate command
+        if(cmd.page === PageCommand.NullPage) {
+            return;
+        }
+        if(cmd.page !== this.page.instance) {
             throw new Error(
                 "Command is not configured to operate on this page."
             );
         }
-        if(command.execute()) {
+        // Execute command
+        if(cmd.execute()) {
             this._redoStack = [];
-            this._undoStack.push(command);
+            this._undoStack.push(cmd);
         }
     }
 
@@ -175,8 +223,9 @@ export class PageEditor {
      * @returns
      *  The page's editor.
      */
-    public static createNew(template: PageImporter.PageTemplate): PageEditor {
-        return new this(template.name, template.keys, PageImporter.newPage(template).page);
+    public static createNew(template: PageTemplate): PageEditor {
+        let page = new PageImporter(template).initialize().getPage();
+        return new this(template.name, template.keys, page);
     }
 
     /**
@@ -188,8 +237,9 @@ export class PageEditor {
      * @returns
      *  The page's editor.
      */
-    public static fromFile(template: PageImporter.PageTemplate, value: any): PageEditor {
-        return new this(template.name, template.keys, PageImporter.newPage(template, undefined, value).page);
+    public static fromFile(template: PageTemplate, value: any): PageEditor {
+        let page = new PageImporter(template, value).initialize().getPage();
+        return new this(template.name, template.keys, page);
     }
 
     /**
@@ -200,6 +250,7 @@ export class PageEditor {
     public toFile(): string {
         return JSON.stringify({
             ...PageExporter.serialize(this.page).toObject(),
+            report_date: new Date().toISOString(),
             __document: {
                 authoring_tool_version: version,
                 template_name: this.template,
@@ -207,6 +258,20 @@ export class PageEditor {
                 template_identifier: this.page.id
             }
         }, null, 4);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //  4. Phantom Editor  ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Tests if the current editor is the phantom editor.
+     * @returns
+     *  True if the current editor is the phantom editor, false otherwise.
+     */
+    public isPhantom() {
+        return this.id === PageEditor.Phantom.id;
     }
 
 }

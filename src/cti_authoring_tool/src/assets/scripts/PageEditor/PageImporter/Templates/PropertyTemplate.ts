@@ -1,17 +1,18 @@
+import { Plugins } from "./Plugins";
 import { PropertyType } from "./PropertyType";
 import {
-    PropertyParameters,
     AtomicPropertyParameters,
-    NumberPropertyParameters,
     EnumPropertyParameters,
     StringProperty,
-    NumberProperty,
     DateTimeProperty,
     EnumProperty,
-    Plugin,
     ComplexTablePropertyParameters,
     BasicTablePropertyParameters,
-    TabularProperty
+    IntegerProperty,
+    FloatProperty,
+    NumberPropertyParameters,
+    BasicTableProperty,
+    ComplexTableProperty
 } from "@/assets/scripts/Page";
 
 
@@ -22,17 +23,27 @@ export interface StringPropertyTemplate extends AtomicPropertyParameters {
     type          : PropertyType.String;
     default?      : null | string;
     suggestions?  : string[];
-    plugins?      : Plugin<StringProperty>[],
+    plugins?      : Plugins<StringProperty>,
 }
 
 
 /**
- * Number Property Template
+ * Float Property Template
  */
-export interface NumberPropertyTemplate extends NumberPropertyParameters {
-    type          : PropertyType.Integer | PropertyType.Float;
+export interface FloatPropertyTemplate extends NumberPropertyParameters {
+    type          : PropertyType.Float;
     default?      : null | number;
-    plugins?      : Plugin<NumberProperty>[],
+    plugins?      : Plugins<FloatProperty>,
+}
+
+
+/**
+ * Integer Property Template
+ */
+export interface IntegerPropertyTemplate extends NumberPropertyParameters {
+    type          : PropertyType.Integer;
+    default?      : null | number;
+    plugins?      : Plugins<IntegerProperty>,
 }
 
 
@@ -42,7 +53,7 @@ export interface NumberPropertyTemplate extends NumberPropertyParameters {
 export interface DateTimePropertyTemplate extends AtomicPropertyParameters {
     type          : PropertyType.Date | PropertyType.Time | PropertyType.DateTime;
     default?      : string | Date | null;
-    plugins?      : Plugin<DateTimeProperty>[],
+    plugins?      : Plugins<DateTimeProperty>,
 }
 
 
@@ -52,7 +63,7 @@ export interface DateTimePropertyTemplate extends AtomicPropertyParameters {
 export interface EnumPropertyTemplate extends EnumPropertyParameters {
     type          : PropertyType.Enum;
     default?      : string | null;
-    plugins?      : Plugin<EnumProperty>[],
+    plugins?      : Plugins<EnumProperty>,
 }
 
 
@@ -71,7 +82,7 @@ export interface BasicTablePropertyTemplate extends BasicTablePropertyParameters
     type          : PropertyType.BasicTable;
     default?      : TabularPropertyRowValue[];
     properties    : AtomicPropertyTemplate[];
-    plugins?      : Plugin<TabularProperty>[]
+    plugins?      : Plugins<BasicTableProperty>
 }
 
 
@@ -82,7 +93,7 @@ export interface ComplexTablePropertyTemplate extends ComplexTablePropertyParame
     type          : PropertyType.ComplexTable;
     default?      : TabularPropertyRowValue[];
     properties    : AtomicPropertyTemplate[];
-    plugins?      : Plugin<TabularProperty>[]
+    plugins?      : Plugins<ComplexTableProperty>
 }
 
 
@@ -91,7 +102,8 @@ export interface ComplexTablePropertyTemplate extends ComplexTablePropertyParame
  */
 export type AtomicPropertyTemplate
     = StringPropertyTemplate
-    | NumberPropertyTemplate
+    | FloatPropertyTemplate
+    | IntegerPropertyTemplate
     | DateTimePropertyTemplate
     | EnumPropertyTemplate
 

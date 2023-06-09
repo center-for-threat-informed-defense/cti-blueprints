@@ -1,8 +1,9 @@
-import { Property } from "..";
+
 import { Alignment } from "./Alignment";
 import { PropertyAssembler } from "../PropertyAssembler";
 import { AtomicPropertyMetric } from "./AtomicPropertyMetric";
 import { AtomicPropertyParameters } from "./AtomicPropertyParameters";
+import { AtomicPropertyMetrics, Property } from "..";
 
 export abstract class AtomicProperty extends Property {
 
@@ -23,9 +24,19 @@ export abstract class AtomicProperty extends Property {
 
 
     /**
+     * The property's value.
+     */
+    public abstract get value(): string | number | Date | null;
+
+    /**
+     * The property value's setter.
+     */
+    public abstract set value(value: string | number | Date | null);
+
+    /**
      * The property's metrics.
      */
-    public get metrics(): ReadonlyMap<string, AtomicPropertyMetric> {
+    public get metrics(): AtomicPropertyMetrics {
         return this._metrics;
     }
 

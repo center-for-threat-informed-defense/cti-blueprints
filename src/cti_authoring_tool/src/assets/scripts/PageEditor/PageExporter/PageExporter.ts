@@ -82,7 +82,6 @@ function _serialize(root: ObjectMapNode, path: string, el: Page | Section | Prop
         } else if(el instanceof NumberProperty) {
             value = new AtomicNode(el.value);
         } else if(el instanceof EnumProperty) {
-            // TODO: In the future, export enum's actual value
             value = new AtomicNode(el.value);
         } else {
             throw new Error(`Unexpected property type: '${ el.constructor.name }'`);

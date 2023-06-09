@@ -2,7 +2,7 @@ import { Module } from "vuex"
 import { PageEditor } from "@/assets/scripts/PageEditor/PageEditor";
 import { AppCommand } from "@/assets/scripts/Application/Commands";
 import { PageCommand } from "@/assets/scripts/PageEditor/Commands";
-import { BaseAppSettings } from "@/assets/scripts/Application/AppSettings";
+import { BaseAppSettings } from "@/assets/scripts/Application";
 import { ModuleStore, ApplicationStore } from "@/store/StoreTypes"
 
 export default {

@@ -1,4 +1,4 @@
-export class PluginConfiguration {
+export class ReactivitySystem {
 
     /**
      * A function that returns an object's reactive proxy. This must be

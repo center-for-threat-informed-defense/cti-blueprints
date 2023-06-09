@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](///compare/v0.1.3...v1.0.0) (2023-06-09)
+
+
+### Features
+
+* add duplicate column to tabular properties 3820dab
+* add global install features for plugins 68ee889
+* add property metrics bar ae8409e
+* add splash page d2a74a6
+* add support for group page commands 576102a
+* add text metrics plugin 789fb10
+* allow plugins to restrict enum field options 8de39a6
+
+
+### Bug Fixes
+
+* apply horizontal spacing to tabular field actions 8f5e061
+* resolve bug which prevented large fields from being selected more than once 545641a
+* split page import into construct and initialize phases to eliminate plugin install inconsistencies eae7036
+
 ### [0.1.3](///compare/v0.1.2...v0.1.3) (2023-06-06)
 
 

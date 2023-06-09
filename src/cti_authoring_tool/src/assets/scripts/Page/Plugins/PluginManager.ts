@@ -1,7 +1,7 @@
 import { Plugin } from "./Plugin";
 import { PageElement } from "../PageElement";
 import { PluginInstance } from "./PluginInstance";
-import { PluginConfiguration } from "./PluginConfiguration";
+import { ReactivitySystem } from "../ReactivitySystem";
 
 export class PluginManager<T extends PageElement> extends Array<PluginInstance<T>> {
     
@@ -24,13 +24,18 @@ export class PluginManager<T extends PageElement> extends Array<PluginInstance<T
      *  The page's root element.
      */
     constructor(element: T, root: PageElement) {
+        
+        // Configure state
         super();
-        this.element = element;
         this._root = root;
-        if(PluginConfiguration.makeReactive) {
-            this.element = PluginConfiguration.makeReactive(this.element);
-            this._root = PluginConfiguration.makeReactive(this._root);
+        this.element = element;
+        
+        // Make state reactive if working in a reactive context
+        if(ReactivitySystem.makeReactive) {
+            this._root = ReactivitySystem.makeReactive(this._root);
+            this.element = ReactivitySystem.makeReactive(this.element);
         }
+
     }
 
 

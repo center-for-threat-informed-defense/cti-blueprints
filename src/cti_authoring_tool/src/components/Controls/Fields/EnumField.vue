@@ -117,7 +117,7 @@ export default defineComponent({
         options.push({ id: null, text: "Null" });
       }
       let st = this.searchTerm.toLocaleLowerCase();
-      for(let [id, { text }] of this.property.options) {
+      for(let [id, { text }] of this.property.validOptions) {
         if(st === "" || text.toLocaleLowerCase().includes(st)) {
           options.push({ id, text });
         }
@@ -164,7 +164,7 @@ export default defineComponent({
         this.search?.focus();
       }, 0);
       // Execute select command
-      let cmd = AppCommands.selectAtomicProperty(this.property);
+      let cmd = PageCommands.selectAtomicProperty(this.property);
       this.$emit("execute", cmd);
     },
 
@@ -180,7 +180,7 @@ export default defineComponent({
       // Refresh value
       this.refreshValue();
       // Execute deselect command
-      let cmd = AppCommands.deselectAtomicProperty(this.property);
+      let cmd = PageCommands.deselectAtomicProperty(this.property);
       this.$emit("execute", cmd);
     },
 
@@ -194,7 +194,7 @@ export default defineComponent({
         return;
       }
       let st = this.searchTerm.toLocaleLowerCase();
-      for(let [key, { text }] of this.property.options) {
+      for(let [key, { text }] of this.property.validOptions) {
         if(text.toLocaleLowerCase().includes(st)) {
           this.select = key;
           return;

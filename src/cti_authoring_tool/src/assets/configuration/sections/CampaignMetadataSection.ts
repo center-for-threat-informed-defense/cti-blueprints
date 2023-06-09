@@ -2,7 +2,6 @@ import { Sector } from "../properties/Sector";
 import { PropertyType } from "@/assets/scripts/PageEditor";
 import { LocationRegion } from "../properties/LocationRegion";
 import { Infrastructure } from "../properties/Infrastructure";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { ThreatActorMotivation } from "../properties/ThreatActorMotivation";
 import { ThreatActorAttributions } from "../properties/ThreatActorAttributions";
 
@@ -29,9 +28,6 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1  
             },
-            plugins: [
-                { module: ImportCSVPlugin }
-            ],
             properties: [
                 {
                     ...LocationRegion,
@@ -49,9 +45,6 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1
             },
-            plugins: [
-                { module: ImportCSVPlugin }
-            ],
             properties: [
                 {
                     ...Sector,
@@ -69,9 +62,6 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1
             },
-            plugins: [
-                { module: ImportCSVPlugin }
-            ],
             properties: [
                 {
                     ...Infrastructure,
@@ -89,9 +79,6 @@ export const CampaignMetadataSection = {
             layout: {
                 cols: 1,
             },
-            plugins: [
-                { module: ImportCSVPlugin }
-            ],
             properties: [
                 {
                     ...ThreatActorMotivation,

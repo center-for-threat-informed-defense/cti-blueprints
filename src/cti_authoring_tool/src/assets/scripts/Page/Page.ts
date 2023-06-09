@@ -2,9 +2,10 @@ import { PageElement } from "./PageElement";
 import { PageAssembler } from "./PageAssembler";
 import { PageParameters } from "./PageParameters";
 import { Plugin, PluginManager } from "./Plugins";
+import { PlugableElement } from "./PlugableElement";
 import { Section, SectionAssembler } from "./Section";
 
-export class Page extends PageElement {
+export class Page extends PageElement implements PlugableElement<Page> {
 
     /**
      * The page's id.
@@ -67,7 +68,7 @@ export class Page extends PageElement {
      * @returns
      *  The cloned page.
      */
-    public clone(): Page
+    public clone(): Page;
 
     /**
      * Clones the page.

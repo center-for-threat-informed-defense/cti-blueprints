@@ -1,10 +1,10 @@
-import { Page, Plugin } from "@/assets/scripts/Page";
-import { PageParameters } from "@/assets/scripts/Page/PageParameters";
+import { Plugins } from "./Plugins";
 import { SectionTemplate } from "./SectionTemplate";
+import { Page, PageParameters } from "@/assets/scripts/Page";
 
 export interface PageTemplate extends PageParameters {
     name     : string,
     keys     : string[],
     sections : SectionTemplate[],
-    plugins? : Plugin<Page>[]
+    plugins? : Plugins<Page>
 }

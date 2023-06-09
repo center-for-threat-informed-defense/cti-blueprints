@@ -8,6 +8,9 @@
         <slot name="table-header" :columns="columns">
           <th class="head-cell">[Table-Header]</th>
         </slot>
+        <th class="head-cell duplicate-column">
+          <span class="icon"><Duplicate /></span>
+        </th>
         <th class="head-cell delete-column">
           <span class="icon"><Trash /></span>
         </th>
@@ -20,6 +23,9 @@
           <slot name="table-row" :key="key" :row="row">
             <td class="data-column">[Table-Row]</td>
           </slot>
+          <td class="duplicate-column" @click="onDuplicate(key)">
+            <span class="icon"><Duplicate /></span>
+          </td>
           <td class="delete-column" @click="onDelete(key)">
             <span class="icon">✗</span>
           </td>
@@ -54,6 +60,7 @@ import { defineComponent, markRaw, PropType, ref } from "vue";
 import Trash from "@/components/Icons/Trash.vue";
 import MoveDots from "@/components/Icons/MoveDots.vue";
 import MoveArrow from "@/components/Icons/MoveArrow.vue";
+import Duplicate from "@/components/Icons/Duplicate.vue";
 
 export default defineComponent({
   name: "TabularField",
@@ -94,6 +101,16 @@ export default defineComponent({
      */
     onCreate() {
       let cmd = PageCommands.createTabularPropertyRow(this.property);
+      this.$emit("execute", cmd);
+    },
+
+    /**
+     * Row duplicate behavior.
+     * @param id
+     *  The row's id.
+     */
+    onDuplicate(id: string) {
+      let cmd = PageCommands.duplicateTabularPropertyRow(this.property, id);
       this.$emit("execute", cmd);
     },
 
@@ -226,28 +243,17 @@ export default defineComponent({
     }
 
   },
-  watch: {
-    "property"() {
-    },
-    "property.value"() {
-    }
-  },
   mounted() {
-    // Configure resize observer
-    // this.onResizeObserver = new ResizeObserver(() => this.refreshHeight());
-    // this.onResizeObserver.observe(this.field!);
-    // // Update field property value
-    // this.refreshValue();
-    // // Execute mount command
-    // this.$emit("execute", new Page.MountProperty(this.property, this.$el))
+    // Execute mount command
+    let cmd = AppCommands.mountProperty(this.property, this.$el);
+    this.$emit("execute", cmd);
   },
   unmounted() {
-    // // Disconnect resize observer
-    // this.onResizeObserver!.disconnect();
-    // // Execute destroy command
-    // this.$emit("execute", new Page.DestroyProperty(this.property));
+    // Execute destroy command
+    let cmd = AppCommands.destroyProperty(this.property);
+    this.$emit("execute", cmd);
   },
-  components: { Trash, MoveDots, MoveArrow }
+  components: { Trash, MoveDots, MoveArrow, Duplicate }
 });
 </script>
 
@@ -299,7 +305,8 @@ th, td {
   width: 29px;
 }
 
-.delete-column {
+.delete-column,
+.duplicate-column {
   width: 31px;
 }
 
@@ -318,7 +325,8 @@ th, td {
 /** === Table Control Cells === */
 
 .body-row .move-column,
-.body-row .delete-column {
+.body-row .delete-column,
+.body-row .duplicate-column {
   color: #595959;
   font-size: 12.5pt;
   font-weight: 400;
@@ -328,7 +336,8 @@ th, td {
 }
 
 .body-row .move-column:hover,
-.body-row .delete-column:hover {
+.body-row .delete-column:hover,
+.body-row .duplicate-column:hover {
   background: #e0e0e0;
 }
 
@@ -376,8 +385,12 @@ button:hover {
   background: #379ae1;
 }
 
-tr.phantom td {
-  background: #000;
+.registered button {
+  margin-right: 12px;
+}
+
+.registered button:last-child {
+  margin-right: 0px;
 }
 
 </style>
