@@ -2,7 +2,7 @@
 <table>
     <thead>
         <tr>
-            <th>Atthibution</th>
+            <th>Attribution</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Location</th>
@@ -13,12 +13,12 @@
     <tbody>
         {%- for timelineRow in timeline -%}
         <tr>
-            <td>{{ timelineRow.attribution }}</td>
-            <td>{{ timelineRow.start_data }}</td>
-            <td>{{ timelineRow.end_data }}</td>
+            <td>{{ timelineRow.attribution | newline_to_br }}</td>
+            <td>{{ timelineRow.start_date }}</td>
+            <td>{{ timelineRow.end_date }}</td>
             <td>{{ timelineRow.location }}</td>
             <td>{{ timelineRow.sector }}</td>
-            <td>{{ timelineRow.activity }}</td>
+            <td>{{ timelineRow.activity | newline_to_br }}</td>
         </tr>
         {%- endfor -%}
     </tbody>

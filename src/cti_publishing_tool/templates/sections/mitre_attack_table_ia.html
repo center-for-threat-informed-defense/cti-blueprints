@@ -14,13 +14,13 @@
     <tbody>
         {% for attack_entry in mitre_attack_table.likely_in_network %}
         <tr>
-            <td>{{ attack_entry.attribution }}</td>
+            <td>{{ attack_entry.attribution | newline_to_br }}</td>
             <td>{{ attack_entry.tactic }}</td>
             <td>{{ attack_entry.technique }}</td>
             <td>{{ attack_entry.sub_technique }}</td>
-            <td>{{ attack_entry.procedure }}</td>
-            <td>{{ attack_entry.defend }}</td>
-            <td>{{ attack_entry.control }}</td>
+            <td>{{ attack_entry.procedure | newline_to_br }}</td>
+            <td>{{ attack_entry.defend | newline_to_br }}</td>
+            <td>{{ attack_entry.control | newline_to_br }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -42,8 +42,8 @@
             <td>{{ ttp_entry.tactic }}</td>
             <td>{{ ttp_entry.technique }}</td>
             <td>{{ ttp _entry.sub_technique }}</td>
-            <td>{{ ttp_entry.procedure }}</td>
-            <td>{{ ttp_entry.defend }}</td>
+            <td>{{ ttp_entry.procedure | newline_to_br }}</td>
+            <td>{{ ttp_entry.defend | newline_to_br }}</td>
         </tr>
         {%- endfor -%}
     </tbody>
