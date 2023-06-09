@@ -5,10 +5,14 @@ import json
 from pathlib import Path
 import base64
 import tempfile
+import warnings
 
 from liquid import Template
 from htmldocx import HtmlToDocx
 from docx2pdf import convert
+
+# Suppress BeautifulSoup's text link warnings
+warnings.filterwarnings("ignore", message='.*looks like a URL.*')
 
 # A global map to be used for dynamic HTML templates.
 # { Key (variable name from `exclude_sections`): Value (section filename) }
