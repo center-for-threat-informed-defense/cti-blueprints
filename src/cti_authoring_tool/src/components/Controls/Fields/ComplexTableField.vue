@@ -38,8 +38,6 @@ import { ComplexTableProperty, FormattedText, Property, Sort, SummaryParser, Tab
 // Components
 import TabularField from "./TabularField.vue";
 
-// TODO: Implement abridged summary for tables with 100+ rows
-
 export default defineComponent({
   name: "ComplexTableField",
   props: {
@@ -62,30 +60,6 @@ export default defineComponent({
      */
     summarize(summary: string, row: Property[]): FormattedText[] {
       return SummaryParser.parse(summary, row);
-    },
-
-    /**
-     * Row sort behavior.
-     * @param prop
-     *  The property to sort on.
-     */
-    // TODO: Implement sort action
-    onSort(prop: TableColumnState) {
-      // Determine next sort order
-      let s: Sort;
-      switch(prop.sort) {
-        case Sort.Descending:
-          s = Sort.Ascending;
-          break;
-        case Sort.Ascending:
-        case Sort.None:
-        default:
-          s = Sort.Descending;
-          break;
-      }
-      // Sort
-      let cmd = PageCommands.reorderTabularProperty(this.property, prop.id, s);
-      this.$emit("execute", cmd);
     },
 
     /**
