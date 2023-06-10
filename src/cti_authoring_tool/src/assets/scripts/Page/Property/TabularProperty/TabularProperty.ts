@@ -168,28 +168,29 @@ export abstract class TabularProperty extends Property {
     public insertRow(row: [string, AtomicProperty[]], index?: number) {
         let assembler = this.__prepareAssembler();
         // Create row
-        let props: AtomicProperty[] = [];
+        let properties: AtomicProperty[] = [];
         for(let cell of this._defaultRow) {
-            // TODO: Need better comparison
-            let p = row[1].find(o => o.id === cell.id);
-            if(p) {
-                props.push(p);
+            let property = row[1].find(
+                o => o.id === cell.id && o.constructor.name === cell.constructor.name
+            );
+            if(property) {
+                properties.push(property);
             } else {
                 throw Error("Row does not match the table's structure.")
             }
         }
-        for(let prop of props) {
+        for(let prop of properties) {
             prop.__prepareAssembler().attachToTabularProperty(assembler);
         }
         // Insert row
         if(index === undefined) {
-            this._value.set(row[0], props);
+            this._value.set(row[0], properties);
         } else {
             let v = [...this._value.entries()];
-            v.splice(index, 0, [row[0], props]);
+            v.splice(index, 0, [row[0], properties]);
             this._value = new Map(v);
         }
-        this.emit("insert-row", this, [...props], row[0]);
+        this.emit("insert-row", this, [...properties], row[0]);
     }
 
     /**
