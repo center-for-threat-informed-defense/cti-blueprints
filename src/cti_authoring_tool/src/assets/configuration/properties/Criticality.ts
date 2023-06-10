@@ -6,10 +6,10 @@ export const Criticality = {
     path: "*.criticality",
     type: PropertyType.Enum,
     options: [ 
-        { id: "fysa", text: "FYSA", value: "fysa" }, 
-        { id: "low", text: "Low", value: "low" }, 
-        { id: "medium", text: "Medium", value: "medium" }, 
-        { id: "high", text: "High", value: "high" }, 
-        { id: "critical", text: "Critical", value: "critical" }, 
+        { value: "fysa", text: "FYSA" }, 
+        { value: "low", text: "Low" }, 
+        { value: "medium", text: "Medium" }, 
+        { value: "high", text: "High" }, 
+        { value: "critical", text: "Critical" }, 
     ] 
 }
