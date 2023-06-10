@@ -5,11 +5,11 @@
         <li 
           ref="items"
           v-for="option in options"
-          :key="option.id"
-          :list-id="option.id"
+          :key="option.value"
+          :list-id="option.value"
           :class="{ active: isActive(option), null: isNull(option) }"
-          @click="$emit('select', option.id)"
-          @mouseenter="active = option.id"
+          @click="$emit('select', option.value)"
+          @mouseenter="active = option.value"
           exit-focus-box
         >
           {{ option.text }}
@@ -37,7 +37,7 @@ export default defineComponent({
       required: true
     },
     options: {
-      type: Array as PropType<{ id: string | null, text: string }[]>,
+      type: Array as PropType<{ value: string | null, text: string }[]>,
       required: true
     },
     select: {
@@ -106,8 +106,8 @@ export default defineComponent({
      * @returns
      *  True if the options is the null option, false otherwise.
      */
-    isNull(option: { id: string | null, text: string }) {
-      return option.id === null
+    isNull(option: { value: string | null, text: string }) {
+      return option.value === null
     },
 
     /**
@@ -115,8 +115,8 @@ export default defineComponent({
      * @returns
      *  True if the option is active, false otherwise.
      */
-    isActive(option: { id: string | null, text: string }) {
-      return this.active === option.id;
+    isActive(option: { value: string | null, text: string }) {
+      return this.active === option.value;
     },
 
     /**

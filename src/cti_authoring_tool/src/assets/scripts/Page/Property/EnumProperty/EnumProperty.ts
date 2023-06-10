@@ -9,7 +9,7 @@ export class EnumProperty extends AtomicProperty implements PlugableElement<Enum
     /**
      * The property's set of options.
      */
-    public readonly options: ReadonlyMap<string, { text: string, value: any }>
+    public readonly options: ReadonlyMap<string, string>
 
     /**
      * The property's value.
@@ -19,7 +19,7 @@ export class EnumProperty extends AtomicProperty implements PlugableElement<Enum
     /**
      * The property's valid set of options.
      */
-    private _validOptions: Map<string, { text: string, value: any }> | null;
+    private _validOptions: Map<string, string> | null;
     
     /**
      * The property's plugin manager.
@@ -50,16 +50,9 @@ export class EnumProperty extends AtomicProperty implements PlugableElement<Enum
     }
 
     /**
-     * The property's reference value.
-     */
-    public get refValue(): any {
-        return this._value === null ? null : this.options.get(this._value)!.value;
-    }
-
-    /**
      * The property's valid set of options.
      */
-    public get validOptions(): ReadonlyMap<string, { text: string, value: any }> {
+    public get validOptions(): ReadonlyMap<string, string> {
         if(this._validOptions === null) {
             return this.options
         } else {
@@ -88,11 +81,11 @@ export class EnumProperty extends AtomicProperty implements PlugableElement<Enum
         // Validate options
         let options = new Map();
         for(let option of params.options) {
-            let { id, text, value } = option;
-            if(!options.has(id)) {
-                options.set(id, { text, value })
+            let { value, text } = option;
+            if(!options.has(value)) {
+                options.set(value, text)
             } else {
-                throw new Error("All enum ids must be unique.");
+                throw new Error("All enum values must be unique.");
             }
         }
         this.options = options;
@@ -128,11 +121,8 @@ export class EnumProperty extends AtomicProperty implements PlugableElement<Enum
     public override clone(assembler?: PropertyAssembler, excludePlugins?: boolean): EnumProperty;
     public override clone(assembler?: PropertyAssembler, excludePlugins: boolean = false): EnumProperty {
         // Clone options
-        let options = [...this.options.entries()].map(o => ({ 
-            id    : o[0], 
-            text  : o[1].text,
-            value : o[1].value
-        }));
+        let options = [...this.options.entries()]
+            .map(([ value, text ]) => ({ value, text }));
         // Create property
         let prop = new EnumProperty({
             id        : this.id,
@@ -209,7 +199,7 @@ export class EnumProperty extends AtomicProperty implements PlugableElement<Enum
      *  A string representation of the property.
      */
     public override toString(): string {
-        return this._value !== null ? this.options.get(this._value)!.text : "";
+        return this._value !== null ? this.options.get(this._value)! : "";
     }
 
 
