@@ -21,7 +21,7 @@
       <textarea
         v-model="value"
         ref="field"
-        placeholder="Null"
+        placeholder="None"
         @input="onInput"
         @keyup.stop=""
         @keydown.stop="onKeyDown"

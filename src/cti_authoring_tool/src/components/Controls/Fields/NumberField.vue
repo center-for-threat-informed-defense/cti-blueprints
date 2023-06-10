@@ -4,7 +4,7 @@
       v-model="value"
       type="text"
       ref="field"
-      placeholder="Null"
+      placeholder="None"
       @focus="onSelect"
       @input="onInput"
       @keyup.stop=""
