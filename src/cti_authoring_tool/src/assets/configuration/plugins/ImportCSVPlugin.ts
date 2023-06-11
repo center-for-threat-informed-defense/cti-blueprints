@@ -42,6 +42,11 @@ export class ImportCSVPlugin {
             });
         });
     }
+    
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //  1. CSV Parsing  ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
 
     /**
@@ -54,7 +59,7 @@ export class ImportCSVPlugin {
     private parseCsv(contents: string): any[] {
         let objs = [];
         let lines = contents.split(/\r?\n/g);
-        let head = lines[0].split(/,/g);
+        let head = this.segmentCsvLine(lines[0]);
         for(let i = 1; i < lines.length; i++) {
             // Ignore empty lines
             if(/^\s*$/.test(lines[i])) {
@@ -62,14 +67,73 @@ export class ImportCSVPlugin {
             }
             // Parse line
             let obj = []
-            let cells = lines[i].split(/\,/g);
+            let cells = this.segmentCsvLine(lines[i]);
             for(let j = 0; j < head.length; j++) {
-                obj.push([head[j], cells[j]]);
+                obj.push([head[j], cells[j] ?? ""]);
             }
             objs.push(Object.fromEntries(obj));
         }
         return objs;
     }
+
+    /**
+     * Segments a single line from a CSV.
+     * @param str
+     *  The line.
+     * @returns
+     *  The segmented line. 
+     */
+    private segmentCsvLine(str: string): string[] {
+        str = str.trim();
+        let columns = [];
+        let beg = 0, end = -1, offset = 0;
+        while(beg < str.length) {
+            end = -1, offset = 0;
+            if(str[beg] === "\"") {
+                end = this.indexOf(str, /"\s*,|"$/, beg);
+            }
+            if(end === -1) {
+                end = this.indexOf(str, /,/g, beg);
+            } else {
+                beg += 1;
+                offset += 1;
+            }
+            if(end === -1) {
+                end = str.length;
+            } else {
+                offset += 1
+            }
+            columns.push(str.slice(beg, end));
+            beg = end + offset;
+        }
+        if(str[str.length - 1] === ",") {
+            columns.push("");
+        }
+        return columns;
+    }
+
+    /**
+     * Returns the position of the first match of a regular expression.
+     * @param str
+     *  The string to search.
+     * @param regex
+     *  The regular expression. 
+     * @param idx 
+     *  The index at which to begin searching the String object. If omitted,
+     *  search starts at the beginning of the string.
+     * @returns
+     *  The index of the first match. `-1` if there was no match.
+     */
+    private indexOf(str: string, regex: RegExp, idx: number = 0) {
+        let search = str.slice(idx).search(regex);
+        return (search < 0 ? 0 : idx) + search;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //  2. CSV Data Parsing  //////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Attempts to parse a row from an object.
@@ -82,9 +146,12 @@ export class ImportCSVPlugin {
         let row: { [key: string]: any } = {};
         for(let key in obj) {
             // Attempt to match key to property
-            let property = this.property.defaultRow.find(
-                o => o.id === key.trim() || this.normalize(o.name) === this.normalize(key)
-            );
+            let normalKey = this.normalize(key);
+            let property = this.property.defaultRow.find(o => {
+                let normalName = this.normalize(o.name);
+                return o.id === key.trim() || normalName === normalKey;
+            });
+            // If key matched property:
             if(property) {
                 // Attempt to parse value
                 row[property.id] = this.tryParseValue(obj[key], property);
