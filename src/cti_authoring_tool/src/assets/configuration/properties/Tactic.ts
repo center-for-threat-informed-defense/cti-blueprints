@@ -16,6 +16,8 @@ export const Tactic = {
         { value: "TA0009", text: "TA0009 - Collection" },
         { value: "TA0010", text: "TA0010 - Exfiltration" },
         { value: "TA0011", text: "TA0011 - Command and Control" },
-        { value: "TA0040", text: "TA0040 - Impact" }
+        { value: "TA0040", text: "TA0040 - Impact" },
+        { value: "TA0042", text: "TA0042 - Resource Development" },
+        { value: "TA0043", text: "TA0043 - Reconnaissance" }
     ]
 }
