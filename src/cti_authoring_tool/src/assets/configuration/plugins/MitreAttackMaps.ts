@@ -1,7 +1,8 @@
 /**
  * A dictionary that maps ATT&CK tactics to ATT&CK techniques.
  * @remarks
- *  Relationships are sourced from the "ATT&CK" tab of this spreadsheet:
+ *  Relationships were automatically generated from an internal Excel
+ *  spreadsheet which mapped tactics to techniques.
  */
 export const TacticMap: { [key: string]: string[] } = {
     TA0001: ["T1078","T1091","T1133","T1189","T1190","T1195","T1199","T1200","T1566"],
@@ -23,7 +24,8 @@ export const TacticMap: { [key: string]: string[] } = {
 /**
  * A dictionary that maps ATT&CK techniques to ATT&CK sub-techniques.
  * @remarks
- *  Relationships are sourced from the "ATT&CK" tab of this spreadsheet:
+ *  Relationships were automatically generated from an internal Excel
+ *  spreadsheet which mapped techniques to sub-techniques.
  */
 export const TechniquesMap: { [key: string]: string[] } = {
     T1595: ["001","002","003"],
