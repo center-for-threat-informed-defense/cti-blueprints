@@ -110,7 +110,7 @@ export class SummaryParser {
         if (prop === undefined) {
             text.at(-1)!.text += `[Error: Unknown property '${ token }']`;
         } else {
-            let t = prop.toString() ?? prop.name;
+            let t = prop.toString() || prop.name;
             text.at(-1)!.text += t.replace(/\n/g, "");
         }
         tokens.shift();

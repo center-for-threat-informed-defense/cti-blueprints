@@ -1,9 +1,10 @@
 import { AtomicProperty } from "..";
+import { PlugableElement } from "../../PlugableElement";
 import { PropertyAssembler } from "../PropertyAssembler";
 import { Plugin, PluginManager } from "../../Plugins";
 import { AtomicPropertyParameters } from "../AtomicProperty/AtomicPropertyParameters";
 
-export class StringProperty extends AtomicProperty {
+export class StringProperty extends AtomicProperty implements PlugableElement<StringProperty> {
     
     /**
      * The property's string suggestions.
@@ -24,17 +25,17 @@ export class StringProperty extends AtomicProperty {
     /**
      * The property's value.
      */
-    public get value(): string | null {
+    public override get value(): string | null {
         return this._value;
     }
 
     /**
      * The property value's setter.
      */
-    public set value(value: string | null) {
+    public override set value(value: string | null) {
         let lastValue = this._value;
         this._value = value;
-        this.emit("update", this._value, lastValue);
+        this.emit("update", this, lastValue);
     }
 
     
@@ -71,16 +72,20 @@ export class StringProperty extends AtomicProperty {
      * @returns
      *  The cloned property.
      */
-    public override clone(): StringProperty
+    public override clone(): StringProperty;
 
     /**
      * Clones the property.
      * @param assembler
      *  The cloned property's assembler.
+     * @param excludePlugins
+     *  If true, plugins will not be installed on the cloned property.
+     *  (Default: false)
      * @returns
      *  The cloned property.
      */
-    public override clone(assembler?: PropertyAssembler): StringProperty {
+    public override clone(assembler?: PropertyAssembler, excludePlugins?: boolean): StringProperty;
+    public override clone(assembler?: PropertyAssembler, excludePlugins: boolean = false): StringProperty {
         // Create property
         let prop = new StringProperty({
             id        : this.id,
@@ -92,13 +97,14 @@ export class StringProperty extends AtomicProperty {
             required  : this.required,
             alignment : this.alignment
         }, assembler);
-        // Clone values
-        prop.value = this._value;
+        // Clone suggestions
         prop.suggestions = [...this.suggestions];
         // Clone plugins
-        this._plugins?.forEach(({ plugin }) => {
-            prop.tryInstallPlugin(plugin);
-        });
+        if(!excludePlugins) {
+            this._plugins?.forEach(({ plugin }) => prop.tryInstallPlugin(plugin));
+        }
+        // Clone values
+        prop.value = this._value;
         // Return
         return prop;
     }
@@ -156,8 +162,8 @@ export class StringProperty extends AtomicProperty {
      * @returns
      *  A string representation of the property.
      */
-    public override toString(): string | undefined {
-        return this._value ?? undefined;
+    public override toString(): string {
+        return this._value ?? "";
     }
 
 }

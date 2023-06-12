@@ -1,5 +1,4 @@
 import { PropertyType } from "@/assets/scripts/PageEditor";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { InternalTelemetry } from "./InternalTelemetry";
 
 export const InternalTelemetryTable = {
@@ -10,9 +9,6 @@ export const InternalTelemetryTable = {
     layout: {
         cols: 1,
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             ...InternalTelemetry,

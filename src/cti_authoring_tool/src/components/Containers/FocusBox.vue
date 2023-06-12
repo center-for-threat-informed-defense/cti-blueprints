@@ -31,10 +31,8 @@ export default defineComponent({
      * Focus in behavior.
      */
     onFocusIn() {
-      if(!this.focus) {
-        this.focus = true;
-        this.$emit("focusin");
-      }
+      this.focus = true;
+      this.$emit("focusin");
     },
 
     /**

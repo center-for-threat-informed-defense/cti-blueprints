@@ -1,11 +1,11 @@
 import { Tactic } from "./Tactic";
+import { Details } from "./Details";
 import { Artifact } from "./Artifact";
 import { Attribution } from "./Attribution";
+import { LastReported } from "./LastReported";
 import { PropertyType } from "@/assets/scripts/PageEditor";
-import { LastObserved } from "./LastObserved";
-import { FirstObserved } from "./FirstObserved";
-import { SystemDetails } from "./SystemDetails";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
+import { FirstReported } from "./FirstReported";
+import { SystemArtifactType } from "./SystemArtifactType";
 
 export const SystemArtifacts = {
     id: "system_artifacts",
@@ -17,9 +17,6 @@ export const SystemArtifacts = {
         rows: 4,
         cols: 2
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             ...Attribution,
@@ -33,22 +30,27 @@ export const SystemArtifacts = {
         },
         {
             ...Artifact,
+            name: "Host Artifact",
             row: 2,
-            col: [1, 2]
+            col: 1
         },
         {
-            ...SystemDetails,
+            ...SystemArtifactType,
+            row: 2,
+            col: 2
+        },
+        {
+            ...Details,
             row: 3,
             col: [1, 2]
         },
-        
         {
-            ...FirstObserved,
+            ...FirstReported,
             row: 4,
             col: 1
         },
         {
-            ...LastObserved,
+            ...LastReported,
             row: 4,
             col: 2
         },

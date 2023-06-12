@@ -5,10 +5,27 @@ import json
 from pathlib import Path
 import base64
 import tempfile
+import warnings
 
-from liquid import Template
+from liquid import Environment, FileSystemLoader
 from htmldocx import HtmlToDocx
 from docx2pdf import convert
+
+# Suppress BeautifulSoup's text link warnings
+warnings.filterwarnings("ignore", message='.*looks like a URL.*')
+
+# Configure Liquid environment
+env = Environment(loader=FileSystemLoader("templates/sections"))
+
+# Register new line to br filter
+def newline_to_br(val):
+    return str(val).replace("\\n", "<br>")
+env.add_filter("newline_to_br", newline_to_br)
+
+# Register strip new line filter
+def strip_newline(val):
+    return str(val).replace("\\n", "")
+env.add_filter("strip_newline", strip_newline)
 
 # A global map to be used for dynamic HTML templates.
 # { Key (variable name from `exclude_sections`): Value (section filename) }
@@ -562,9 +579,7 @@ def process_template(data_input_filepath, report_type, exclude_sections=None):
             if key == "file":
                 _embed_file(data)
             else:
-                with open(sect + SECTIONS[key], 'r') as _file_obj:
-                    tem = Template(_file_obj.read())
-                    _template_ += tem.render(data)
+                _template_ += env.get_template(SECTIONS[key]).render(data)
         return _template_
     
     def _embed_file(data):

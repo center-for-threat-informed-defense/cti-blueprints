@@ -1,7 +1,7 @@
 <template>
   <TitleBar class="app-title-bar-element" :menus="menus" @select="onItemSelect">
     <template v-slot:icon>
-      <span class="logo">TE</span>
+      <span class="logo"><img :src="require('~/public/logo.png')" /></span>
     </template>
   </TitleBar>
 </template>
@@ -81,13 +81,11 @@ export default defineComponent({
 /** === App Logo === */
 
 .logo {
-    margin: 0px 8px;
-    padding: 2px 4px;
-    color: #f0f1f2;
-    font-size: 7pt;
-    font-weight: 600;
-    border-radius: 3px;
-    background: #726de2;
+  margin: 0px 6px 0px 12px;
+}
+
+.logo img {
+  height: 10px;
 }
 
 </style>

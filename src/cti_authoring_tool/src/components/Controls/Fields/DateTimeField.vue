@@ -3,7 +3,7 @@
     <div class="grid-container">
       <div class="value" v-show="!showEditor">
         <p v-if="property.value === null" class="null-value">
-          Null
+          None
         </p>
         <p v-else class="date-value">
           <template v-if="includeDate">
@@ -136,7 +136,7 @@ export default defineComponent({
      */
     prop_M(): string {
       let v = this.property.value;
-      return v ? Months[v.getUTCMonth()] : "Null";
+      return v ? Months[v.getUTCMonth()] : "?";
     },
 
     /**
@@ -146,7 +146,7 @@ export default defineComponent({
      */
     prop_D(): string {
       let v = this.property.value;
-      return `${ v?.getUTCDate() ?? 'Null' }`;
+      return `${ v?.getUTCDate() ?? '?' }`;
     },
     
     /**
@@ -156,7 +156,7 @@ export default defineComponent({
      */
     prop_Y(): string {
       let v = this.property.value;
-      return `${ v?.getUTCFullYear() ?? 'Null' }`;
+      return `${ v?.getUTCFullYear() ?? '?' }`;
     },
 
     /**
@@ -166,7 +166,7 @@ export default defineComponent({
      */
     prop_H(): string {
       let v = this.property.value;
-      return v ? `${ v.getUTCHours() }`.padStart(2, '0') : "Null";
+      return v ? `${ v.getUTCHours() }`.padStart(2, '0') : "?";
     },
 
     /**
@@ -176,7 +176,7 @@ export default defineComponent({
      */
     prop_m(): string {
       let v = this.property.value;
-      return v ? `${ v.getUTCMinutes() }`.padStart(2, '0') : "Null";
+      return v ? `${ v.getUTCMinutes() }`.padStart(2, '0') : "?";
     },
 
     /**
@@ -186,7 +186,7 @@ export default defineComponent({
      */
     prop_s(): string {
       let v = this.property.value;
-      return v ? `${ v.getUTCSeconds() }`.padStart(2, '0') : "Null";
+      return v ? `${ v.getUTCSeconds() }`.padStart(2, '0') : "?";
     },
 
     /**
@@ -241,7 +241,7 @@ export default defineComponent({
       // Enter edit mode
       this.enterEditMode();
       // Execute select command
-      let cmd = AppCommands.selectAtomicProperty(this.property);
+      let cmd = PageCommands.selectAtomicProperty(this.property);
       this.$emit("execute", cmd);
     },
 
@@ -256,7 +256,7 @@ export default defineComponent({
         this.exitEditMode();
       }
       // Execute deselect command
-      let cmd = AppCommands.deselectAtomicProperty(this.property)
+      let cmd = PageCommands.deselectAtomicProperty(this.property)
       this.$emit("execute", cmd);
     },
 

@@ -32,7 +32,7 @@ export class MountSection extends AppCommand {
      * Executes the command.
      */
     public execute(): void {
-        this._section.emit("mount", this._el);
+        this._section.emit("mount", this._section, this._el);
     }
 
 }

@@ -1,5 +1,4 @@
 import { PropertyType } from "@/assets/scripts/PageEditor";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const ReportCitations = {
     id: "report_citations",
@@ -9,9 +8,6 @@ export const ReportCitations = {
     layout: {
         cols: 3
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             id: "description",

@@ -4,7 +4,6 @@ import { DateReported } from "./DateReported";
 import { PropertyType } from "@/assets/scripts/PageEditor";
 import { LocationRegion } from "./LocationRegion";
 import { LocationGranular } from "./LocationGranular";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 
 export const Victims = {
     id: "victims",
@@ -16,9 +15,6 @@ export const Victims = {
         rows: 3,
         cols: 2
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             ...VictimName,

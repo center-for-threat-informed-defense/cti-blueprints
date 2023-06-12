@@ -13,13 +13,13 @@
     <tbody>
         {%- for attackTableRow in mitre_attack_table -%}
         <tr>
-            <td>{{ attackTableRow.attribution }}</td>
+            <td>{{ attackTableRow.attribution | newline_to_br }}</td>
             <td>{{ attackTableRow.tactic }}</td>
             <td>{{ attackTableRow.technique }}</td>
             <td>{{ attackTableRow.sub_technique }}</td>
-            <td>{{ attackTableRow.procedure }}</td>
-            <td>{{ attackTableRow.defend }}</td>
-            <td>{{ attackTableRow.control }}</td>
+            <td>{{ attackTableRow.procedure | newline_to_br }}</td>
+            <td>{{ attackTableRow.defend | newline_to_br }}</td>
+            <td>{{ attackTableRow.control | newline_to_br }}</td>
         </tr>
         {%- endfor -%}
     </tbody>

@@ -4,7 +4,12 @@
     <!-- <div class id="tool-bar"></div> -->
     <div id="app-body">
       <ScrollBox id="page-container" :alwaysShowScrollBar="true">
-        <PageEditorControl id="page" :page="editor.page" @execute="onExecute" />
+        <template v-if="editor.isPhantom()">
+          <SplashMenu id="splash-menu" :templates="templates" @new="onNewDocument" @open="onOpenDocument"/>
+        </template>
+        <template v-else>
+          <PageEditorControl id="page" :page="editor.page" @execute="onExecute"/>
+        </template>
       </ScrollBox>
     </div>
     <FileSelect 
@@ -15,7 +20,7 @@
       @switch="onEditorSwitch"
       v-show="0 < editors.size"
     />
-    <div class id="footer-bar"></div>
+    <AppMetricsBar id="metrics-bar"></AppMetricsBar>
   </AppHotkeyBox>
 </template>
 
@@ -27,12 +32,15 @@ import Configuration from "@/assets/configuration/app.config"
 import { Command } from "./assets/scripts/Application/Command";
 import { PageEditor } from "./assets/scripts/PageEditor/PageEditor";
 import { defineComponent } from 'vue';
+import { DocumentTemplate } from "./assets/scripts/Application";
 import { mapMutations, mapState } from 'vuex';
 // Components
 import ScrollBox from "./components/Containers/ScrollBox.vue";
+import SplashMenu from "./components/Controls/SplashMenu.vue";
 import FileSelect from "./components/Controls/FileSelect.vue";
 import AppTitleBar from "./components/Elements/AppTitleBar.vue";
 import AppHotkeyBox from "./components/Elements/AppHotkeyBox.vue";
+import AppMetricsBar from "./components/Elements/AppMetricsBar.vue";
 import PageEditorControl from "./components/Controls/PageEditor.vue";
 
 export default defineComponent({
@@ -55,10 +63,19 @@ export default defineComponent({
       },
       editors(state: Store.ApplicationStore): Map<string, PageEditor> {
         let editors = [...state.editors.entries()]
-          .filter(o => o[0] !== PageEditor.Phantom.id)
+          .filter(o => !o[1].isPhantom())
         return new Map(editors);
       }
-    })
+    }),
+
+    /**
+     * Returns the application's document templates.
+     * @returns
+     *  The application's document templates.
+     */
+    templates(): DocumentTemplate[] {
+      return Configuration.templates;
+    }
 
   },
   methods: {
@@ -101,8 +118,23 @@ export default defineComponent({
      */
     onEditorClose(id: string) {
       this.execute(AppCommands.unloadPage(this.ctx, id));
-    }
+    },
 
+    /**
+     * New document behavior.
+     * @param template
+     *  The document's template.
+     */
+    onNewDocument(template: DocumentTemplate) {
+      this.execute(AppCommands.loadNewPageFile(this.ctx, template));
+    },
+
+    /**
+     * Open document behavior.
+     */
+    async onOpenDocument() {
+      this.execute(await AppCommands.loadPageFromFileSystem(this.ctx));
+    }
 
   },
   async created() {
@@ -117,8 +149,8 @@ export default defineComponent({
     this.execute(AppCommands.loadSettings(this.ctx, settings));
   },
   components: {
-    ScrollBox, AppTitleBar, AppHotkeyBox, 
-    FileSelect, PageEditorControl
+    ScrollBox, AppTitleBar, AppHotkeyBox, AppMetricsBar,
+    FileSelect, PageEditorControl, SplashMenu
   }
 });
 </script>
@@ -186,7 +218,7 @@ ul {
   background: url("./assets/images/texture.png");
 }
 
-#tool-bar, #footer-bar {
+#tool-bar, #metrics-bar {
   flex-shrink: 0;
   height: 31px;
 }
@@ -195,7 +227,7 @@ ul {
   border-bottom: solid 1px #d9d9d9;
 }
 
-#footer-bar {
+#metrics-bar {
   border-top: solid 1px #bfbfbf;
 }
 
@@ -204,7 +236,7 @@ ul {
   height: 100%;
 }
 
-#page {
+#page, #splash-menu {
   width: 950px;
   margin: auto;
 }

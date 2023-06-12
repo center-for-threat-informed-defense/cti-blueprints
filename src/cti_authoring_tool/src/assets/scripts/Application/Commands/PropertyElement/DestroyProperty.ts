@@ -24,7 +24,7 @@ export class DestroyProperty extends AppCommand {
      * Executes the command.
      */
     public execute(): void {
-        this._property.emit("destroy");
+        this._property.emit("destroy", this._property);
     }
 
 }

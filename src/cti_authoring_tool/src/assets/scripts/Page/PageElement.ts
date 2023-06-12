@@ -43,11 +43,34 @@ export abstract class PageElement extends EventEmitter {
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///  1. Property Cloning  /////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
     /**
      * Clones the element.
      * @returns
      *  The cloned element.
      */
     public abstract clone(): PageElement;
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///  2. Emit Upward  //////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Emits an event up through the element's parent chain.
+     * @param event
+     *  The name of the event to raise.
+     * @param args
+     *  The arguments to pass to the event listeners.
+     */
+    public emitUpward(event: string, ...args: any[]): void {
+        this.emit(event, ...args);
+        this._parent?.emitUpward(event, ...args);
+    }
 
 }

@@ -1,9 +1,12 @@
+import { PluginType } from "@/assets/scripts/PageEditor";
 import { IocsSection } from "../sections/IocsSection";
 import { VictimsSection } from "../sections/VictimsSection";
 import { GeneralSection } from "../sections/GeneralSection";
+import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { TimelineSection } from "../sections/TimelineSection";
 import { KeyPointsSection } from "../sections/KeyPointsSection";
 import { SignaturesSection } from "../sections/SignaturesSection";
+import { TextMetricsPlugin } from "../plugins/TextMetricsPlugin";
 import { AssessmentSection } from "../sections/AssessmentSection";
 import { DataSourcesSection } from "../sections/DataSourcesSection";
 import { MitreAttackTableSection } from "../sections/MitreAttackTableSection";
@@ -19,8 +22,24 @@ export const ThreatActorProfile: any = {
     keys: [
         "general.report_title"
     ],
+    plugins: {
+        global: {
+            [PluginType.StringProperty]: [
+                { module: TextMetricsPlugin }
+            ],
+            [PluginType.BasicTableProperty]: [
+                { module: ImportCSVPlugin }
+            ],
+            [PluginType.ComplexTableProperty]: [
+                { module: ImportCSVPlugin }
+            ]
+        }
+    },
     sections: [
-        GeneralSection,
+        {
+            name: "Threat Actor Profile",
+            ...GeneralSection
+        },
         ExecutiveSummarySection,
         KeyPointsSection,
         AssessmentSection,
@@ -34,5 +53,6 @@ export const ThreatActorProfile: any = {
         IntelligenceRequirementsSection,
         DataSourcesSection,
         ThreatActorMetadataSection,
-    ]
+    ],
+    description: "Know: The Threat Actor Report is designed to be an encyclopedia for the organization for a given threat actor or category of activity. This report should be treated as a living document that should be maintained on a periodic basis by the intelligence team."
 }

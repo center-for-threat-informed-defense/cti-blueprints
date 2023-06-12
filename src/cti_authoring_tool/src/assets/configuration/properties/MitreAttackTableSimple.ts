@@ -4,7 +4,9 @@ import { Procedure } from "./Procedure";
 import { Techniques } from "./Technique";
 import { PropertyType } from "@/assets/scripts/PageEditor";
 import { SubTechniques } from "./SubTechnique";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
+import { MitreDefendPlugin } from "../plugins/MitreDefendPlugin";
+import { MitreAttackFlowPlugin } from "../plugins/MitreAttackFlowPlugin";
+import { MitreAttackSmartDropdownsPlugin } from "../plugins/MitreAttackSmartDropdownsPlugin";
 
 export const MitreAttackTableSimple = {
     id: "mitre_attack_table",
@@ -16,7 +18,9 @@ export const MitreAttackTableSimple = {
         cols: 2
     },
     plugins: [
-        { module: ImportCSVPlugin }
+        { module: MitreAttackSmartDropdownsPlugin },
+        { module: MitreAttackFlowPlugin },
+        { module: MitreDefendPlugin },
     ],
     properties: [
         {

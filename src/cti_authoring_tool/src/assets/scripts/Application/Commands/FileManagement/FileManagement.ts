@@ -18,8 +18,10 @@ import { PageEditor, PageTemplate } from "@/assets/scripts/PageEditor";
  *  A command that represents the action.
  */
 export function loadNewPageFile(context: ApplicationStore, template: PageTemplate): AppCommand {
-    let page = PageEditor.createNew(template);
-    return new LoadPage(context, page);
+    // Create page
+    let editor = PageEditor.createNew(template);
+    // Return page
+    return new LoadPage(context, editor);
 }
 
 /**
@@ -42,9 +44,9 @@ export function loadPageFromFile(context: ApplicationStore, file: string): AppCo
     if(!template) {
         throw new Error(`Application does not support file template '${ id }'.`);
     }
-    // Load Page
-    let page = PageEditor.fromFile(template, contents);
-    return new LoadPage(context, page);
+    // Create Page
+    let editor = PageEditor.fromFile(template, contents);
+    return new LoadPage(context, editor);
 }
 
 /**

@@ -4,7 +4,7 @@
       v-model="value"
       type="text"
       ref="field"
-      placeholder="Null"
+      placeholder="None"
       @focus="onSelect"
       @input="onInput"
       @keyup.stop=""
@@ -92,7 +92,7 @@ export default defineComponent({
      */
     onSelect() {
       // Execute select command
-      let cmd = AppCommands.selectAtomicProperty(this.property);
+      let cmd = PageCommands.selectAtomicProperty(this.property);
       this.$emit("execute", cmd);
     },
 
@@ -103,7 +103,7 @@ export default defineComponent({
       // Update property
       this.updateProperty(0);
       // Execute deselect command
-      let cmd = AppCommands.deselectAtomicProperty(this.property)
+      let cmd = PageCommands.deselectAtomicProperty(this.property)
       this.$emit("execute", cmd);
     },
 

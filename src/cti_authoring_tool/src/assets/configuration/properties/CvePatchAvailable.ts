@@ -5,7 +5,7 @@ export const CvePatchAvailable = {
     name: "Patch Available",
     type: PropertyType.Enum,
     options: [
-        { id: "Yes", text: "Yes", value: "Yes" },
-        { id: "No", text: "No", value: "No" }
+        { value: "Yes", text: "Yes" },
+        { value: "No",  text: "No" }
     ]
 }

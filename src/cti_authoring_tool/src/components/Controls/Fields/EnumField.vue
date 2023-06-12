@@ -111,15 +111,15 @@ export default defineComponent({
      * @returns
      *  The enum's options.
      */
-    options(): { id: string | null, text: string }[] {
-      let options: { id: string | null, text: string }[] = [];
+    options(): { value: string | null, text: string }[] {
+      let options: { value: string | null, text: string }[] = [];
       if(this.searchTerm === "") {
-        options.push({ id: null, text: "Null" });
+        options.push({ value: null, text: "None" });
       }
       let st = this.searchTerm.toLocaleLowerCase();
-      for(let [id, { text }] of this.property.options) {
+      for(let [value, text] of this.property.validOptions) {
         if(st === "" || text.toLocaleLowerCase().includes(st)) {
-          options.push({ id, text });
+          options.push({ value, text });
         }
       }
       return options;
@@ -132,9 +132,9 @@ export default defineComponent({
      */
     selectText(): string {
       if(this.select !== null) {
-        return this.property.options.get(this.select)!.text
+        return this.property.options.get(this.select)!
       } else {
-        return "Null";
+        return "None";
       }
     },
 
@@ -164,7 +164,7 @@ export default defineComponent({
         this.search?.focus();
       }, 0);
       // Execute select command
-      let cmd = AppCommands.selectAtomicProperty(this.property);
+      let cmd = PageCommands.selectAtomicProperty(this.property);
       this.$emit("execute", cmd);
     },
 
@@ -180,7 +180,7 @@ export default defineComponent({
       // Refresh value
       this.refreshValue();
       // Execute deselect command
-      let cmd = AppCommands.deselectAtomicProperty(this.property);
+      let cmd = PageCommands.deselectAtomicProperty(this.property);
       this.$emit("execute", cmd);
     },
 
@@ -194,9 +194,9 @@ export default defineComponent({
         return;
       }
       let st = this.searchTerm.toLocaleLowerCase();
-      for(let [key, { text }] of this.property.options) {
+      for(let [value, text] of this.property.validOptions) {
         if(text.toLocaleLowerCase().includes(st)) {
-          this.select = key;
+          this.select = value;
           return;
         }
       }
@@ -216,15 +216,15 @@ export default defineComponent({
       let options = this.options;
       switch(event.key) {
         case "ArrowUp":
-          idx = options.findIndex(o => o.id === this.select);
+          idx = options.findIndex(o => o.value === this.select);
           if(0 < idx) {
-            this.select = options[idx - 1].id;
+            this.select = options[idx - 1].value;
           }
           break;
         case "ArrowDown":
-          idx = options.findIndex(o => o.id === this.select);
+          idx = options.findIndex(o => o.value === this.select);
           if(idx < options.length - 1) {
-            this.select = options[idx + 1].id;
+            this.select = options[idx + 1].value;
           }
           break;
         case "Tab":

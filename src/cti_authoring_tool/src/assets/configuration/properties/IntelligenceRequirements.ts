@@ -1,5 +1,4 @@
 import { PropertyType } from "@/assets/scripts/PageEditor";
-import { ImportCSVPlugin } from "../plugins/ImportCSVPlugin";
 import { IntelligenceRequirement } from "./IntelligenceRequirement";
 
 export const IntelligenceRequirements = {
@@ -10,9 +9,6 @@ export const IntelligenceRequirements = {
     layout: {
         cols: 1,
     },
-    plugins: [
-        { module: ImportCSVPlugin }
-    ],
     properties: [
         {
             ...IntelligenceRequirement,

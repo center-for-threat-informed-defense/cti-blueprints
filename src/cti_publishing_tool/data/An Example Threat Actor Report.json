@@ -17,24 +17,24 @@
     "timeline": [
         {
             "attribution": "VTX-123",
-            "start_data": "2023-02-13T10:00:00.000Z",
-            "end_data": "2023-02-14T11:00:00.000Z",
+            "start_date": "2023-02-13T10:00:00.000Z",
+            "end_date": "2023-02-14T11:00:00.000Z",
             "location": "USA",
             "sector": "NAICS 443",
             "activity": "Quisque quis ligula sit amet tellus imperdiet accumsan. In hac habitasse platea dictumst. Nam maximus posuere nibh, vestibulum bibendum neque. Fusce sit amet velit in ante viverra semper vitae ac enim. Etiam vulputate metus quam, quis varius dui sollicitudin a. Pellentesque vulputate vitae augue ac bibendum. "
         },
         {
             "attribution": "VTX-123",
-            "start_data": "2023-03-10T01:00:00.000Z",
-            "end_data": "2023-03-12T01:10:00.000Z",
+            "start_date": "2023-03-10T01:00:00.000Z",
+            "end_date": "2023-03-12T01:10:00.000Z",
             "location": "USA",
             "sector": "NAICS 481",
             "activity": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis neque id purus convallis lobortis. Cras imperdiet ipsum ut quam scelerisque facilisis. Nunc tincidunt tellus arcu, vel dapibus ante tempus a. In hac habitasse platea dictumst. Nunc aliquet et massa quis consectetur. Curabitur quis erat vel quam volutpat tempus quis sed lectus. "
         },
         {
             "attribution": "VTX-123",
-            "start_data": "2023-04-28T00:00:00.000Z",
-            "end_data": "2023-04-28T12:00:00.000Z",
+            "start_date": "2023-04-28T00:00:00.000Z",
+            "end_date": "2023-04-28T12:00:00.000Z",
             "location": "USA",
             "sector": "NAICS 311",
             "activity": "Duis iaculis malesuada orci id consequat. In mauris sapien, feugiat nec eros a, congue dictum enim. Ut vulputate, mauris et blandit condimentum, neque orci tincidunt nisl, sodales porta orci urna a velit. Quisque at facilisis justo. Vestibulum elementum scelerisque eros eu ullamcorper. Integer semper felis quam, in dapibus neque euismod in."
@@ -49,7 +49,7 @@
             "sub_technique": "T1001.003",
             "procedure": "Pellentesque dapibus nisi quis sollicitudin molestie. Ut eu nisi scelerisque, pretium augue eu, egestas massa. Ut odio nulla, luctus eget ante gravida, commodo pulvinar nibh.",
             "control": "Nulla iaculis ut nisl in mattis. ",
-            "defend": "www.google.com"
+            "defend": "https://d3fend.mitre.org/offensive-technique/attack/T1001.003/"
         },
         {
             "attribution": "VTX-123",
@@ -58,7 +58,7 @@
             "sub_technique": null,
             "procedure": "Morbi vitae nisl diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum ac nisl fermentum, volutpat ex vel, sodales erat. Suspendisse sem mi, hendrerit vitae euismod ac, ultrices sit amet leo. Sed dapibus ante in sem facilisis, vel semper lectus vestibulum.",
             "control": "Morbi consequat, sapien imperdiet.",
-            "defend": "www.google.com"
+            "defend": "https://d3fend.mitre.org/offensive-technique/attack/T1006/"
         }
     ],
     "victims": [
@@ -81,13 +81,14 @@
         "malware": [
             {
                 "attribution": "VTX-123",
-                "timestamp": "2023-04-28T00:00:00.000Z",
                 "ioc_malware_name": "bad_malware.exe",
                 "ioc_malware_sandbox": "Morbi vitae nisl diam.",
                 "ioc_malware_hash_type": "SHA256",
                 "ioc_malware_hash": "5b62f19431f5f069dd245cdd6fa11d55b905290c2493d5b9c17a4b9f10260cd4",
                 "ioc_associated_file_hash": "e86d4849b250f27bfbf994c9eb2cee826a1777e764c631b7ab16b72528f7b690",
-                "ioc_malware_description": "Nulla iaculis ut nisl in mattis. Pellentesque dapibus nisi quis sollicitudin molestie. Ut eu nisi scelerisque, pretium augue eu, egestas massa. Ut odio nulla, luctus eget ante gravida, commodo pulvinar nibh. Morbi consequat, sapien imperdiet bibendum vestibulum, dolor lacus varius risus, ut facilisis orci mauris a ligula. Phasellus blandit euismod magna ornare tempor. Sed pharetra elit sit amet nisl tempus, sit amet finibus quam laoreet."
+                "ioc_malware_description": "Nulla iaculis ut nisl in mattis. Pellentesque dapibus nisi quis sollicitudin molestie. Ut eu nisi scelerisque, pretium augue eu, egestas massa. Ut odio nulla, luctus eget ante gravida, commodo pulvinar nibh. Morbi consequat, sapien imperdiet bibendum vestibulum, dolor lacus varius risus, ut facilisis orci mauris a ligula. Phasellus blandit euismod magna ornare tempor. Sed pharetra elit sit amet nisl tempus, sit amet finibus quam laoreet.",
+                "first_reported": "2023-04-28T00:00:00.000Z",
+                "last_reported": "2023-04-29T00:00:00.000Z"
             }
         ],
         "network": [
@@ -95,8 +96,9 @@
                 "attribution": "VTX-123",
                 "network_intrusion_phase": "TA0001",
                 "artifact": "10.10.20.132",
-                "first_observed": "2023-02-14T10:00:00.000Z",
-                "last_observed": "2023-04-28T00:00:00.000Z"
+                "details": "Nulla iaculis ut nisl in mattis. Pellentesque dapibus nisi quis sollicitudin molestie. Ut eu nisi scelerisque, pretium augue eu, egestas massa.",
+                "first_reported": "2023-02-14T10:00:00.000Z",
+                "last_reported": "2023-04-28T00:00:00.000Z"
             }
         ],
         "system_artifacts": [
@@ -104,9 +106,10 @@
                 "attribution": "VTX-123",
                 "tactic": "TA0001",
                 "artifact": "bad_malware.dll",
-                "system_details": "Morbi vitae nisl diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum ac nisl fermentum, volutpat ex vel, sodales erat. Suspendisse sem mi, hendrerit vitae euismod ac, ultrices sit amet leo. Sed dapibus ante in sem facilisis, vel semper lectus vestibulum.",
-                "first_observed": "2023-02-14T10:00:00.000Z",
-                "last_observed": "2023-04-28T00:00:00.000Z"
+                "type": "Dynamic Linked Library",
+                "details": "Nulla iaculis ut nisl in mattis. Pellentesque dapibus nisi quis sollicitudin molestie. Ut eu nisi scelerisque, pretium augue eu, egestas massa.",
+                "first_reported": "2023-02-14T10:00:00.000Z",
+                "last_reported": "2023-04-28T00:00:00.000Z"
             }
         ],
         "cves": [
@@ -116,7 +119,7 @@
                 "cve_patch_available": "Yes",
                 "cve_cvss_score": 10,
                 "cve_patch_applied": "No",
-                "date_of_report": "2023-04-28T00:00:00.000Z",
+                "date_reported": "2023-04-28T00:00:00.000Z",
                 "cve_remediation": "Morbi vitae nisl diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum ac nisl fermentum, volutpat ex vel, sodales erat. Suspendisse sem mi, hendrerit vitae euismod ac, ultrices sit amet leo. Sed dapibus ante in sem facilisis, vel semper lectus vestibulum."
             }
         ]
@@ -189,10 +192,11 @@
             }
         ]
     },
+    "report_date": "2023-06-09T06:56:12.149Z",
     "__document": {
-        "authoring_tool_version": "0.1.2",
+        "authoring_tool_version": "0.1.3",
         "template_name": "Threat Actor Profile",
-        "template_version": "1.0.0",
+        "template_version": "0.1.0",
         "template_identifier": "e4e907ac-f845-4b51-a73f-ab511456ce74"
     }
 }
