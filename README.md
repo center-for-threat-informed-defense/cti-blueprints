@@ -1,3 +1,6 @@
+[![MITRE ATT&CK® v13](https://img.shields.io/badge/MITRE%20ATT%26CK®-v13-red)](https://attack.mitre.org/versions/v13/)
+[![build](https://github.com/center-for-threat-informed-defense/cti-blueprints/actions/workflows/build.yml/badge.svg)](https://github.com/center-for-threat-informed-defense/cti-blueprints/actions)
+
 # CTI Blueprints
 
 CTI Blueprints is a free suite of templates and tools that helps Cyber Threat
@@ -26,13 +29,12 @@ then read the sample reports. For a deeper dive, read the wiki documentation and
 the CTI templates. From there, try creating your own reports using either the Word
 templates or the Blueprints Suite of tools.
 
-| Resource                                                                                        | Description                                        |
-| ----------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [One Pager](https://hubs.ly/Q01SYBjK0)                                                          | Overview of CTI Blueprints                         |
-| [Documentation](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki)      | Complete documentation for CTI Blueprints          |
-| [Templates](./templates)                                                                        | CTI report templates with inline guidance          |
-| [Sample Reports](./samples)                                                                     | Sample reports illustrating use of the templates   |
-| [Download Tools](https://github.com/center-for-threat-informed-defense/cti-blueprints/releases) | Tools for creating and publishing your own reports |
+| Resource                                                                                                              | Description                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [One Pager](https://hubs.ly/Q01SYBjK0)                                                                                | Overview of CTI Blueprints                                                                     |
+| [Documentation](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki)                            | Complete documentation for CTI Blueprints                                                      |
+| [Templates & Sample Reports](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki/CTI-Templates) | CTI report templates with inline guidance and sample reports illustrating use of the templates |
+| [Download Tools](https://github.com/center-for-threat-informed-defense/cti-blueprints/releases)                       | Tools for creating and publishing your own reports                                             |
 
 ## Getting Involved
 

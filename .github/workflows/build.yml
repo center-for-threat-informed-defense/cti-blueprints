@@ -31,3 +31,29 @@ jobs:
       with:
         name: cti_authoring_tool
         path: src/cti_authoring_tool/dist/
+
+
+  github_pages:
+    # This job only runs when committing or merging to main branch.
+    if: github.ref_name == 'main'
+    needs: cti_authoring_tool
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
+    - name: Download HTML docs
+      uses: actions/download-artifact@v3
+      with:
+        name: cti_authoring_tool
+        path: cti_authoring_tool
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: ./cti_authoring_tool
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v1
