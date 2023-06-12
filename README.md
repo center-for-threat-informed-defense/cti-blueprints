@@ -1,5 +1,5 @@
 [![MITRE ATT&CK® v13](https://img.shields.io/badge/MITRE%20ATT%26CK®-v13-red)](https://attack.mitre.org/versions/v13/)
-[![build](https://github.com/center-for-threat-informed-defense/cti-blueprints/actions/workflows/build.yml/badge.svg)](https://github.com/center-for-threat-informed-defense/cti-blueprints/actions)
+[![build](https://github.com/center-for-threat-informed-defense/cti-blueprints/actions/workflows/build.yml/badge.svg)](https://github.com/center-for-threat-informed-defense/cti-blueprints/actions/workflows/build.yml)
 
 # CTI Blueprints
 
