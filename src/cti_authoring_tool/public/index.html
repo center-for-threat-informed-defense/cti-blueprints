@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <% if(htmlWebpackPlugin.options.googleAnalyticsTag) { %>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=<%=htmlWebpackPlugin.options.googleAnalyticsTag%>"></script>
-      <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',<%=`"${ htmlWebpackPlugin.options.googleAnalyticsTag }"`%>);</script>
+    <% if(process.env.VUE_APP_GOOG_ANALYTICS_TAG) { %>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%=process.env.VUE_APP_GOOG_ANALYTICS_TAG%>"></script>
+      <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',<%=`"${ process.env.VUE_APP_GOOG_ANALYTICS_TAG }"`%>);</script>
     <% } %>
   </head>
   <body>

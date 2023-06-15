@@ -1,4 +1,3 @@
 exports.default = {
-    title: "Authoring Tool - CTI Blueprints",
-    googleAnalyticsTag: null
+    title: "Authoring Tool - CTI Blueprints"
 }
