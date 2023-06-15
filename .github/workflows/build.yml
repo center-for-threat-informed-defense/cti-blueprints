@@ -28,6 +28,7 @@ jobs:
       env:
         # Workaround for node.js bug: https://github.com/webpack/webpack/issues/14532
         NODE_OPTIONS: "--openssl-legacy-provider"
+        VUE_APP_GOOG_ANALYTICS_TAG: "G-67S8JX925T"
       run: npm run build
     - name: Upload artifact
       uses: actions/upload-artifact@v3
