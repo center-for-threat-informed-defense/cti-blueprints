@@ -45,8 +45,8 @@ threat-informed defense:
 - **Review the [One Pager](https://hubs.ly/Q01SYBjK0) and [sample reports](./samples).**
   This will give you a quick overview of the project's goals and help to envision your
   own capability to use it.
-- **Read [the
-  The project wiki goes deeper into the project's goals and objectives.
+- **Read [the project wiki](https://github.com/center-for-threat-informed-defense/cti-blueprints/wiki).**
+  It goes deeper into the project's goals and objectives.
 - **Create your own reports.** Choose one of two approaches for creating reports:
   - Build reports with the [Word templates](./templates), which are user friendly and
 ## Questions and Feedback
