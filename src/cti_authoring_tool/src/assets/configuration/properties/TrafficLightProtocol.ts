@@ -6,10 +6,10 @@ export const TrafficLightProtocol = {
     path: "*.traffic_light_protocol",
     type: PropertyType.Enum, 
     options: [ 
-        { value: "red", text: "Red" }, 
-        { value: "amber_strict", text: "Amber+Strict" }, 
-        { value: "amber", text: "Amber" }, 
-        { value: "green", text: "Green" }, 
-        { value: "clear", text: "Clear" }, 
+        { value: "red", text: "RED" }, 
+        { value: "amber_strict", text: "AMBER+STRICT" }, 
+        { value: "amber", text: "AMBER" }, 
+        { value: "green", text: "GREEN" }, 
+        { value: "clear", text: "CLEAR" }, 
     ] 
 }
