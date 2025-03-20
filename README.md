@@ -10,9 +10,9 @@ resource constraints, lack of analytic training and guidance, and lack of feedba
 CTI consumers on what works. This project seeks to increase the operational relevance of
 reports through a standardized set of templates that help analysts answer specific
 analytic questions for common cyber security use cases. This project is created and
-maintained by the MITRE Engenuity Center for Threat-Informed Defense in futherance of
+maintained by the MITRE Center for Threat-Informed Defense in futherance of
 our mission to advance the start of the art and the state of the practice in
-threat-informed defense globally. The project is funded by our [research participants](https://mitre-engenuity.org/blog/2023/06/12/cti-blueprints/#research-participants).
+threat-informed defense globally. The project is funded by our [research participants](https://ctid.mitre.org/projects/cti-blueprints#participants-section).
 
 **Table Of Contents:**
 
@@ -52,7 +52,7 @@ threat-informed defense:
 ## Questions and Feedback
 
 Please submit issues for any technical questions/concerns or contact
-ctid@mitre-engenuity.org directly for more general inquiries.
+ctid@mitre.org directly for more general inquiries.
 
 Also see the guidance for contributors if are you interested in contributing or simply
 reporting issues.
@@ -62,7 +62,7 @@ reporting issues.
 We welcome your feedback and contributions to help advance CTI Blueprints.
 
 - Provide feedback on the templates and tool on Github, find us on LinkedIn, or reach
-  out to our team directly at ctid@mitre-engenuity.org.
+  out to our team directly at ctid@mitre.org.
 - Help us develop additional plug-ins for the community or provide additional plugin
   suggestions. A running list of suggested plug-ins can be found on our Github Wiki
   Developer page.
@@ -73,12 +73,12 @@ We welcome your feedback and contributions to help advance CTI Blueprints.
 Please see the guidance for contributors if are you interested in [contributing or
 simply reporting issues.](/CONTRIBUTING.md). Submit
 [issues](https://github.com/center-for-threat-informed-defense/cti_blueprints/issues)
-for any technical questions/concerns or contact ctid@mitre-engenuity.org directly for
+for any technical questions/concerns or contact ctid@mitre.org directly for
 more general inquiries.
 
 ## Notice
 
-Copyright 2023 MITRE Engenuity. Approved for public release. Document number CT0069.
+Copyright 2023 MITRE. Approved for public release. Document number CT0069.
 
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this

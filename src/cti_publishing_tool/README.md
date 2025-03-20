@@ -40,7 +40,7 @@ Argument explanation:
 
 ## Section for feedback and error messages
 If an error is encountered when using the publishing tool, open an issue in Github with as many detials as possible.
-Contact ctid@mitre-engenuity.org directly for more general inquiries.
+Contact ctid@mitre.org directly for more general inquiries.
 
 ## Example usage:
 Generate a campaign report without stepping through the guide:
