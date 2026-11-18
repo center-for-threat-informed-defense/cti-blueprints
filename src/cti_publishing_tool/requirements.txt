@@ -1,3 +1,21 @@
-docx2pdf==0.1.8
-htmldocx==0.0.6
+# CTI Publishing Tool - dependencias (Python >= 3.10)
+# Cubre el script original (cti_publishing_tool.py), la v2 y el MCP Server.
+#
+#   python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+#   pip install -r requirements.txt
+#
+# Para PDF hace falta además LibreOffice (paquete del sistema, no de pip):
+#   python document_converter.py --check   -> muestra los comandos para tu sistema
+
+# Plantillas y conversión HTML -> DOCX
 python-liquid==1.9.2
+htmldocx==0.0.6
+python-docx==1.2.0
+beautifulsoup4==4.15.0
+
+# MCP Server (cti_mcp_server.py)
+mcp==2.3.0
+
+# Lo importa el script original; la v2 lo usa sólo como motor PDF alternativo
+# con Microsoft Word en Windows/macOS (instala pywin32/appscript automáticamente).
+docx2pdf==0.1.8

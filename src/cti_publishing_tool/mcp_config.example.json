@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "cti-publishing": {
+      "command": "/RUTA/AL/REPO/src/cti_publishing_tool/.venv/bin/python",
+      "args": ["/RUTA/AL/REPO/src/cti_publishing_tool/cti_mcp_server.py"],
+      "env": {
+        "CTI_MCP_DATA_DIRS": "/RUTA/AL/REPO/src/cti_publishing_tool/data",
+        "CTI_MCP_TEMPLATE_DIRS": "/RUTA/AL/REPO/templates",
+        "CTI_MCP_OUTPUT_DIR": "/RUTA/AL/REPO/src/cti_publishing_tool/output"
+      }
+    }
+  }
+}

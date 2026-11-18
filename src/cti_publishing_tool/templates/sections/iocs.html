@@ -19,10 +19,10 @@
         {%- for malwareRow in iocs.malware -%}
         <tr>
             <td>{{ malwareRow.attribution | newline_to_br }}</td>
-            <td>{{ malwareRow.ioc_malware_name | newline_to_br }} </td>
-            <td>{{ malwareRow.ioc_malware_hash_type }} </td>
-            <td class="hash">{{ malwareRow.ioc_malware_hash }} </td>
-            <td class="hash">{{ malwareRow.ioc_associated_file_hash }} </td>
+            <td>{{ malwareRow.ioc_malware_name | newline_to_br }}</td>
+            <td>{{ malwareRow.ioc_malware_hash_type }}</td>
+            <td class="hash">{{ malwareRow.ioc_malware_hash }}</td>
+            <td class="hash">{{ malwareRow.ioc_associated_file_hash }}</td>
             <td>{{ malwareRow.ioc_malware_description | newline_to_br }}</td>
             <td>{{ malwareRow.ioc_malware_sandbox | newline_to_br }}</td>
             <td>{{ malwareRow.first_reported }}</td>
