@@ -1,8 +1,50 @@
-output
+# Documentos generados (CLI, MCP y pruebas manuales)
+output/
 
-# local env files
+# Datos de prueba e informes reales: solo se versionan los JSON de ejemplo
+data/*
+!data/An Example *.json
+
+# Plantillas corporativas propias (las CTID están en templates/ de la raíz del repositorio)
+corporate-templates/
+cti-templates/
+
+# Registros y resultados temporales de pruebas
+*.log
+*.tmp
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Entornos virtuales de Python
+create_report/
+.venv/
+venv/
+env/
+
+# Caché de Python y de pruebas
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Respaldos locales (el historial de git ya conserva los originales)
+*.bak
+templates/sections_original/
+
+# Archivos temporales de Office / LibreOffice
+~$*
+.~lock.*#
+
+# Configuración local (MCP con rutas propias, variables de entorno)
+.mcp.json
+.env
 .env.local
 .env.*.local
 
-# Editor directories and files
-.vscode
+# Editores y sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
